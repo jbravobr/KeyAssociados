@@ -63,19 +63,28 @@ namespace TechSocial
             {
                 model = App.Container.Resolve<LoginViewModel>();
 
-                // Carregando loading.
-                var loading = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-                loading.ShowLoading("Carregando dados");
-
-                if (await model.ExecutarLogin(usuario, senha))
+                var netStatus = DependencyService.Get<Acr.XamForms.Mobile.Net.INetworkService>().IsConnected;
+                if (!netStatus)
                 {
-                    loading.HideLoading();
-                    await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
+                    var dialog = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+                    await dialog.AlertAsync(String.Empty, "Seu primeiro logon deve ser feito online!", "OK");
+                    return;
                 }
                 else
                 {
-                    loading.HideLoading();
-                    await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
+                    var loading = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+                    loading.ShowLoading("Carregando dados");
+
+                    if (await model.ExecutarLogin(usuario, senha))
+                    {
+                        loading.HideLoading();
+                        await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
+                    }
+                    else
+                    {
+                        loading.HideLoading();
+                        await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
+                    }
                 }
             }
         }

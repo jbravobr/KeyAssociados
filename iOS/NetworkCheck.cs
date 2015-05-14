@@ -5,11 +5,11 @@ using CoreFoundation;
 
 namespace TechSocial.iOS
 {
-    public class NetworkCheck
+    public static class NetworkCheck
     {
-        public string HostName = "www.google.com";
+        public static string HostName = "www.google.com";
 
-        public bool IsReachableWithoutRequiringConnection(NetworkReachabilityFlags flags)
+        public static bool IsReachableWithoutRequiringConnection(NetworkReachabilityFlags flags)
         {
             // Is it reachable with the current network configuration?
             bool isReachable = (flags & NetworkReachabilityFlags.Reachable) != 0;
@@ -26,7 +26,7 @@ namespace TechSocial.iOS
         }
 
         // Is the host reachable with the current network configuration
-        public bool IsHostReachable(string host)
+        public static bool IsHostReachable(string host)
         {
             if (string.IsNullOrEmpty(host))
                 return false;
@@ -48,9 +48,9 @@ namespace TechSocial.iOS
         // we do not even pass the info as to what changed, and
         // we lump all three status we probe into one
         //
-        public event EventHandler ReachabilityChanged;
+        public static event EventHandler ReachabilityChanged;
 
-        void OnChange(NetworkReachabilityFlags flags)
+        static void OnChange(NetworkReachabilityFlags flags)
         {
             var h = ReachabilityChanged;
             if (h != null)
@@ -62,9 +62,9 @@ namespace TechSocial.iOS
         // and optionally provides extra network reachability flags as the
         // out parameter
         //
-        NetworkReachability adHocWiFiNetworkReachability;
+        static NetworkReachability adHocWiFiNetworkReachability;
 
-        public bool IsAdHocWiFiNetworkAvailable(out NetworkReachabilityFlags flags)
+        public static bool IsAdHocWiFiNetworkAvailable(out NetworkReachabilityFlags flags)
         {
             if (adHocWiFiNetworkReachability == null)
             {
@@ -76,9 +76,9 @@ namespace TechSocial.iOS
             return adHocWiFiNetworkReachability.TryGetFlags(out flags) && IsReachableWithoutRequiringConnection(flags);
         }
 
-        NetworkReachability defaultRouteReachability;
+        static NetworkReachability defaultRouteReachability;
 
-        bool IsNetworkAvailable(out NetworkReachabilityFlags flags)
+        static bool IsNetworkAvailable(out NetworkReachabilityFlags flags)
         {
             if (defaultRouteReachability == null)
             {
@@ -89,9 +89,9 @@ namespace TechSocial.iOS
             return defaultRouteReachability.TryGetFlags(out flags) && IsReachableWithoutRequiringConnection(flags);
         }
 
-        NetworkReachability remoteHostReachability;
+        static NetworkReachability remoteHostReachability;
 
-        public NetworkStatus RemoteHostStatus()
+        public static NetworkStatus RemoteHostStatus()
         {
             NetworkReachabilityFlags flags;
             bool reachable;
@@ -122,7 +122,7 @@ namespace TechSocial.iOS
             return NetworkStatus.ReachableViaWiFiNetwork;
         }
 
-        public NetworkStatus InternetConnectionStatus()
+        public static NetworkStatus InternetConnectionStatus()
         {
             NetworkReachabilityFlags flags;
             bool defaultNetworkAvailable = IsNetworkAvailable(out flags);
@@ -137,7 +137,7 @@ namespace TechSocial.iOS
             return NetworkStatus.ReachableViaWiFiNetwork;
         }
 
-        public NetworkStatus LocalWifiConnectionStatus()
+        public static NetworkStatus LocalWifiConnectionStatus()
         {
             NetworkReachabilityFlags flags;
             if (IsAdHocWiFiNetworkAvailable(out flags))

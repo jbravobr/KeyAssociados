@@ -52,7 +52,7 @@
     <MtouchDebug>true</MtouchDebug>
     <IpaPackageName>
     </IpaPackageName>
-    <CodesignProvision>d352ec80-ded8-4095-b537-343935bb4dbe</CodesignProvision>
+    <CodesignProvision>f06a0647-305b-47f2-89be-553585042275</CodesignProvision>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchLink>None</MtouchLink>
     <MtouchI18n>

@@ -23,9 +23,9 @@ namespace TechSocial.iOS
 
         #endregion
 
-        private static bool VerificaConexao()
+        private bool VerificaConexao()
         {
-            return (!new NetworkCheck().IsHostReachable("http://google.com"));
+            return (!NetworkCheck.IsHostReachable("http://google.com"));
         }
     }
 }

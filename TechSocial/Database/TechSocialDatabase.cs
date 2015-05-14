@@ -18,6 +18,24 @@ namespace TechSocial
                 CriaSchema();
         }
 
+        public bool ExisteSchema()
+        {
+            if (database.TableMappings.All(b => b.TableName != "Auditor"
+                    || b.TableName != "Rotas"
+                    || b.TableName != "Fornecedores"
+                    || b.TableName != "Auditorias"
+                    || b.TableName != "Modulos"
+                    || b.TableName != "Questoes"
+                    || b.TableName != "Respostas"
+                    || b.TableName != "Semana"
+                    || b.TableName != "BaseLegal"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Rotina para verificar se o Schema do banco já foi criado
         /// </summary>

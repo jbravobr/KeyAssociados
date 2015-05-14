@@ -225,16 +225,15 @@ namespace TechSocial
                 {
                     try
                     {
-                        this.entObservacoes.Text = string.Empty;
-                        this.entryCriterio.Text = string.Empty;
-                        this.entryDescricaoBaseLegal.Text = string.Empty;
-                        this.dataPicker = new DatePicker{ Format = "D" };
-                        this.entAcoesRequeridas.Text = string.Empty;
-
-                        questao = questoes.Skip(page).Take(1).First();
-
-                        if (_questoes.Count > 1 && page <= _questoes.Count)
+                        if (_questoes.Count > 1 && page < _questoes.Count)
                         {
+                            this.entObservacoes.Text = string.Empty;
+                            this.entryCriterio.Text = string.Empty;
+                            this.entryDescricaoBaseLegal.Text = string.Empty;
+                            this.dataPicker = new DatePicker{ Format = "D" };
+                            this.entAcoesRequeridas.Text = string.Empty;
+
+                            questao = questoes.Skip(page).Take(1).First();
                             BindingContext = questao;
                             resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
 
@@ -261,6 +260,7 @@ namespace TechSocial
                         }
                         else
                         {
+                            DisplayAlert("Aviso", "Não existem mais questões para este módulo", "OK");
                             return;
                         }
                     }
@@ -401,7 +401,7 @@ namespace TechSocial
                     await DisplayAlert("Erro", "Erro ao salvar questão", "OK");
             }
             else
-                await DisplayAlert("Erro", "Você precisa informar um critério");
+                await DisplayAlert("Erro", "Você precisa informar um critério", "OK");
         }
 
         // Tira foto.

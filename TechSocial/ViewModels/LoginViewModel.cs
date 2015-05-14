@@ -36,18 +36,6 @@ namespace TechSocial
             if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
                 throw new ArgumentException("Usuário ou senha em branco!");
 
-            var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
-            if (!netStatus)
-            {
-                var db = new TechSocialDatabase(false);
-                var _auditor = db.GetAuditor();
-
-                if (_auditor.user == user && _auditor.pass == pass)
-                    return await Task.FromResult<bool>(true);
-
-                return await Task.FromResult<bool>(false);
-            }
-
             var dadosFromServer = await service.ExecutarLogin(user, pass);
 
             if (dadosFromServer != null && !String.IsNullOrEmpty(dadosFromServer.Auditor.nome))

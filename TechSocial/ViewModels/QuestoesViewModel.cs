@@ -39,7 +39,7 @@ namespace TechSocial
 
             if (_id == null || _id == 0)
             {
-                _resposta = CriaResposta(obs, evidencia, criterio, baseLegalId,
+                _resposta = CriaResposta(obs, evidencia, c, baseLegalId,
                     baseLegalTexto, data, imagemEvidencia, audi, modulo, questao, tpprazo, acoesRequeridas);
             }
             else
