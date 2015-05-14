@@ -1,0 +1,46 @@
+﻿```xml
+<Manifest>
+  <AgentType>iOSUnified_Forms</AgentType>
+  <Resources />
+  <TimeoutSeconds>0</TimeoutSeconds>
+</Manifest>
+```
+```csharp
+using Xamarin.Forms;
+using System.Threading.Tasks;
+using TechSocial;
+
+       TechSocial.RotaViewModel model;
+
+        public RotaPage()
+        {
+            Title = "Rotas";
+    BindingContext = model = new TechSocial.RotaViewModel()
+
+            var listViewRotas = new ListView
+            {
+                ItemsSource = model.Rotas,
+                VerticalOptions = LayoutOptions.StartAndExpand,
+                ItemTemplate = new DataTemplate(typeof(RotaViewCell)),
+                SeparatorVisibility = SeparatorVisibility.Default,
+                RowHeight = 107
+            };
+
+            listViewRotas.ItemTapped += async (sender, e) => await ExibeDetalheRota(e.Item);
+
+            var layout = new StackLayout { Children = { listViewRotas } };
+            RootPage.Children.Add(new ContentPage
+                {
+                    Padding = new Thickness(0, 20, 0, 0),
+                    Content = layout
+                });
+        }
+
+        async Task ExibeDetalheRota(object item)
+        {
+            await Navigation.PushAsync(new AuditoriasPage(((Rotas)item).fornecedor));
+        }
+
+
+```
+
