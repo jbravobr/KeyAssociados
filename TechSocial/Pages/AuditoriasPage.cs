@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using Autofac;
+using System.Collections.Generic;
+using System.IO;
 
 namespace TechSocial
 {
@@ -21,6 +24,20 @@ namespace TechSocial
             BindingContext = model.Auditorias;
             listViewRotas.ItemsSource = model.Auditorias;
             listViewRotas.ItemTemplate = new DataTemplate(typeof(AuditoriaViewCell));
+
+            if (App.Current.Properties.ContainsKey("assinatura"))
+            {
+                try
+                {
+                    var dic = App.Current.Properties["assinatura"] as Dictionary<int,ImageSource>;
+                    await this.Assina(dic);
+                    App.Current.Properties.Remove("assinatura");
+                }
+                catch
+                {
+                    return;
+                }
+            }
         }
 
         public AuditoriasPage(string fornecedor)
@@ -34,8 +51,7 @@ namespace TechSocial
                 VerticalOptions = LayoutOptions.StartAndExpand,
                 SeparatorVisibility = SeparatorVisibility.Default,
                 RowHeight = 77,
-                HasUnevenRows = true,
-                //BackgroundColor = Color.FromHex("#FFFFF0")
+                HasUnevenRows = true
             };
 
             MessagingCenter.Subscribe<AuditoriaViewCell,int>(this, "assinar", (sender, audi) =>
@@ -53,6 +69,28 @@ namespace TechSocial
         async Task ExibeDetalheAuditoria(object item)
         {
             await Navigation.PushAsync(new ChecklistPage(((Auditorias)item).audi.ToString()));
+        }
+
+        async Task Assina(Dictionary<int,ImageSource> dic)
+        {
+            var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+            var salvarImagem = false;
+            salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(dic.Values.First(), imgNome);
+            var imagem = imgNome;
+
+            if (salvarImagem)
+            {
+                var db = new TechSocialDatabase(false);
+                try
+                {
+                    db.SalvarAssinatura(imagem, dic.Keys.First());
+                    await this.Navigation.PopAsync();
+                }
+                catch
+                {
+                    await DisplayAlert("Erro", "Erro ao salvar imagem", "OK");
+                }
+            }
         }
     }
 }

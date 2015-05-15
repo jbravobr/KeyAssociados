@@ -458,6 +458,14 @@ namespace TechSocial
 
             return false;
         }
+
+        public void SalvarAssinatura(string imagem, int audi)
+        {
+            var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
+            auditoria.assinatura = imagem;
+
+            this.database.Update(auditoria);
+        }
     }
 }
 

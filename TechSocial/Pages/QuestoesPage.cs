@@ -60,6 +60,7 @@ namespace TechSocial
             if (resposta != null)
             {
                 entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.atende;
+                this.criterioQuestao = resposta.atende;
                 entryDescricaoBaseLegal.Text = resposta.baseLegalTexto;
 
                 if (!String.IsNullOrEmpty(resposta.dt_prazo))
@@ -70,6 +71,12 @@ namespace TechSocial
 
                 entAcoesRequeridas.Text = resposta.acoesRequeridadas;
                 entObservacoes.Text = resposta.observacao;
+
+                if (!String.IsNullOrEmpty(resposta.evidencia))
+                {
+                    var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
+                    thumbImagem.Source = imgSrc;
+                }
             }
         }
 
@@ -133,7 +140,7 @@ namespace TechSocial
 
             dataPicker = new DatePicker
             {
-                Format = "D",
+                Format = "dd/MM/yyyy",
                 IsVisible = false
             };
             var btnData = new Button
@@ -228,10 +235,15 @@ namespace TechSocial
                         if (_questoes.Count > 1 && page < _questoes.Count)
                         {
                             this.entObservacoes.Text = string.Empty;
+                            this.criterioQuestao = string.Empty;
                             this.entryCriterio.Text = string.Empty;
                             this.entryDescricaoBaseLegal.Text = string.Empty;
-                            this.dataPicker = new DatePicker{ Format = "D" };
+                            this.dataPicker = new DatePicker{ Format = "dd/MM/yyyy" };
+                            this.dataPicker.ClearValue(DatePicker.DateProperty);
+                            this.dataPicker.IsVisible = false;
                             this.entAcoesRequeridas.Text = string.Empty;
+                            this.thumbImagem.Source = null;
+                            this.imagem = String.Empty;
 
                             questao = questoes.Skip(page).Take(1).First();
                             BindingContext = questao;
@@ -241,6 +253,7 @@ namespace TechSocial
                             {
                                 entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.atende;
                                 entryDescricaoBaseLegal.Text = resposta.baseLegalTexto;
+                                this.criterioQuestao = resposta.atende;
 
                                 if (!String.IsNullOrEmpty(resposta.dt_prazo))
                                 {
@@ -250,6 +263,13 @@ namespace TechSocial
 
                                 entAcoesRequeridas.Text = resposta.acoesRequeridadas;
                                 entObservacoes.Text = resposta.observacao;
+
+                                if (!String.IsNullOrEmpty(resposta.evidencia))
+                                {
+                                    var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
+                                    thumbImagem.Source = ImageSource.FromFile(imgSrc);
+                                }
+                                this.imagem = resposta.evidencia;
                             }
 
                             lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
@@ -264,7 +284,7 @@ namespace TechSocial
                             return;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         return;
                     }
@@ -285,6 +305,7 @@ namespace TechSocial
                         if (resposta != null)
                         {
                             entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.atende;
+                            this.criterioQuestao = resposta.atende;
                             entryDescricaoBaseLegal.Text = resposta.baseLegalTexto;
 
                             if (!String.IsNullOrEmpty(resposta.dt_prazo))
@@ -295,13 +316,20 @@ namespace TechSocial
 
                             entAcoesRequeridas.Text = resposta.acoesRequeridadas;
                             entObservacoes.Text = resposta.observacao;
+
+                            if (!String.IsNullOrEmpty(resposta.evidencia))
+                            {
+                                var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
+                                thumbImagem.Source = ImageSource.FromFile(imgSrc);
+                            }
+                            this.imagem = resposta.evidencia;
                         }
 
                         lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
                         lblPeso.SetBinding(Label.TextProperty, "PesoPergunta");
                         entObservacoes.SetBinding(Label.TextProperty, "Texto");
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         return;
                     }
@@ -395,7 +423,7 @@ namespace TechSocial
                     if (_questoes.Count > 1 && page < _questoes.Count)
                         MessagingCenter.Send<QuestoesPage, ICollection<Questoes>>(this, "proximo", _questoes);
                     else
-                        this.Navigation.PopAsync();
+                        await this.Navigation.PopAsync();
                 }
                 else
                     await DisplayAlert("Erro", "Erro ao salvar questão", "OK");
@@ -420,17 +448,21 @@ namespace TechSocial
                 var imgSource = ImageSource.FromStream(() =>
                     {
                         var stream = photo.GetStream();
-                        photo.Dispose();
+                        //photo.Dispose();
                         return stream;
                     });
+
+                //var imgSource = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg");
                 
                 var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
                 var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
                 this.imagem = imgNome;
                 this.thumbImagem.Source = imgSource;
 
-                if (salvarImagem)
-                    await DisplayAlert(String.Empty, "Imagem Salva com sucesso", "OK");
+                if (!salvarImagem)
+                    await DisplayAlert(String.Empty, "Erro ao salvar a imagem, tente novamente!", "OK");
+                else
+                    await DisplayAlert(String.Empty, "Imagem salva com sucesso!", "OK");
 
                 this.entObservacoes.Text = obs;
                 this.entryCriterio.Text = criterio;

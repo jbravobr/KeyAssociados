@@ -75,6 +75,7 @@ namespace TechSocial
                     var loading = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
                     loading.ShowLoading("Carregando dados");
 
+                    #if DEBUG
                     if (await model.ExecutarLogin(usuario, senha))
                     {
                         loading.HideLoading();
@@ -85,11 +86,20 @@ namespace TechSocial
                         loading.HideLoading();
                         await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
                     }
+                    #else
+                    if (await model.ExecutarLogin(usuario, senha))
+                    {
+                        loading.HideLoading();
+                        await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
+                    }
+                    else
+                    {
+                        loading.HideLoading();
+                        await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
+                    }
+                    #endif
                 }
             }
         }
-
-
     }
 }
-

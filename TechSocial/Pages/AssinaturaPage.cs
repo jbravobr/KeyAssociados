@@ -1,6 +1,9 @@
 ﻿using System;
 using Xamarin.Forms;
 using Acr.XamForms.SignaturePad;
+using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace TechSocial
 {
@@ -25,11 +28,19 @@ namespace TechSocial
             {
                 Text = "Salvar"
             };
-            btnSalvar.Clicked += async (sender, e) =>
+            btnSalvar.Clicked += (sender, e) =>
             {
-                //var db = new TechSocialDatabase(false);
-                //var auditoria = db.
-                await this.Navigation.PopAsync();
+                var imgSource = ImageSource.FromStream(() =>
+                    {
+                        var stream = signature.GetImage(ImageFormatType.Jpg);
+                        return stream;
+                    });
+
+                var dic = new Dictionary<int,ImageSource>();
+                dic.Add(audi, imgSource);
+
+                App.Current.Properties["assinatura"] = dic;
+                this.Navigation.PopAsync();
             };
 
             var stack = new StackLayout
@@ -37,7 +48,7 @@ namespace TechSocial
                 Orientation = StackOrientation.Vertical,
                 HorizontalOptions = LayoutOptions.Center,
                 Padding = 30,
-                Spacing = 5,
+                Spacing = 14,
                 Children = { signature, btnSalvar }
             };
 

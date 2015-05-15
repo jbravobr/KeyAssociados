@@ -6,18 +6,22 @@ using Xamarin.Forms.Platform.iOS;
 using TechSocial.iOS;
 using System.IO;
 using Foundation;
+using UIKit;
 
 [assembly: Dependency(typeof(SaveAndLoadFile_IOS))]
 namespace TechSocial.iOS
 {
     public class SaveAndLoadFile_IOS : ISaveAndLoadFile
     {
+        UIImage image;
+
         #region ISaveAndLoadFile implementation
 
         public async Task<bool> SaveImage(ImageSource img, string imageName)
         {
             var render = new StreamImagesourceHandler();
-            var image = await render.LoadImageAsync(img);
+
+            image = await render.LoadImageAsync(img);
 
             var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             var nomeImagem = Path.Combine(path, imageName);
