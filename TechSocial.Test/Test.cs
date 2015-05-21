@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.IO;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace TechSocial.Test
 {
@@ -37,7 +38,7 @@ namespace TechSocial.Test
         {
             const string auditoria = "3792";
             const string questao = "4";
-            const string ulrFoto = "foto.json";
+            const string urlFoto = "foto.json/";
             var img = File.ReadAllBytes("IMG_14052015_152040.png");
             const string url = "http://techsocial.com.br/hering/webservices/app/api/";
 
@@ -51,16 +52,13 @@ namespace TechSocial.Test
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var json = JsonConvert.SerializeObject(new ImagemPOST{ audi = auditoria, questao = questao, foto = base64String });
-                HttpContent content = new StringContent(json);
+                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 try
                 {
-                    var result = await client.PostAsync("foto.json/", content);
+                    var result = await client.PostAsync(urlFoto, content);
 
-                    if (result.IsSuccessStatusCode)
-                        Assert.IsTrue(1 == 1);
-                    else
-                        Assert.IsFalse(1 == 1);
+                    Assert.IsTrue(result.IsSuccessStatusCode);
                 }
                 catch (Exception ex)
                 {

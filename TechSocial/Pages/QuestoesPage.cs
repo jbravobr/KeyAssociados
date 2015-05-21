@@ -37,6 +37,9 @@ namespace TechSocial
         {
             base.OnAppearing();
 
+            if (model != null)
+                return;
+            
             model = App.Container.Resolve<QuestoesViewModel>();
             await model.MontarQuestao(modulo);
             _questoes = model.Questao;
@@ -140,8 +143,7 @@ namespace TechSocial
 
             dataPicker = new DatePicker
             {
-                Format = "dd/MM/yyyy",
-                IsVisible = false
+                Format = "dd/MM/yyyy"
             };
             var btnData = new Button
             {
@@ -161,7 +163,6 @@ namespace TechSocial
                 Action _pedeData = () =>
                 {
                     this.prazo = "2";
-                    dataPicker.IsVisible = true;
                 };
                 config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Imediato", _imediato));
                 config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Pede Data", _pedeData));
@@ -437,6 +438,13 @@ namespace TechSocial
                                      string baseLegalTexto, string data, string imagemEvidencia, 
                                      string _audi, string acoesRequeridas, int? _id = null)
         {
+            this.entObservacoes.Text = obs;
+            this.entryCriterio.Text = criterio;
+            this.baseLegalId = base_id;
+            this.entryDescricaoBaseLegal.Text = baseLegalTexto;
+            this.dataPicker.Date = Convert.ToDateTime(data);
+            this.audi = _audi;
+            this.entAcoesRequeridas.Text = acoesRequeridas;
             var mediaPickerService = DependencyService.Get<IMediaPicker>();
 
             if (mediaPickerService.IsCameraAvailable || mediaPickerService.IsPhotoGalleryAvailable)
@@ -445,33 +453,35 @@ namespace TechSocial
                     { Camera = CameraDevice.Rear };
 
                 var photo = await mediaPickerService.TakePhoto(options);
-                var imgSource = ImageSource.FromStream(() =>
-                    {
-                        var stream = photo.GetStream();
-                        //photo.Dispose();
-                        return stream;
-                    });
+                ImageSource imgSource;
 
-                //var imgSource = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg");
-                
-                var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
-                var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
-                this.imagem = imgNome;
-                this.thumbImagem.Source = imgSource;
+                if (photo != null)
+                {
+                    imgSource = ImageSource.FromStream(() =>
+                        {
+                            var stream = photo.GetStream();
+                            //photo.Dispose();
+                            return stream;
+                        });
 
-                if (!salvarImagem)
-                    await DisplayAlert(String.Empty, "Erro ao salvar a imagem, tente novamente!", "OK");
+                    //var imgSource = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg");
+
+                    var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+                    var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
+
+                    this.imagem = imgNome;
+                    this.thumbImagem.Source = imgSource;
+
+                    if (!salvarImagem)
+                        await DisplayAlert(String.Empty, "Erro ao salvar a imagem, tente novamente!", "OK");
+                    else
+                        await DisplayAlert(String.Empty, "Imagem salva com sucesso!", "OK");
+                }
                 else
-                    await DisplayAlert(String.Empty, "Imagem salva com sucesso!", "OK");
-
-                this.entObservacoes.Text = obs;
-                this.entryCriterio.Text = criterio;
-                this.baseLegalId = base_id;
-                this.entryDescricaoBaseLegal.Text = baseLegalTexto;
-                this.dataPicker.Date = Convert.ToDateTime(data);
-                this.audi = _audi;
-                this.entAcoesRequeridas.Text = acoesRequeridas;
+                    return;
             }
+
+            return;
         }
     }
 }

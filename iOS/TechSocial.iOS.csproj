@@ -53,7 +53,7 @@
     <MtouchDebug>true</MtouchDebug>
     <IpaPackageName>
     </IpaPackageName>
-    <CodesignProvision>f06a0647-305b-47f2-89be-553585042275</CodesignProvision>
+    <CodesignProvision>de836435-eb46-4b8c-b2c8-de26cc336921</CodesignProvision>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchLink>None</MtouchLink>
     <MtouchI18n>
@@ -88,7 +88,7 @@
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchI18n>
     </MtouchI18n>
-    <CodesignProvision>f06a0647-305b-47f2-89be-553585042275</CodesignProvision>
+    <CodesignProvision>de836435-eb46-4b8c-b2c8-de26cc336921</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>full</DebugType>
@@ -127,15 +127,6 @@
     </Reference>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Acr.XamForms.SignaturePad">
-      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.4\lib\Xamarin.iOS10\Acr.XamForms.SignaturePad.dll</HintPath>
-    </Reference>
-    <Reference Include="Acr.XamForms.SignaturePad.iOS">
-      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.4\lib\Xamarin.iOS10\Acr.XamForms.SignaturePad.iOS.dll</HintPath>
-    </Reference>
-    <Reference Include="SignaturePad.iOS">
-      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.4\lib\Xamarin.iOS10\SignaturePad.iOS.dll</HintPath>
     </Reference>
     <Reference Include="Acr.XamForms.UserDialogs">
       <HintPath>..\packages\Acr.XamForms.UserDialogs.3.0.4\lib\Xamarin.iOS10\Acr.XamForms.UserDialogs.dll</HintPath>
@@ -176,6 +167,15 @@
     <Reference Include="ExifLib">
       <HintPath>..\packages\ExifLib.PCL.1.0.1\lib\portable-net45+sl50+win+WindowsPhoneApp81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\ExifLib.dll</HintPath>
     </Reference>
+    <Reference Include="Acr.XamForms.SignaturePad">
+      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\Xamarin.iOS10\Acr.XamForms.SignaturePad.dll</HintPath>
+    </Reference>
+    <Reference Include="Acr.XamForms.SignaturePad.iOS">
+      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\Xamarin.iOS10\Acr.XamForms.SignaturePad.iOS.dll</HintPath>
+    </Reference>
+    <Reference Include="SignaturePad.iOS">
+      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\Xamarin.iOS10\SignaturePad.iOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TechSocial\TechSocial.csproj">
@@ -195,10 +195,10 @@
     <Compile Include="NetworkStatus_IOS.cs" />
     <Compile Include="SQLite_IOS.cs" />
     <Compile Include="NetworkCheck.cs" />
-    <Compile Include="Bootstrap\SignaturePadBootstrap.cs" />
     <Compile Include="Bootstrap\UserDialogsBootstrap.cs" />
     <Compile Include="Bootstrap\MobileBootstrap.cs" />
     <Compile Include="SaveAndLoadFile_IOS.cs" />
+    <Compile Include="Bootstrap\SignaturePadBootstrap.cs" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="ITunesArtwork" />
