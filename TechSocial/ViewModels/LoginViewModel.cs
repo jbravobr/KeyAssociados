@@ -8,98 +8,98 @@ using System.Collections.Generic;
 
 namespace TechSocial
 {
-    [ImplementPropertyChanged]
-    public class LoginViewModel
-    {
-        readonly ILoginService service;
-        readonly IAuditoriaService serviceAuditoria;
-        readonly ICheckListService serviceChecklist;
-        readonly IQuestoesService serviceQuestoes;
-        readonly IRespostaService serviceRespostas;
-        readonly IBaseService serviceBaseLegal;
+	[ImplementPropertyChanged]
+	public class LoginViewModel
+	{
+		readonly ILoginService service;
+		readonly IAuditoriaService serviceAuditoria;
+		readonly ICheckListService serviceChecklist;
+		readonly IQuestoesService serviceQuestoes;
+		readonly IRespostaService serviceRespostas;
+		readonly IBaseService serviceBaseLegal;
 
-        public ICollection<Respostas> listaRespostas { get; set; }
+		public ICollection<Respostas> listaRespostas { get; set; }
 
-        public LoginViewModel(ILoginService service, IAuditoriaService serviceAuditoria, ICheckListService serviceChecklist,
-                              IQuestoesService serviceQuestoes, IRespostaService serviceRespostas, IBaseService serviceBaseLegal)
-        {
-            this.service = service;
-            this.serviceAuditoria = serviceAuditoria;
-            this.serviceChecklist = serviceChecklist;
-            this.serviceQuestoes = serviceQuestoes;
-            this.serviceRespostas = serviceRespostas;
-            this.serviceBaseLegal = serviceBaseLegal;
-        }
+		public LoginViewModel(ILoginService service, IAuditoriaService serviceAuditoria, ICheckListService serviceChecklist,
+		                            IQuestoesService serviceQuestoes, IRespostaService serviceRespostas, IBaseService serviceBaseLegal)
+		{
+			this.service = service;
+			this.serviceAuditoria = serviceAuditoria;
+			this.serviceChecklist = serviceChecklist;
+			this.serviceQuestoes = serviceQuestoes;
+			this.serviceRespostas = serviceRespostas;
+			this.serviceBaseLegal = serviceBaseLegal;
+		}
 
-        public async Task<bool> ExecutarLogin(string user, string pass)
-        {
-            if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
-                throw new ArgumentException("Usuário ou senha em branco!");
+		public async Task<bool> ExecutarLogin(string user, string pass)
+		{
+			if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
+				throw new ArgumentException("Usuário ou senha em branco!");
 
-            var dadosFromServer = await service.ExecutarLogin(user, pass);
+			var dadosFromServer = await service.ExecutarLogin(user, pass);
 
-            if (dadosFromServer != null && !String.IsNullOrEmpty(dadosFromServer.Auditor.nome))
-            {
-                var db = new TechSocialDatabase(false);
+			if (dadosFromServer != null && !String.IsNullOrEmpty(dadosFromServer.Auditor.nome))
+			{
+				var db = new TechSocialDatabase(false);
 
-                // Gravando Auditor logado.
-                db.InsertAuditor(dadosFromServer.Auditor);
+				// Gravando Auditor logado.
+				db.InsertAuditor(dadosFromServer.Auditor);
 
-                // Gravando Rotas recebidas.
-                db.InsertRotas(dadosFromServer.Rotas);
+				// Gravando Rotas recebidas.
+				db.InsertRotas(dadosFromServer.Rotas);
 
-                // Gravando Semanas.
-                db.InsertSemanas(dadosFromServer.Semanas);
+				// Gravando Semanas.
+				db.InsertSemanas(dadosFromServer.Semanas);
 
-                // Gravando Fornecedores recebidos.
-                var fornecedores = dadosFromServer.Rotas.Select(x => x.Fornecedores).ToList();
-                db.InsertFornecedores(fornecedores);
+				// Gravando Fornecedores recebidos.
+				var fornecedores = dadosFromServer.Rotas.Select(x => x.Fornecedores).ToList();
+				db.InsertFornecedores(fornecedores);
                
-                // Gravando Auditorias.
-                foreach (var fornecedor in fornecedores)
-                {
-                    dadosFromServer = await this.serviceAuditoria.RetornarAuditorias(fornecedor.fornecedor);
+				// Gravando Auditorias.
+				foreach (var fornecedor in fornecedores)
+				{
+					dadosFromServer = await this.serviceAuditoria.RetornarAuditorias(fornecedor.fornecedor);
 
-                    if (dadosFromServer != null && dadosFromServer.Auditorias != null && dadosFromServer.Auditorias.Any())
-                    {
-                        db.InsertAuditorias(dadosFromServer.Auditorias);
-                    }
-                }
+					if (dadosFromServer != null && dadosFromServer.Auditorias != null && dadosFromServer.Auditorias.Any())
+					{
+						db.InsertAuditorias(dadosFromServer.Auditorias);
+					}
+				}
                     
-                // Gravando Bases Legais.
-                var dadosBasesLegais = await serviceBaseLegal.RetornarBasesLegais();
-                db.InsertBaseLegal(dadosBasesLegais.BaseLegal);
+				// Gravando Bases Legais.
+				//var dadosBasesLegais = await serviceBaseLegal.RetornarBasesLegais();
+				//db.InsertBaseLegal(dadosBasesLegais.BaseLegal);
 
-                // Gravando Módulos.
-                var modulo = new JsonObjectModulo();
-                var auditorias = db.GetAuditorias();
-                foreach (var auditoria in auditorias)
-                {
-                    modulo = await this.serviceChecklist.RetornaChecklist(auditoria.audi.ToString());
+				// Gravando Módulos.
+				var modulo = new JsonObjectModulo();
+				var auditorias = db.GetAuditorias();
+				foreach (var auditoria in auditorias)
+				{
+					modulo = await this.serviceChecklist.RetornaChecklist(auditoria.audi.ToString());
 
-                    if (modulo != null && modulo.Auditorias != null)
-                    {
-                        foreach (var item in modulo.Modulos)
-                        {
-                            item.audi = auditoria.audi;
-                        }
+					if (modulo != null && modulo.Auditorias != null)
+					{
+						foreach (var item in modulo.Modulos)
+						{
+							item.audi = auditoria.audi;
+						}
 
-                        db.InsertModulos(modulo.Modulos);
-                    }
-                }
+						db.InsertModulos(modulo.Modulos);
+					}
+				}
                     
-                // Gravando Questões.
-                foreach (var mod in modulo.Modulos)
-                {
-                    var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
+				// Gravando Questões.
+				foreach (var mod in modulo.Modulos)
+				{
+					var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
 
-                    if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
-                    {
-                        db.InsertQuestao(questoes.Questoes);
-                    }   
-                }
+					if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+					{
+						db.InsertQuestao(questoes.Questoes);
+					}   
+				}
 
-                // Gravando Respostas.
+				// Gravando Respostas.
 //                foreach (var auditoria in auditorias)
 //                {
 //                    var respostas = await this.serviceRespostas.RetornarRespostasParaAuditoria(auditoria.audi);
@@ -122,30 +122,30 @@ namespace TechSocial
 //                    }
 //                }
 
-                // Atualizando Módulos com atende
-                if (db.ExistemRespostas())
-                {
-                    var mods = db.GetModulos();
-                    var q = db.GetQuestoes();
-                    this.listaRespostas = db.GetRespostas();
+				// Atualizando Módulos com atende
+				if (db.ExistemRespostas())
+				{
+					var mods = db.GetModulos();
+					var q = db.GetQuestoes();
+					this.listaRespostas = db.GetRespostas();
 
-                    foreach (var mod in mods)
-                    {
-                        int? operacao;
+					foreach (var mod in mods)
+					{
+						int? operacao;
 
-                        foreach (var questao in q.Where(x=>x.modulo == mod.modulo))
-                        {
-                            var peso = questao.peso;
-                            if (this.listaRespostas.Any(b => b.questao == questao.questao.ToString()))
-                            {
-                                var atende = this.listaRespostas.First(x => x.questao == questao.questao.ToString()).atende;
-                                operacao += atende == null ? 0 : Convert.ToInt32(atende) * peso;
-                            }
-                        }
-                        mod.atende = operacao;
-                    }
+						foreach (var questao in q.Where(x=>x.modulo == mod.modulo))
+						{
+							var peso = questao.peso;
+							if (this.listaRespostas.Any(b => b.questao == questao.questao.ToString()))
+							{
+								var atende = this.listaRespostas.First(x => x.questao == questao.questao.ToString()).atende;
+								operacao += atende == null ? 0 : Convert.ToInt32(atende) * peso;
+							}
+						}
+						mod.atende = operacao;
+					}
 
-                    // Atualizando Módulos com imagem do semáforo.
+					// Atualizando Módulos com imagem do semáforo.
 //                    foreach (var mod in mods)
 //                    {
 //                        ImageSource imgSrc = null;
@@ -162,14 +162,14 @@ namespace TechSocial
 //
 //                        mod.Image = imgSrc;
 //                    }
-                    db.InsertModulos(mods);
-                }
+					db.InsertModulos(mods);
+				}
 
-                return true;
-            }
+				return true;
+			}
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 }
 

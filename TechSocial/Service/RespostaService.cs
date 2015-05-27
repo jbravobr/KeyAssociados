@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace TechSocial
 {
@@ -27,6 +28,29 @@ namespace TechSocial
                 }
 
                 throw new ArgumentException("Erro de acesso ao servidor.");
+            }
+        }
+
+        /// <summary>
+        /// Executa o envio da resposta do módulo
+        /// </summary>
+        public async Task<bool> EnviarResposta(Respostas resp)
+        {
+            using (var client = CallAPI.RetornaClientHttp())
+            {
+                var json = JsonConvert.SerializeObject(resp);
+                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var result = await client.PostAsync(Constants.PostResposta, content);
+
+                    return result.IsSuccessStatusCode ? await Task.FromResult<bool>(true) : await Task.FromResult<bool>(false);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }

@@ -6,30 +6,48 @@ using System.Collections.Generic;
 
 namespace TechSocial
 {
-    public class BaseLegalService : IBaseService
-    {
-        HttpResponseMessage response;
+	public class BaseLegalService : IBaseService
+	{
+		HttpResponseMessage response;
 
-        /// <summary>
-        /// Retorna as Bases Legais.
-        /// </summary>
-        public async Task<JsonObject> RetornarBasesLegais()
-        {
-            using (var client = CallAPI.RetornaClientHttp())
-            {
-                response = await client.GetAsync(String.Format("{0}", Constants.BaseLegal));
+		/// <summary>
+		/// Retorna as Bases Legais.
+		/// </summary>
+		public async Task<JsonObject> RetornarBasesLegais()
+		{
+			using (var client = CallAPI.RetornaClientHttp())
+			{
+				response = await client.GetAsync(String.Format("{0}", Constants.BaseLegal));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var json = JsonConvert.DeserializeObject<JsonObject>(jsonResponse);
+				if (response.IsSuccessStatusCode)
+				{
+					var jsonResponse = await response.Content.ReadAsStringAsync();
+					var json = JsonConvert.DeserializeObject<JsonObject>(jsonResponse);
 
-                    return json;
-                }
+					return json;
+				}
 
-                throw new ArgumentException("Erro de acesso ao servidor.");
-            }
-        }
-    }
+				throw new ArgumentException("Erro de acesso ao servidor.");
+			}
+		}
+
+		public async Task<JsonObject> RetornarBasesLegaisPorChecklistQuestao(string questaoId, string checklistId)
+		{
+			using (var client = CallAPI.RetornaClientHttp())
+			{
+				response = await client.GetAsync(String.Format("{0}{1}/{2}", Constants.BaseLegalCheckListQuestao, checklistId, questaoId));
+
+				if (response.IsSuccessStatusCode)
+				{
+					var jsonResponse = await response.Content.ReadAsStringAsync();
+					var json = JsonConvert.DeserializeObject<JsonObject>(jsonResponse);
+
+					return json;
+				}
+
+				throw new ArgumentException("Erro de acesso ao servidor.");
+			}
+		}
+	}
 }
 

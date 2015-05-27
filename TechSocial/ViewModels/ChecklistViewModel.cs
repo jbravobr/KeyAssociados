@@ -9,6 +9,13 @@ namespace TechSocial
     {
         public ICollection<Modulos> Modulos { get; set; }
 
+        readonly IRespostaService RespostaService;
+
+        public ChecklistViewModel(IRespostaService respostaService)
+        {
+            this.RespostaService = respostaService;
+        }
+
         public async Task MontarModulos(string auditoria)
         {
             var db = new TechSocialDatabase(false);
@@ -26,6 +33,21 @@ namespace TechSocial
                     }
                 }
             }
+        }
+
+        public async Task<bool> EnviarRespostas(int modulo, int audi)
+        {
+            var db = new TechSocialDatabase(false);
+            var result = false;
+
+            var respostas = db.GetRespostaPorAuditoriaModulo(audi, modulo);
+
+            foreach (var resposta in respostas)
+            {
+                result = await this.RespostaService.EnviarResposta(resposta);
+            }
+
+            return result;
         }
     }
 }

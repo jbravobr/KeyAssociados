@@ -1,5 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
+using Autofac;
 
 namespace TechSocial
 {
@@ -54,6 +55,25 @@ namespace TechSocial
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Children = { rotalLayout, imgSeta },
             };
+
+            // Menu de ações
+            var enviarAction = new MenuItem { Text = "Enviar" };
+            enviarAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("modulo"));
+            enviarAction.SetBinding(MenuItem.ClassIdProperty, new Binding("audi"));
+            enviarAction.Clicked += async (sender, e) =>
+            {
+                var dialog = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+                dialog.ShowLoading("Enviado");
+                
+                var model = App.Container.Resolve<ChecklistViewModel>();
+                var modulo = ((int)((MenuItem)sender).CommandParameter);
+                var audi = Convert.ToInt32(((MenuItem)sender).ClassId);
+                
+                await model.EnviarRespostas(modulo, audi);
+                dialog.HideLoading();
+            };
+
+            ContextActions.Add(enviarAction);
 
             this.View = cellLayout;
         }
