@@ -20,10 +20,10 @@ namespace TechSocial
 		string criterioQuestao;
 		Label lblRequisito;
 		Label lblPeso;
-		Entry entObservacoes;
-		Entry entAcoesRequeridas;
+		MyButton entObservacoes;
+		MyButton entAcoesRequeridas;
 		Entry entryCriterio;
-		Entry entryDescricaoBaseLegal;
+		MyButton entryDescricaoBaseLegal;
 		DatePicker dataPicker;
 		Image thumbImagem;
 		int page = 1;
@@ -91,7 +91,12 @@ namespace TechSocial
 			this.audi = audi;
 			this.Title = "Questão";
 
-			entryCriterio = new Entry { HeightRequest = 20, WidthRequest = 20, IsEnabled = false, Placeholder = "Critério" };
+			entryCriterio = new Entry
+			{
+				HeightRequest = 20, 
+				WidthRequest = 20, 
+				IsEnabled = false,
+			};
 
 			var btnCriterio = new Button
 			{
@@ -100,7 +105,7 @@ namespace TechSocial
 			btnCriterio.Clicked += (sender, e) =>
 			{
 				var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-				var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
+				var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();	
                    
 				config.SetTitle("Critério");
                 
@@ -112,11 +117,10 @@ namespace TechSocial
 				dialogService.ActionSheet(config);
 			};
 
-			entryDescricaoBaseLegal = new Entry
+			entryDescricaoBaseLegal = new MyButton
 			{
 				HeightRequest = 90,
 				WidthRequest = 140,
-				IsEnabled = false
 			};
             
 			var btnBaseLegal = new Button
@@ -177,16 +181,14 @@ namespace TechSocial
 				dialogService.ActionSheet(config);
 			};
 
-			entObservacoes = new Entry
+			entObservacoes = new MyButton
 			{
-				Placeholder = "Observações",
 				HeightRequest = 90,
 				WidthRequest = 130
 			};
 
-			entAcoesRequeridas = new Entry
+			entAcoesRequeridas = new MyButton
 			{
-				Placeholder = "Ações Requeridas",
 				HeightRequest = 90,
 				WidthRequest = 130,
 				VerticalOptions = LayoutOptions.Center

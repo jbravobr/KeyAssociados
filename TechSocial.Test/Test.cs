@@ -8,64 +8,369 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Linq;
 
 namespace TechSocial.Test
 {
-    [TestFixture()]
-    public class Test
-    {
-        //        [Test()]
-        //        public async void TestaLogin()
-        //        {
-        //            const string user = "helton";
-        //            const string pass = "zzz";
-        //        }
-        //
-        //        [Test()]
-        //        public async void TestaAuditorias()
-        //        {
-        //            const string fornecedor = "9968253411322";
-        //
-        //            var auditoriaService = new AuditoriaService();
-        //            var retorno = await auditoriaService.RetornarAuditorias(fornecedor);
-        //
-        //            Assert.IsNotNull(retorno);
-        //            Assert.IsInstanceOf <JsonObject>(retorno);
-        //        }
+	[TestFixture()]
+	public class Test
+	{
+		//		[Test()]
+		//		public async void TestaLogin()
+		//		{
+		//			const string user = "helton";
+		//			const string pass = "zzz";
+		//		}
+		//
+		//		[Test()]
+		//		public async void TestaAuditorias()
+		//		{
+		//			const string fornecedor = "9968253411322";
+		//
+		//			var auditoriaService = new AuditoriaService();
+		//			var retorno = await auditoriaService.RetornarAuditorias(fornecedor);
+		//
+		//			Assert.IsNotNull(retorno);
+		//			Assert.IsInstanceOf <JsonObject>(retorno);
+		//		}
+		//
+		//		[Test()]
+		//		public async void TestaEnviarImagem()
+		//		{
+		//			const string auditoria = "3792";
+		//			const string questao = "4";
+		//			const string urlFoto = "foto.json/";
+		//			var img = File.ReadAllBytes("IMG_14052015_152040.png");
+		//			const string url = "http://techsocial.com.br/hering/webservices/app/api/";
+		//
+		//			using (var m = new MemoryStream())
+		//			{
+		//				string base64String = Convert.ToBase64String(img);
+		//
+		//				var client = new HttpClient();
+		//				client.BaseAddress = new Uri(url);
+		//				client.DefaultRequestHeaders.Accept.Clear();
+		//				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+		//
+		//				var json = JsonConvert.SerializeObject(new ImagemPOST{ audi = auditoria, questao = questao, foto = base64String });
+		//				HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+		//
+		//				try
+		//				{
+		//					var result = await client.PostAsync(urlFoto, content);
+		//
+		//					Assert.IsTrue(result.IsSuccessStatusCode);
+		//				}
+		//				catch (Exception ex)
+		//				{
+		//					throw ex;
+		//				}
+		//			}
+		//		}
 
-        [Test()]
-        public async void TestaEnviarImagem()
-        {
-            const string auditoria = "3792";
-            const string questao = "4";
-            const string urlFoto = "foto.json/";
-            var img = File.ReadAllBytes("IMG_14052015_152040.png");
-            const string url = "http://techsocial.com.br/hering/webservices/app/api/";
+		[Test]
+		public async void Testa_Enviar_Colecao_Respostas()
+		{
+			const string URL = "http://techsocial.com.br/hering/webservices/app/api/";
+			const string metodoEnvio = "Answer.json";
 
-            using (var m = new MemoryStream())
-            {
-                string base64String = Convert.ToBase64String(img);
+			var respostas = new List<Respostas>();
 
-                var client = new HttpClient();
-                client.BaseAddress = new Uri(url);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			#region -- Adicionando Perguntas na coleção --
 
-                var json = JsonConvert.SerializeObject(new ImagemPOST{ audi = auditoria, questao = questao, foto = base64String });
-                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			respostas.Add(new Respostas
+				{
+					acoesRequeridadas = "Teste",
+					atende = "Teste",
+					atualizacao = "Teste",
+					audi = "Teste",
+					baseLegalTexto = "Teste",
+					dt_prazo = "Teste",
+					evidencia = "Teste",
+					id_baselegal = "Teste",
+					imagem = "Teste",
+					modulo = "Teste",
+					observacao = "Teste",
+					questao = "Teste",
+					respondida = true,
+					tp_prazo = "Teste"
+				});
+			#endregion
 
-                try
-                {
-                    var result = await client.PostAsync(urlFoto, content);
+			var client = new HttpClient();
+			client.BaseAddress = new Uri(URL);
+			client.DefaultRequestHeaders.Accept.Clear();
+			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    Assert.IsTrue(result.IsSuccessStatusCode);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }  
-        }
-    }
+			var json = JsonConvert.SerializeObject(respostas);
+			HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			try
+			{
+				var result = await client.PostAsync(String.Format("{0}{1}", URL, metodoEnvio), content);
+
+				Assert.IsTrue(result.IsSuccessStatusCode);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+	}
 }
 

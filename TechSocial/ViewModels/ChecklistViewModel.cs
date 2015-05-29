@@ -5,50 +5,44 @@ using System.Linq;
 
 namespace TechSocial
 {
-    public class ChecklistViewModel
-    {
-        public ICollection<Modulos> Modulos { get; set; }
+	public class ChecklistViewModel
+	{
+		public ICollection<Modulos> Modulos { get; set; }
 
-        readonly IRespostaService RespostaService;
+		readonly IRespostaService RespostaService;
 
-        public ChecklistViewModel(IRespostaService respostaService)
-        {
-            this.RespostaService = respostaService;
-        }
+		public ChecklistViewModel(IRespostaService respostaService)
+		{
+			this.RespostaService = respostaService;
+		}
 
-        public async Task MontarModulos(string auditoria)
-        {
-            var db = new TechSocialDatabase(false);
-            this.Modulos = db.GetModulosByAuditoria(auditoria);
+		public async Task MontarModulos(string auditoria)
+		{
+			var db = new TechSocialDatabase(false);
+			this.Modulos = db.GetModulosByAuditoria(auditoria);
 
-            foreach (var modulo in Modulos)
-            {
-                if (db.GetRespostaPorAuditoriaModulo(modulo.audi, modulo.modulo).Any())
-                {
-                    var _questoes = db.GetQuestoes().Where(c => c.modulo == modulo.modulo).ToList();
+			foreach (var modulo in Modulos)
+			{
+				if (db.GetRespostaPorAuditoriaModulo(modulo.audi, modulo.modulo).Any())
+				{
+					var _questoes = db.GetQuestoes().Where(c => c.modulo == modulo.modulo).ToList();
 
-                    foreach (var item in _questoes)
-                    {
-                        modulo.pontuacao = modulo.pontuacao + item.pontuacao;
-                    }
-                }
-            }
-        }
+					foreach (var item in _questoes)
+					{
+						modulo.pontuacao = modulo.pontuacao + item.pontuacao;
+					}
+				}
+			}
+		}
 
-        public async Task<bool> EnviarRespostas(int modulo, int audi)
-        {
-            var db = new TechSocialDatabase(false);
-            var result = false;
+		public async Task<bool> EnviarRespostas(int audi)
+		{
+			var db = new TechSocialDatabase(false);
 
-            var respostas = db.GetRespostaPorAuditoriaModulo(audi, modulo);
+			var respostas = db.GetRespostaPorAuditoria(audi);
 
-            foreach (var resposta in respostas)
-            {
-                result = await this.RespostaService.EnviarResposta(resposta);
-            }
-
-            return result;
-        }
-    }
+			return await this.RespostaService.EnviarResposta(respostas);
+		}
+	}
 }
 

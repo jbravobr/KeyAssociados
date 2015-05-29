@@ -42,15 +42,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Acr.XamForms.SignaturePad">
-      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.4\lib\MonoAndroid10\Acr.XamForms.SignaturePad.dll</HintPath>
-    </Reference>
-    <Reference Include="Acr.XamForms.SignaturePad.Droid">
-      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.4\lib\MonoAndroid10\Acr.XamForms.SignaturePad.Droid.dll</HintPath>
-    </Reference>
-    <Reference Include="SignaturePad.Android">
-      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.4\lib\MonoAndroid10\SignaturePad.Android.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -80,6 +71,15 @@
     </Reference>
     <Reference Include="Xamarin.Android.Support.v4">
       <HintPath>..\packages\Xamarin.Android.Support.v4.22.1.1.1\lib\MonoAndroid403\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Acr.XamForms.SignaturePad">
+      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\MonoAndroid10\Acr.XamForms.SignaturePad.dll</HintPath>
+    </Reference>
+    <Reference Include="Acr.XamForms.SignaturePad.Droid">
+      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\MonoAndroid10\Acr.XamForms.SignaturePad.Droid.dll</HintPath>
+    </Reference>
+    <Reference Include="SignaturePad.Android">
+      <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\MonoAndroid10\SignaturePad.Android.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

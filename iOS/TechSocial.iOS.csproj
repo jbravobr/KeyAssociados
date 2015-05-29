@@ -199,6 +199,7 @@
     <Compile Include="Bootstrap\MobileBootstrap.cs" />
     <Compile Include="SaveAndLoadFile_IOS.cs" />
     <Compile Include="Bootstrap\SignaturePadBootstrap.cs" />
+    <Compile Include="MyButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="ITunesArtwork" />
