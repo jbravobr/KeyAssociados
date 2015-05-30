@@ -1,33 +1,26 @@
 ﻿using System;
 
 using Xamarin.Forms;
+using PropertyChanged;
 
 namespace TechSocial
 {
+	[ImplementPropertyChanged]
 	public class MyButton : ContentView
 	{
-		public int Height { get; set; }
-
-		public int Width { get; set; }
-
-		public string Text { get; set; }
+		public Editor entry { get; set; }
 
 		public MyButton()
 		{
-			var entry = new Editor
-			{
-				HeightRequest = Height,
-				WidthRequest = Width,
-				Text = Text
-			};
+			entry = new Editor();
 
 			var frame = new Frame
 			{
 				HasShadow = false,
-				OutlineColor = Color.Gray,
-				HeightRequest = Height,
-				WidthRequest = Width,
-				Content = entry
+				OutlineColor = Color.FromHex("#e8e8e8"),
+				HeightRequest = 200,
+				Content = entry,
+				BackgroundColor = Color.Transparent
 			};
 
 			this.Content = frame;

@@ -65,7 +65,7 @@ namespace TechSocial
 			{
 				entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.atende;
 				this.criterioQuestao = resposta.atende;
-				entryDescricaoBaseLegal.Text = resposta.baseLegalTexto;
+				entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
 
 				if (!String.IsNullOrEmpty(resposta.dt_prazo))
 				{
@@ -73,8 +73,8 @@ namespace TechSocial
 					dataPicker.IsVisible = true;
 				}
 
-				entAcoesRequeridas.Text = resposta.acoesRequeridadas;
-				entObservacoes.Text = resposta.observacao;
+				entAcoesRequeridas.entry.Text = resposta.acoesRequeridadas;
+				entObservacoes.entry.Text = resposta.observacao;
 
 				if (!String.IsNullOrEmpty(resposta.evidencia))
 				{
@@ -91,17 +91,10 @@ namespace TechSocial
 			this.audi = audi;
 			this.Title = "Questão";
 
-			entryCriterio = new Entry
-			{
-				HeightRequest = 20, 
-				WidthRequest = 20, 
-				IsEnabled = false,
-			};
-
-			var btnCriterio = new Button
-			{
-				Text = "Critério"
-			};
+			#region Critério
+			entryCriterio = new Entry{ IsEnabled = false };
+			
+			var btnCriterio = new Button{ Text = "Critério" };
 			btnCriterio.Clicked += (sender, e) =>
 			{
 				var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
@@ -116,24 +109,21 @@ namespace TechSocial
 				}
 				dialogService.ActionSheet(config);
 			};
+			#endregion
 
-			entryDescricaoBaseLegal = new MyButton
-			{
-				HeightRequest = 90,
-				WidthRequest = 140,
-			};
+			#region Bases Legais
+			entryDescricaoBaseLegal = new MyButton();
+			entryDescricaoBaseLegal.entry.HeightRequest = 200;
             
-			var btnBaseLegal = new Button
-			{
-				Text = "Base Legal"
-			};
+			var btnBaseLegal = new Button{ Text = "Base Legal" };
 			btnBaseLegal.Clicked += async (sender, e) =>
 			{
 				var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
 				var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
 
 				// Retornando Bases Legais.
-				var dadosBasesLegais = await new BaseLegalService().RetornarBasesLegaisPorChecklistQuestao(this.questao.questao.ToString(), this.checklistId);
+				var dadosBasesLegais = await new BaseLegalService()
+						.RetornarBasesLegaisPorChecklistQuestao(this.questao.questao.ToString(), this.checklistId);
 
 				config.SetTitle("Base Legal");
 
@@ -141,7 +131,7 @@ namespace TechSocial
 				{
 					Action _selecionaBase = () =>
 					{
-						entryDescricaoBaseLegal.Text = bl.descricao;
+						entryDescricaoBaseLegal.entry.Text = bl.descricao;
 						this.baseLegalId = bl.id_baselegal;
 						entryDescricaoBaseLegal.IsEnabled = true;
 					};
@@ -149,7 +139,9 @@ namespace TechSocial
 				}
 				dialogService.ActionSheet(config);
 			};
+			#endregion
 
+			#region Data
 			dataPicker = new DatePicker
 			{
 				Format = "dd/MM/yyyy",
@@ -180,25 +172,19 @@ namespace TechSocial
 				config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Pede Data", _pedeData));
 				dialogService.ActionSheet(config);
 			};
+			#endregion
 
-			entObservacoes = new MyButton
-			{
-				HeightRequest = 90,
-				WidthRequest = 130
-			};
+			#region Observações
+			entObservacoes = new MyButton();
+			entObservacoes.entry.HeightRequest = 200;
+			#endregion
 
-			entAcoesRequeridas = new MyButton
-			{
-				HeightRequest = 90,
-				WidthRequest = 130,
-				VerticalOptions = LayoutOptions.Center
-			};
+			#region Ações Requeridas
+			entAcoesRequeridas = new MyButton();
+			entAcoesRequeridas.entry.HeightRequest = 200;
+			#endregion
 
-			var btnSalvar = new Button
-			{
-				Text = "Salvar"
-			};
-                       
+			#region Requisito (Título)
 			lblRequisito = new Label
 			{
 				FontFamily = "ArialHebrew-Bold",
@@ -208,7 +194,9 @@ namespace TechSocial
 				HorizontalOptions = LayoutOptions.Start,
 				VerticalOptions = LayoutOptions.Start
 			};
+			#endregion
             
+			#region Peso
 			lblPeso = new Label
 			{
 				FontFamily = "ArialHebrew-Bold",
@@ -216,17 +204,23 @@ namespace TechSocial
 				TextColor = Color.FromHex("#333333"),
 				LineBreakMode = LineBreakMode.WordWrap
 			};
+			#endregion
 
+			var btnSalvar = new Button
+			{
+				Text = "Salvar",
+				Style = Estilos.buttonDefaultStyle
+			};
 			btnSalvar.Clicked += async (sender, e) =>
 			{
-				var obs = entObservacoes.Text;
+				var obs = entObservacoes.entry.Text;
 				var evidencia = string.Empty;
 				var criterio = this.criterioQuestao;
 				var baseLegalId = this.baseLegalId;
-				var baseLegalTexto = entryDescricaoBaseLegal.Text;
+				var baseLegalTexto = entryDescricaoBaseLegal.entry.Text;
 				var data = dataPicker.Date.ToString("yyyy-MM-dd");
 				var imagemEvidencia = this.imagem;
-				var acoesRequeridas = entAcoesRequeridas.Text;
+				var acoesRequeridas = entAcoesRequeridas.entry.Text;
 				var peso = this.lblPeso.Text;
 
 				// Salva uma nova resposta.
@@ -245,14 +239,14 @@ namespace TechSocial
 					{
 						if (_questoes.Count > 1 && page < _questoes.Count)
 						{
-							this.entObservacoes.Text = string.Empty;
+							this.entObservacoes.entry.Text = string.Empty;
 							this.criterioQuestao = string.Empty;
 							this.entryCriterio.Text = string.Empty;
-							this.entryDescricaoBaseLegal.Text = string.Empty;
+							this.entryDescricaoBaseLegal.entry.Text = string.Empty;
 							this.prazo = string.Empty;
 							this.dataPicker = new DatePicker{ Format = "dd/MM/yyyy" };
 							this.dataPicker.IsVisible = false;
-							this.entAcoesRequeridas.Text = string.Empty;
+							this.entAcoesRequeridas.entry.Text = string.Empty;
 							this.thumbImagem.Source = null;
 							this.imagem = String.Empty;
 
@@ -263,7 +257,7 @@ namespace TechSocial
 							if (resposta != null)
 							{
 								entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.atende;
-								entryDescricaoBaseLegal.Text = resposta.baseLegalTexto;
+								entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
 								this.criterioQuestao = resposta.atende;
 
 								if (!String.IsNullOrEmpty(resposta.dt_prazo))
@@ -272,8 +266,8 @@ namespace TechSocial
 									dataPicker.IsVisible = true;
 								}
 
-								entAcoesRequeridas.Text = resposta.acoesRequeridadas;
-								entObservacoes.Text = resposta.observacao;
+								entAcoesRequeridas.entry.Text = resposta.acoesRequeridadas;
+								entObservacoes.entry.Text = resposta.observacao;
 
 								if (!String.IsNullOrEmpty(resposta.evidencia))
 								{
@@ -317,7 +311,7 @@ namespace TechSocial
 						{
 							entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.atende;
 							this.criterioQuestao = resposta.atende;
-							entryDescricaoBaseLegal.Text = resposta.baseLegalTexto;
+							entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
 
 							if (!String.IsNullOrEmpty(resposta.dt_prazo))
 							{
@@ -325,8 +319,8 @@ namespace TechSocial
 								dataPicker.IsVisible = true;
 							}
 
-							entAcoesRequeridas.Text = resposta.acoesRequeridadas;
-							entObservacoes.Text = resposta.observacao;
+							entAcoesRequeridas.entry.Text = resposta.acoesRequeridadas;
+							entObservacoes.entry.Text = resposta.observacao;
 
 							if (!String.IsNullOrEmpty(resposta.evidencia))
 							{
@@ -346,40 +340,106 @@ namespace TechSocial
 					}
 				});
 
-			var gridCriterio = new Grid();
+			#region Grid para Critério
+			var gridCriterio = new Grid
+			{
+				VerticalOptions = LayoutOptions.Start,
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
+				}
+			};
+			gridCriterio.Children.Add(btnCriterio, 0, 0);
+			gridCriterio.Children.Add(entryCriterio, 1, 0);
+			#endregion
 
-			gridCriterio.ColumnSpacing = -170;
-			gridCriterio.VerticalOptions = LayoutOptions.Start;
-			gridCriterio.Children.Add(btnCriterio, 0, 1);
-			gridCriterio.Children.Add(entryCriterio, 1, 1);
-
-			var gridBaseLegal = new Grid();
-            
-			gridBaseLegal.ColumnSpacing = -170;
-			gridBaseLegal.VerticalOptions = LayoutOptions.Start;
+			#region Grid Bases Legais
+			var gridBaseLegal = new Grid
+			{
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+				}
+			};
 			gridBaseLegal.Children.Add(btnBaseLegal, 0, 1);
 			gridBaseLegal.Children.Add(entryDescricaoBaseLegal, 1, 1);
+			#endregion
 
-			var gridData = new Grid();
-            
-			gridData.ColumnSpacing = -170;
-			gridData.VerticalOptions = LayoutOptions.Start;
+			#region Grid para Data
+			var gridData = new Grid
+			{
+				VerticalOptions = LayoutOptions.Start,
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
+				}
+			};
 			gridData.Children.Add(btnData, 0, 1);
 			gridData.Children.Add(dataPicker, 1, 1);
+			#endregion
+
+			#region Grid Observações
+			var gridObs = new Grid
+			{
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+				}
+			};
+			gridObs.Children.Add(new Button{ Text = "Observações" }, 0, 1);
+			gridObs.Children.Add(entObservacoes, 1, 1);
+			#endregion
+
+			#region Grid Ações Requeridas
+			var gridAcoesRequeridas = new Grid
+			{
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+				}
+			};
+			gridAcoesRequeridas.Children.Add(new Button{ Text = "Ações Requeridas" }, 0, 1);
+			gridAcoesRequeridas.Children.Add(entAcoesRequeridas, 1, 1);
+			#endregion
 
 			var btnAnexo = new Button
 			{
-				Text = "Capturar Foto"
+				Text = "Capturar Foto", Style = Estilos.buttonDefaultStyle
 			};
 			btnAnexo.Clicked += async (sender, e) =>
 			{
-				var obs = entObservacoes.Text;
+				var obs = entObservacoes.entry.Text;
 				var criterio = this.criterioQuestao;
 				var baseLegalId = this.baseLegalId;
-				var baseLegalTexto = entryDescricaoBaseLegal.Text;
+				var baseLegalTexto = entryDescricaoBaseLegal.entry.Text;
 				var data = dataPicker.Date.ToString("yyyy-MM-dd");
 				var imagemEvidencia = this.imagem;
-				var acoesRequeridas = entAcoesRequeridas.Text;
+				var acoesRequeridas = entAcoesRequeridas.entry.Text;
 
 				await TrataFoto(obs, criterio, baseLegalId, baseLegalTexto, data, 
 					imagemEvidencia, audi, acoesRequeridas);
@@ -392,10 +452,27 @@ namespace TechSocial
 				HeightRequest = 100,
 				WidthRequest = 100
 			};
-
+			
+			#region Grid Foto
+			var gridFoto = new Grid
+			{
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+				}
+			};
+			gridFoto.Children.Add(btnAnexo, 0, 1);
+			gridFoto.Children.Add(thumbImagem, 1, 1);
+			#endregion
+		
 			var stack = new StackLayout
 			{
-				Padding = new Thickness(10, 20, 10, 10),
+				Padding = new Thickness(10, 10, 10, 0),
 				Spacing = 5,
 				Children =
 				{ 
@@ -404,14 +481,12 @@ namespace TechSocial
 					gridCriterio,    
 					gridBaseLegal,
 					gridData,
-					entAcoesRequeridas,
-					entObservacoes,
-					btnAnexo,
-					thumbImagem,
+					gridObs,
+					gridAcoesRequeridas, 
+					gridFoto,
 					btnSalvar 
 				},
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				Orientation = StackOrientation.Vertical
+				Orientation = StackOrientation.Vertical,
 			};
 
 			this.Content = new ScrollView{ Content = stack, Orientation = ScrollOrientation.Vertical };
@@ -448,13 +523,13 @@ namespace TechSocial
 		                             string baseLegalTexto, string data, string imagemEvidencia, 
 		                             string _audi, string acoesRequeridas, int? _id = null)
 		{
-			this.entObservacoes.Text = obs;
+			this.entObservacoes.entry.Text = obs;
 			this.entryCriterio.Text = criterio;
 			this.baseLegalId = base_id;
-			this.entryDescricaoBaseLegal.Text = baseLegalTexto;
+			this.entryDescricaoBaseLegal.entry.Text = baseLegalTexto;
 			this.dataPicker.Date = Convert.ToDateTime(data);
 			this.audi = _audi;
-			this.entAcoesRequeridas.Text = acoesRequeridas;
+			this.entAcoesRequeridas.entry.Text = acoesRequeridas;
 			var mediaPickerService = DependencyService.Get<IMediaPicker>();
 
 			if (mediaPickerService.IsCameraAvailable || mediaPickerService.IsPhotoGalleryAvailable)

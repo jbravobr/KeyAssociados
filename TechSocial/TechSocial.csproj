@@ -91,6 +91,11 @@
     <Compile Include="Service\IBaseService.cs" />
     <Compile Include="Models\Answers.cs" />
     <Compile Include="CustomControls\MyButton.cs" />
+    <Compile Include="Models\ExceptionEnvioRespostas.cs" />
+    <Compile Include="Content\Estilos.cs" />
+    <Compile Include="Service\IEnvioImagemResposta.cs" />
+    <Compile Include="Service\EnvioImagemService.cs" />
+    <Compile Include="Models\ImagemPOST.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

@@ -76,17 +76,29 @@ namespace TechSocial
 			};
 
 			var enviarAction = new MenuItem { Text = "Enviar" };
-			assinaturaAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
+			enviarAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
 			enviarAction.Clicked += async (sender, e) =>
 			{
 				var dialog = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+				var alert = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
 				dialog.ShowLoading("Enviado");
 
 				var model = App.Container.Resolve<ChecklistViewModel>();
 				var audi = ((int)((MenuItem)sender).CommandParameter);
+				var result = await model.EnviarRespostas(audi);
 
-				await model.EnviarRespostas(audi);
-				dialog.HideLoading();
+				if (result == ExceptionEnvioRespostas.Enviado)
+					dialog.HideLoading();
+				else if (result == ExceptionEnvioRespostas.RespostasPendentes)
+				{
+					dialog.HideLoading();
+					await alert.AlertAsync("Existem questões pendentes de respostas!", "Aviso", "OK");
+				}
+				else
+				{
+					dialog.HideLoading();
+					await alert.AlertAsync("Houve um erro ao enviar, tente novamente!", "Erro", "OK");	
+				}
 			};
 
 			ContextActions.Add(assinaturaAction);

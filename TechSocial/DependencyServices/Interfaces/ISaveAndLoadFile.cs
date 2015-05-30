@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 
 namespace TechSocial
 {
-    public interface ISaveAndLoadFile
-    {
-        Task<bool> SaveImage(ImageSource img, string imageName);
+	public interface ISaveAndLoadFile
+	{
+		Task<bool> SaveImage(ImageSource img, string imageName);
 
-        string GetImage(string imageName);
-    }
+		string GetImage(string imageName);
+
+		byte[] GetImageArray(string imageName);
+	}
 }
 

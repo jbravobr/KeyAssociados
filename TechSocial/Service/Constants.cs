@@ -29,6 +29,10 @@ namespace TechSocial
 
 		public const string PostResposta = "Answer.json";
 		//Envia uma resposta.
+
+		public const string EnviaImagemResposta = "foto.json/";
+
+		public const string EnviarImagemAssinatura = "assinatura.json/";
 	}
 }
 

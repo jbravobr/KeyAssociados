@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Xamarin.Forms;
 
 namespace TechSocial
 {
@@ -10,10 +11,12 @@ namespace TechSocial
 		public ICollection<Modulos> Modulos { get; set; }
 
 		readonly IRespostaService RespostaService;
+		readonly IEnvioImagemResposta EnvioImagemService;
 
-		public ChecklistViewModel(IRespostaService respostaService)
+		public ChecklistViewModel(IRespostaService respostaService, IEnvioImagemResposta envioImagemService)
 		{
 			this.RespostaService = respostaService;
+			this.EnvioImagemService = envioImagemService;
 		}
 
 		public async Task MontarModulos(string auditoria)
@@ -35,13 +38,42 @@ namespace TechSocial
 			}
 		}
 
-		public async Task<bool> EnviarRespostas(int audi)
+		public async Task<ExceptionEnvioRespostas> EnviarRespostas(int audi)
 		{
 			var db = new TechSocialDatabase(false);
 
+			var modulos = db.GetModulosByAuditoria(audi.ToString());
+
+			var questoes = new List<Questoes>();
+
+			foreach (var modulo in modulos)
+			{
+				questoes.AddRange(db.GetQuestoes().Where(m => m.modulo == modulo.modulo));
+			}
+				
 			var respostas = db.GetRespostaPorAuditoria(audi);
 
-			return await this.RespostaService.EnviarResposta(respostas);
+			if (questoes.Count() == respostas.Count())
+			{
+				if (await this.RespostaService.EnviarResposta(respostas))
+				{
+					foreach (var resposta in respostas)
+					{
+						var img = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(resposta.evidencia);
+						var base64Img = Convert.ToBase64String(img);
+
+						this.EnvioImagemService.Enviar(base64Img, resposta.audi, resposta.questao);
+					}
+					var auditoria = db.GetAuditorias().First(x => x.audi == audi);
+					var assinatura = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(auditoria.assinatura);
+
+					return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.Enviado);
+				}
+				else
+					return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.ErroAoEnviar);
+			}
+			else
+				return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.RespostasPendentes);
 		}
 	}
 }
