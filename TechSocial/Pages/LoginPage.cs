@@ -57,10 +57,10 @@ namespace TechSocial
 
 		async Task TrataCliqueBtnAcessar(string usuario, string senha)
 		{
-			#if DEBUG
-			usuario = "helton";
-			senha = "zzz";
-			#endif
+//			#if DEBUG
+//			usuario = "helton";
+//			senha = "zzz";
+//			#endif
 
 			if (String.IsNullOrEmpty(usuario) || String.IsNullOrEmpty(senha))
 				await DisplayAlert("Erro", "É necessário informa um usuário e senha!", "OK");
@@ -80,8 +80,19 @@ namespace TechSocial
 					var loading = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
 					loading.ShowLoading("Carregando dados");
 
-					#if DEBUG
-					if (true)
+//					#if DEBUG
+//					if (true)
+//					{
+//						loading.HideLoading();
+//						await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
+//					}
+//					else
+//					{
+//						loading.HideLoading();
+//						await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
+//					}
+//					#else
+					if (await model.ExecutarLogin(usuario, senha))
 					{
 						loading.HideLoading();
 						await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
@@ -91,18 +102,7 @@ namespace TechSocial
 						loading.HideLoading();
 						await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
 					}
-					#else
-                    if (await model.ExecutarLogin(usuario, senha))
-                    {
-                        loading.HideLoading();
-                        await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
-                    }
-                    else
-                    {
-                        loading.HideLoading();
-                        await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
-                    }
-					#endif
+					//#endif
 				}
 			}
 		}

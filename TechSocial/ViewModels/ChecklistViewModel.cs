@@ -53,27 +53,37 @@ namespace TechSocial
 				
 			var respostas = db.GetRespostaPorAuditoria(audi);
 
-			if (questoes.Count() == respostas.Count())
+			//if (questoes.Count() == respostas.Count())
+			//{
+			if (await this.RespostaService.EnviarResposta(respostas))
 			{
-				if (await this.RespostaService.EnviarResposta(respostas))
+				foreach (var resposta in respostas)
 				{
-					foreach (var resposta in respostas)
+					if (!String.IsNullOrEmpty(resposta.evidencia))
 					{
 						var img = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(resposta.evidencia);
 						var base64Img = Convert.ToBase64String(img);
-
 						this.EnvioImagemService.Enviar(base64Img, resposta.audi, resposta.questao);
 					}
-					var auditoria = db.GetAuditorias().First(x => x.audi == audi);
-					var assinatura = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(auditoria.assinatura);
-
-					return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.Enviado);
 				}
-				else
-					return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.ErroAoEnviar);
+				var auditoria = db.GetAuditorias().First(x => x.audi == audi);
+
+				if (!String.IsNullOrEmpty(auditoria.assinatura))
+				{
+					var assinatura = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(auditoria.assinatura);
+					var base64Img = Convert.ToBase64String(assinatura);
+					this.EnvioImagemService.EnviarAssinatura(base64Img, auditoria.audi.ToString());
+				}
+
+				return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.Enviado);
+//				}
+//				else
+//					return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.ErroAoEnviar);
+//			}
+//			else
+//				return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.RespostasPendentes);
 			}
-			else
-				return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.RespostasPendentes);
+			return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.ErroAoEnviar);
 		}
 	}
 }
