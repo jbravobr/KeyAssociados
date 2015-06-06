@@ -96,6 +96,7 @@
     <Compile Include="Service\IEnvioImagemResposta.cs" />
     <Compile Include="Service\EnvioImagemService.cs" />
     <Compile Include="Models\ImagemPOST.cs" />
+    <Compile Include="Pages\GaleriaFotoPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
@@ -131,6 +132,8 @@
     <EmbeddedResource Include="Content\Images\completo.png" />
     <EmbeddedResource Include="Content\Images\incompleto.png" />
     <EmbeddedResource Include="Content\Images\imagemteste.jpg" />
+    <EmbeddedResource Include="Content\Images\excluirFoto.png" />
+    <EmbeddedResource Include="Content\Images\adicionarFoto.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http">
