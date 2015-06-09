@@ -1,15 +1,91 @@
 ﻿using System;
+using System.Linq;
 
 using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Acr.XamForms.Mobile.Media;
+using System.IO;
 
 namespace TechSocial
 {
 	public class GaleriaFotoPage : ContentPage
 	{
-		public GaleriaFotoPage()
+		string Imagem;
+		Image imgCapturada;
+		Image imgSelecionada;
+		StackLayout areaFotosCapturadasThumb;
+		string auditoria;
+		string modulo;
+		Image icoAdicionar;
+
+		protected async override void OnAppearing()
 		{
+			base.OnAppearing();
+
+			var GetPhoto = new TapGestureRecognizer();
+			GetPhoto.Tapped += async (sender, e) =>
+			{
+				var mediaPickerService = DependencyService.Get<IMediaPicker>();
+
+				if (mediaPickerService.IsCameraAvailable || mediaPickerService.IsPhotoGalleryAvailable)
+				{
+					var options = new CameraOptions
+							{ Camera = CameraDevice.Rear };
+
+					var photo = await mediaPickerService.TakePhoto(options);
+					ImageSource imgSource;
+
+					if (photo != null)
+					{
+						imgSource = ImageSource.FromStream(() =>
+							{
+								var stream = photo.GetStream();
+								return stream;
+							});
+
+						var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+
+						var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
+
+						if (salvarImagem)
+						{
+							var db = new TechSocialDatabase(false);
+							db.InserirFotoAuditoria(this.auditoria, this.modulo, imgNome);
+
+							this.Imagem = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNome);
+							areaFotosCapturadasThumb.Children.Add(new Image{ Source = ImageSource.FromFile(this.Imagem) });
+							imgCapturada.Source = ImageSource.FromFile(this.Imagem);
+
+							if (areaFotosCapturadasThumb.Children.Any())
+							{
+								foreach (var item in areaFotosCapturadasThumb.Children)
+								{
+									var img = (Image)item;
+									var img_Click = new TapGestureRecognizer();
+									img_Click.Tapped += (s, elem) =>
+									{
+										imgCapturada.Source = img.Source;
+										this.imgSelecionada = img;
+									};
+									img.GestureRecognizers.Add(img_Click);
+								}
+							}
+							this.Imagem = string.Empty;
+						}
+					}
+					else
+						return;
+				}
+			};
+			icoAdicionar.GestureRecognizers.Add(GetPhoto);
+		}
+
+		public GaleriaFotoPage(string audi, string modulo)
+		{
+			this.auditoria = audi;
+			this.modulo = modulo;
+				
 			var menu = new StackLayout
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -21,16 +97,28 @@ namespace TechSocial
 			var icoExcluir = new Image
 			{
 				Source = ImageSource.FromResource("TechSocial.Content.Images.excluirFoto.png"),
-				HorizontalOptions = LayoutOptions.Start
+				HorizontalOptions = LayoutOptions.Start,
+				AnchorX = 0.15
 			};
+			var excluir_click = new TapGestureRecognizer();
+			excluir_click.Tapped += (sender, e) =>
+			{
+				if (this.imgSelecionada == null)
+					return;
 
-			var icoAdicionar = new Image
+				var index = areaFotosCapturadasThumb.Children.IndexOf(this.imgSelecionada);
+				areaFotosCapturadasThumb.Children.RemoveAt(index);
+				this.imgCapturada.Source = ((Image)areaFotosCapturadasThumb.Children[index - 1 > 0 ? index - 1 : 0]).Source;
+				this.imgSelecionada = this.imgCapturada;
+			};
+			icoExcluir.GestureRecognizers.Add(excluir_click);
+			
+			icoAdicionar = new Image
 			{
 				Source = ImageSource.FromResource("TechSocial.Content.Images.adicionarFoto.png"),
-				HorizontalOptions = LayoutOptions.Center,
-				AnchorX = 1
+				AnchorX = 1.75
 			};
-
+			
 			var lblConcluir = new Label
 			{
 				Text = "Concluir",
@@ -38,9 +126,11 @@ namespace TechSocial
 				TextColor = Color.Blue,
 				HorizontalOptions = LayoutOptions.EndAndExpand
 			};
+			var encerrar_Click = new TapGestureRecognizer();
+			encerrar_Click.Tapped += (sender, e) => this.Navigation.PopAsync();
+			lblConcluir.GestureRecognizers.Add(encerrar_Click);
 
-			var imgCapturada = new Image();
-			imgCapturada.Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg"); 
+			imgCapturada = new Image();
 			imgCapturada.Aspect = Aspect.AspectFit;
 
 			menu.Children.Add(icoExcluir);
@@ -65,18 +155,13 @@ namespace TechSocial
 				WidthRequest = DependencyService.Get<Acr.XamForms.Mobile.IDeviceInfo>().ScreenWidth
 			};
 
-			var areaFotosCapturadasThumb = new StackLayout
+			areaFotosCapturadasThumb = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.FillAndExpand,
 				Orientation = StackOrientation.Horizontal,
 				HeightRequest = 120,
 				BackgroundColor = Color.FromHex("#EEEEEE")
 			};
-
-			foreach (var imagem in ImagensCapturadas ())
-			{
-				areaFotosCapturadasThumb.Children.Add(imagem);
-			}
 
 			var scrollAreaFotosCapturadas = new ScrollView { Content = areaFotosCapturadasThumb, Orientation = ScrollOrientation.Horizontal };
 
@@ -92,28 +177,6 @@ namespace TechSocial
 			mainLayout.Children.Add(scrollAreaFotosCapturadas);
 
 			this.Content = mainLayout;
-		}
-
-		private static ObservableCollection<Image> ImagensCapturadas()
-		{
-			var img1 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-			var img2 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-			var img3 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-			var img4 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-			var img5 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-			var img6 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-			var img7 = new Image { Source = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg") };
-
-			var lista = new List<Image>();
-			lista.Add(img1);
-			lista.Add(img2);
-			lista.Add(img3);
-			lista.Add(img4);
-			lista.Add(img5);
-			lista.Add(img6);
-			lista.Add(img7);
-
-			return new ObservableCollection<Image>(lista);
 		}
 	}
 }

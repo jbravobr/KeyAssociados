@@ -67,21 +67,13 @@ namespace TechSocial
 			};
 			cellLayout.SetBinding(StackLayout.IsEnabledProperty, "Ativo");
 
-			var assinaturaAction = new MenuItem { Text = "Assinar", IsDestructive = true };
-			assinaturaAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
-			assinaturaAction.Clicked += (sender, e) =>
-			{
-				var audi = ((int)((MenuItem)sender).CommandParameter);
-				MessagingCenter.Send<AuditoriaViewCell,int>(this, "assinar", audi);
-			};
-
-			var enviarAction = new MenuItem { Text = "Enviar" };
-			enviarAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
-			enviarAction.Clicked += async (sender, e) =>
+			var revisarAction = new MenuItem { Text = "Enviar", IsDestructive = true };
+			revisarAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
+			revisarAction.Clicked += async (sender, e) =>
 			{
 				var dialog = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
 				var alert = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-				dialog.ShowLoading("Enviado");
+				dialog.ShowLoading("Enviando...");
 
 				var model = App.Container.Resolve<ChecklistViewModel>();
 				var audi = ((int)((MenuItem)sender).CommandParameter);
@@ -101,7 +93,24 @@ namespace TechSocial
 				}
 			};
 
-			ContextActions.Add(assinaturaAction);
+			var enviarAction = new MenuItem { Text = "Revisar" };
+			enviarAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
+			enviarAction.Clicked += (sender, e) =>
+			{
+				var audi = ((int)((MenuItem)sender).CommandParameter);
+				MessagingCenter.Send<AuditoriaViewCell,int>(this, "finalizar", audi);
+			};
+
+			var assinarAction = new MenuItem { Text = "Assinar" };
+			assinarAction.SetBinding(MenuItem.CommandParameterProperty, new Binding("audi"));
+			assinarAction.Clicked += (sender, e) =>
+			{
+				var audi = ((int)((MenuItem)sender).CommandParameter);
+				MessagingCenter.Send<AuditoriaViewCell,int>(this, "assinar", audi);
+			};
+
+			ContextActions.Add(revisarAction);
+			ContextActions.Add(assinarAction);
 			ContextActions.Add(enviarAction);
 
 			this.View = cellLayout;

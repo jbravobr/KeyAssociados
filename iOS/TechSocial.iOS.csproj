@@ -218,5 +218,6 @@
     <BundleResource Include="Resources\menuHorizontal.png" />
     <BundleResource Include="Resources\more.png" />
     <BundleResource Include="Resources\less.png" />
+    <BundleResource Include="Resources\setaParaDireita.png" />
   </ItemGroup>
 </Project>

@@ -59,11 +59,16 @@ namespace TechSocial
 			{
 				foreach (var resposta in respostas)
 				{
-					if (!String.IsNullOrEmpty(resposta.evidencia))
+					var imagens = db.GetImagensAuditoria(resposta.audi);
+
+					if (imagens != null && imagens.Any())
 					{
-						var img = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(resposta.evidencia);
-						var base64Img = Convert.ToBase64String(img);
-						this.EnvioImagemService.Enviar(base64Img, resposta.audi, resposta.questao);
+						foreach (var imagem in imagens)
+						{
+							var img = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(imagem.NomeImagem);
+							var base64Img = Convert.ToBase64String(img);
+							await this.EnvioImagemService.Enviar(base64Img, resposta.audi, resposta.questao);
+						}
 					}
 				}
 				var auditoria = db.GetAuditorias().First(x => x.audi == audi);
@@ -72,7 +77,7 @@ namespace TechSocial
 				{
 					var assinatura = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(auditoria.assinatura);
 					var base64Img = Convert.ToBase64String(assinatura);
-					this.EnvioImagemService.EnviarAssinatura(base64Img, auditoria.audi.ToString());
+					await this.EnvioImagemService.EnviarAssinatura(base64Img, auditoria.audi.ToString());
 				}
 
 				return await Task.FromResult<ExceptionEnvioRespostas>(ExceptionEnvioRespostas.Enviado);

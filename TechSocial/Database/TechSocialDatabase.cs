@@ -60,6 +60,7 @@ namespace TechSocial
 				database.CreateTable<Respostas>();
 				database.CreateTable<Semana>();
 				database.CreateTable<BaseLegal>();
+				database.CreateTable<ImagemAuditoriaModulo>();
 			}
 		}
 
@@ -466,6 +467,19 @@ namespace TechSocial
 			auditoria.assinatura = imagem;
 
 			this.database.Update(auditoria);
+		}
+
+		public void InserirFotoAuditoria(string auditoria, string modulo, string nomeimagem)
+		{
+			this.database.Insert(new ImagemAuditoriaModulo{ AuditoriaId = auditoria, ModoloId = modulo, NomeImagem = nomeimagem });
+		}
+
+		public List<ImagemAuditoriaModulo> GetImagensAuditoria(string auditoria)
+		{
+			if (this.database.Table<ImagemAuditoriaModulo>().Any(a => a.AuditoriaId == auditoria))
+				return this.database.Table<ImagemAuditoriaModulo>().Where(a => a.AuditoriaId == auditoria).ToList();
+
+			return null;
 		}
 	}
 }

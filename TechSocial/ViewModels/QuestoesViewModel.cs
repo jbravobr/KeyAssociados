@@ -112,6 +112,27 @@ namespace TechSocial
 
 			return this.Respostas;
 		}
+
+		public bool AtualizarRespostaQuestaoComProblema(int idResposta, string tp_prazo, string data, string obs, string acoesRequeridas)
+		{
+			var dbResposta = new TechSocialDatabase(false);
+			var _resposta = dbResposta.GetRespostaById(idResposta);
+
+			_resposta.acoesRequeridadas = acoesRequeridas;
+			_resposta.tp_prazo = tp_prazo;
+			_resposta.dt_prazo = data;
+			_resposta.observacao = obs;
+
+			try
+			{
+				dbResposta.InsertResposta(_resposta);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
 	}
 }
 

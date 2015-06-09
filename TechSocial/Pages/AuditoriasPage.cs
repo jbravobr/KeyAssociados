@@ -8,90 +8,95 @@ using System.IO;
 
 namespace TechSocial
 {
-    public class AuditoriasPage : ContentPage
-    {
-        AuditoriaViewModel model = null;
-        string fornecedor = String.Empty;
-        ListView listViewRotas;
+	public class AuditoriasPage : ContentPage
+	{
+		AuditoriaViewModel model = null;
+		string fornecedor = String.Empty;
+		ListView listViewRotas;
 
-        protected async override void OnAppearing()
-        {
-            base.OnAppearing();
+		protected async override void OnAppearing()
+		{
+			base.OnAppearing();
 
-            model = App.Container.Resolve<AuditoriaViewModel>();
-            await model.MontarAuditorias(fornecedor);
+			model = App.Container.Resolve<AuditoriaViewModel>();
+			await model.MontarAuditorias(fornecedor);
 
-            BindingContext = model.Auditorias;
-            listViewRotas.ItemsSource = model.Auditorias;
-            listViewRotas.ItemTemplate = new DataTemplate(typeof(AuditoriaViewCell));
+			BindingContext = model.Auditorias;
+			listViewRotas.ItemsSource = model.Auditorias;
+			listViewRotas.ItemTemplate = new DataTemplate(typeof(AuditoriaViewCell));
 
-            if (App.Current.Properties.ContainsKey("assinatura"))
-            {
-                try
-                {
-                    var dic = App.Current.Properties["assinatura"] as Dictionary<int,ImageSource>;
-                    await this.Assina(dic);
-                    App.Current.Properties.Remove("assinatura");
-                }
-                catch
-                {
-                    return;
-                }
-            }
-        }
+			if (App.Current.Properties.ContainsKey("assinatura"))
+			{
+				try
+				{
+					var dic = App.Current.Properties["assinatura"] as Dictionary<int,ImageSource>;
+					await this.Assina(dic);
+					App.Current.Properties.Remove("assinatura");
+				}
+				catch
+				{
+					return;
+				}
+			}
+		}
 
-        public AuditoriasPage(string fornecedor)
-        {
-            Title = "Auditorias";
-            this.fornecedor = fornecedor;
-            this.BackgroundColor = Color.FromHex("#EEEEEE");
+		public AuditoriasPage(string fornecedor)
+		{
+			Title = "Auditorias";
+			this.fornecedor = fornecedor;
+			this.BackgroundColor = Color.FromHex("#EEEEEE");
 
-            listViewRotas = new ListView
-            {
-                VerticalOptions = LayoutOptions.StartAndExpand,
-                SeparatorVisibility = SeparatorVisibility.Default,
-                RowHeight = 77,
-                HasUnevenRows = true
-            };
+			listViewRotas = new ListView
+			{
+				VerticalOptions = LayoutOptions.StartAndExpand,
+				SeparatorVisibility = SeparatorVisibility.Default,
+				RowHeight = 77,
+				HasUnevenRows = true
+			};
 
-            MessagingCenter.Subscribe<AuditoriaViewCell,int>(this, "assinar", (sender, audi) =>
-                {
-                    this.Navigation.PushAsync(new AssinaturaPage(audi));
-                });
+			MessagingCenter.Subscribe<AuditoriaViewCell,int>(this, "assinar", (sender, audi) =>
+				{
+					this.Navigation.PushAsync(new AssinaturaPage(audi));
+				});
 
-            listViewRotas.ItemTapped += async (sender, e) => await ExibeDetalheAuditoria(e.Item);
+			MessagingCenter.Subscribe<AuditoriaViewCell,int>(this, "finalizar", (sender, audi) =>
+				{
+					this.Navigation.PushAsync(new QuestoesComProblema(audi.ToString()));
+				});
 
-            var layout = new StackLayout { Children = { listViewRotas } };
+			listViewRotas.ItemTapped += async (sender, e) => await ExibeDetalheAuditoria(e.Item);
 
-            this.Content = layout;
-        }
+			var layout = new StackLayout { Children = { listViewRotas } };
 
-        async Task ExibeDetalheAuditoria(object item)
-        {
-            await Navigation.PushAsync(new ChecklistPage(((Auditorias)item).audi.ToString()));
-        }
+			this.Content = layout;
+		}
 
-        async Task Assina(Dictionary<int,ImageSource> dic)
-        {
-            var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
-            var salvarImagem = false;
-            salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(dic.Values.First(), imgNome);
-            var imagem = imgNome;
+		async Task ExibeDetalheAuditoria(object item)
+		{
+			await Navigation.PushAsync(new ChecklistPage(((Auditorias)item).audi.ToString()));
+		}
 
-            if (salvarImagem)
-            {
-                var db = new TechSocialDatabase(false);
-                try
-                {
-                    db.SalvarAssinatura(imagem, dic.Keys.First());
-                    await this.Navigation.PopAsync();
-                }
-                catch
-                {
-                    await DisplayAlert("Erro", "Erro ao salvar imagem", "OK");
-                }
-            }
-        }
-    }
+		async Task Assina(Dictionary<int,ImageSource> dic)
+		{
+			var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+			var salvarImagem = false;
+			salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(dic.Values.First(), imgNome);
+			var imagem = imgNome;
+
+			if (salvarImagem)
+			{
+				var db = new TechSocialDatabase(false);
+				try
+				{
+					db.SalvarAssinatura(imagem, dic.Keys.First());
+					await this.Navigation.PopAsync();
+				}
+				catch
+				{
+					await DisplayAlert("Erro", "Erro ao salvar imagem", "OK");
+				}
+			}
+		}
+	}
 }
 

@@ -120,23 +120,16 @@ namespace TechSocial
 			{
 				var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
 				var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
-
-				// Retornando Bases Legais.
-				var dadosBasesLegais = await new BaseLegalService()
-						.RetornarBasesLegaisPorChecklistQuestao(this.questao.questao.ToString(), this.checklistId);
-
+				
 				config.SetTitle("Base Legal");
-
-				foreach (var bl in dadosBasesLegais.BaseLegal)
+				
+				Action _selecionaBase = () =>
 				{
-					Action _selecionaBase = () =>
-					{
-						entryDescricaoBaseLegal.entry.Text = bl.descricao;
-						this.baseLegalId = bl.id_baselegal;
-						entryDescricaoBaseLegal.IsEnabled = true;
-					};
-					config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(bl.nome, _selecionaBase));
-				}
+					entryDescricaoBaseLegal.entry.Text = questao.BaseLegalDescricao;
+					this.baseLegalId = questao.BaseLegalId;
+					entryDescricaoBaseLegal.IsEnabled = true;
+				};
+				config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(questao.BaseLegalNome, _selecionaBase));
 				dialogService.ActionSheet(config);
 			};
 			#endregion
@@ -480,7 +473,7 @@ namespace TechSocial
 					lblPeso, 
 					gridCriterio,    
 					gridBaseLegal,
-					gridData,
+					//gridData,
 					gridObs,
 					gridAcoesRequeridas, 
 					gridFoto,
@@ -532,39 +525,41 @@ namespace TechSocial
 			this.entAcoesRequeridas.entry.Text = acoesRequeridas;
 			var mediaPickerService = DependencyService.Get<IMediaPicker>();
 
-			if (mediaPickerService.IsCameraAvailable || mediaPickerService.IsPhotoGalleryAvailable)
-			{
-				var options = new CameraOptions
-                    { Camera = CameraDevice.Rear };
+			await this.Navigation.PushModalAsync(new GaleriaFotoPage(audi, modulo.ToString()));
 
-				var photo = await mediaPickerService.TakePhoto(options);
-				ImageSource imgSource;
-
-				if (photo != null)
-				{
-					imgSource = ImageSource.FromStream(() =>
-						{
-							var stream = photo.GetStream();
-							//photo.Dispose();
-							return stream;
-						});
-
-					//var imgSource = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg");
-
-					var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
-					var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
-
-					this.imagem = imgNome;
-					this.thumbImagem.Source = imgSource;
-
-					if (!salvarImagem)
-						await DisplayAlert(String.Empty, "Erro ao salvar a imagem, tente novamente!", "OK");
-					else
-						await DisplayAlert(String.Empty, "Imagem salva com sucesso!", "OK");
-				}
-				else
-					return;
-			}
+//			if (mediaPickerService.IsCameraAvailable || mediaPickerService.IsPhotoGalleryAvailable)
+//			{
+//				var options = new CameraOptions
+//                    { Camera = CameraDevice.Rear };
+//
+//				var photo = await mediaPickerService.TakePhoto(options);
+//				ImageSource imgSource;
+//
+//				if (photo != null)
+//				{
+//					imgSource = ImageSource.FromStream(() =>
+//						{
+//							var stream = photo.GetStream();
+//							//photo.Dispose();
+//							return stream;
+//						});
+//
+//					//var imgSource = ImageSource.FromResource("TechSocial.Content.Images.imagemteste.jpg");
+//
+//					var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+//					var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
+//
+//					this.imagem = imgNome;
+//					this.thumbImagem.Source = imgSource;
+//
+//					if (!salvarImagem)
+//						await DisplayAlert(String.Empty, "Erro ao salvar a imagem, tente novamente!", "OK");
+//					else
+//						await DisplayAlert(String.Empty, "Imagem salva com sucesso!", "OK");
+//				}
+//				else
+//					return;
+//			}
 
 			return;
 		}

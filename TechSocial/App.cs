@@ -18,8 +18,7 @@ namespace TechSocial
 			CriaBD();
 
 			// The root page of your application
-			//MainPage = new LoginPage();
-			MainPage = new GaleriaFotoPage();
+			MainPage = new LoginPage();
 		}
 
 		protected override void OnStart()

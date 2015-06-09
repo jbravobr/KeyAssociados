@@ -21,7 +21,7 @@ namespace TechSocial
 		public ICollection<Respostas> listaRespostas { get; set; }
 
 		public LoginViewModel(ILoginService service, IAuditoriaService serviceAuditoria, ICheckListService serviceChecklist,
-		                            IQuestoesService serviceQuestoes, IRespostaService serviceRespostas, IBaseService serviceBaseLegal)
+		                      IQuestoesService serviceQuestoes, IRespostaService serviceRespostas, IBaseService serviceBaseLegal)
 		{
 			this.service = service;
 			this.serviceAuditoria = serviceAuditoria;
@@ -66,10 +66,6 @@ namespace TechSocial
 					}
 				}
                     
-				// Gravando Bases Legais.
-				//var dadosBasesLegais = await serviceBaseLegal.RetornarBasesLegais();
-				//db.InsertBaseLegal(dadosBasesLegais.BaseLegal);
-
 				// Gravando Módulos.
 				var modulo = new JsonObjectModulo();
 				var auditorias = db.GetAuditorias();
@@ -98,6 +94,24 @@ namespace TechSocial
 						db.InsertQuestao(questoes.Questoes);
 					}   
 				}
+
+				// Gravando Bases Legais.
+				var _questoes = db.GetQuestoes();
+
+				foreach (var item in _questoes)
+				{
+					var dbMod = new TechSocialDatabase(false);
+					var checkList = dbMod.GetModuloById(item.modulo).checklist;
+					var baseLegal = await this.serviceBaseLegal.RetornarBasesLegaisPorChecklistQuestao(item.questao.ToString(), checkList);
+
+					if (baseLegal != null && baseLegal.BaseLegal != null && baseLegal.BaseLegal.Any())
+					{
+						item.BaseLegalDescricao = baseLegal.BaseLegal.First().descricao;
+						item.BaseLegalId = baseLegal.BaseLegal.First().id_baselegal;
+						item.BaseLegalNome = baseLegal.BaseLegal.First().nome;
+					}
+				}
+				db.InsertQuestao(_questoes); // Atualiza questões com bases legais
 
 				// Gravando Respostas.
 //                foreach (var auditoria in auditorias)
