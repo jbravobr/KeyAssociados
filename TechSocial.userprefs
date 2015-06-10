@@ -1,10 +1,8 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPadRetina.8.3" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.iPhone" />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/ViewModels/QuestoesViewModel.cs" line="72" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="TechSocial/ViewModels/LoginViewModel.cs" line="77" offsetX="740" offsetY="1064" expression="auditoria.audi" liveUpdate="False" />

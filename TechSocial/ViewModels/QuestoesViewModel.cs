@@ -38,6 +38,7 @@ namespace TechSocial
 			var c = criterio == "Sim" ? "2" : criterio == "Não" ? "0" : criterio;
 			var p = peso.Split(':')[1];
 			TechSocial.Respostas _resposta;
+			var pontuacaoSimNao = true;
 
 			if (_id == null || _id == 0)
 			{
@@ -63,14 +64,20 @@ namespace TechSocial
 				_resposta.acoesRequeridadas = acoesRequeridas;
 				_resposta._id = (int)_id;
 				_resposta.respondida = true;
+
+				if (_resposta.atende == c)
+					pontuacaoSimNao = false;
 			}
                            
 			try
 			{
 				db.InsertResposta(_resposta);
 
-				var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
-				db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi));
+				if (pontuacaoSimNao)
+				{
+					var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
+					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi));
+				}
 
 				return true;
 			}
