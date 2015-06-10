@@ -19,17 +19,24 @@ namespace TechSocial.iOS
 
 		public async Task<bool> SaveImage(ImageSource img, string imageName)
 		{
-			var render = new StreamImagesourceHandler();
+			try
+			{
+				var render = new StreamImagesourceHandler();
+				NSData imgData = null;
 
-			image = await render.LoadImageAsync(img);
+				var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				var nomeImagem = Path.Combine(path, imageName);
+				NSError erro = null;
 
-			var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			var nomeImagem = Path.Combine(path, imageName);
-
-			NSData imgData = image.AsJPEG();
-			NSError erro = null;
-
-			return imgData.Save(nomeImagem, false, out erro);
+				image = await render.LoadImageAsync(img);
+				imgData = image.AsJPEG();
+						
+				return imgData.Save(nomeImagem, false, out erro);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
 		}
 
 		public string GetImage(string imageName)

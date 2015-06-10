@@ -35,10 +35,11 @@ namespace TechSocial
 		                          string peso, int? _id = null)
 		{
 			var db = new TechSocialDatabase(false);
-			var c = criterio == "Sim" ? "2" : criterio == "Não" ? "0" : criterio;
+			var c = criterio == "Sim" ? "2" : criterio == "Não" ? "0" : criterio == "NA" ? "0" : criterio;
 			var p = peso.Split(':')[1];
 			TechSocial.Respostas _resposta;
 			var pontuacaoSimNao = true;
+			var pontuacaoAnterior = 0;
 
 			if (_id == null || _id == 0)
 			{
@@ -48,6 +49,12 @@ namespace TechSocial
 			else
 			{
 				_resposta = db.GetRespostaById((int)_id);
+
+				pontuacaoAnterior = Convert.ToInt32(_resposta.atende);
+
+				if (_resposta.atende == c)
+					pontuacaoSimNao = false;
+
 				_resposta.observacao = obs;
 				_resposta.evidencia = evidencia;
 				_resposta.atende = c;
@@ -64,9 +71,6 @@ namespace TechSocial
 				_resposta.acoesRequeridadas = acoesRequeridas;
 				_resposta._id = (int)_id;
 				_resposta.respondida = true;
-
-				if (_resposta.atende == c)
-					pontuacaoSimNao = false;
 			}
                            
 			try
@@ -75,6 +79,12 @@ namespace TechSocial
 
 				if (pontuacaoSimNao)
 				{
+					if (pontuacaoAnterior > 0)
+					{
+						var subtrair = pontuacaoAnterior * Convert.ToInt32(p);
+						db.SubtraiPontuacaoAntesDeAtualizar(subtrair, Convert.ToInt32(audi), Convert.ToInt32(modulo));
+					}
+
 					var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
 					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi));
 				}

@@ -18,7 +18,7 @@ namespace TechSocial
 			{
 				HasShadow = false,
 				OutlineColor = Color.FromHex("#e8e8e8"),
-				HeightRequest = 200,
+				HeightRequest = 90,
 				Content = entry,
 				BackgroundColor = Color.Transparent
 			};

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using System.Collections.Generic;
 using System.IO;
+using XLabs.Ioc;
 
 namespace TechSocial
 {
@@ -79,9 +80,13 @@ namespace TechSocial
 		async Task Assina(Dictionary<int,ImageSource> dic)
 		{
 			var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
-			var salvarImagem = false;
-			salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(dic.Values.First(), imgNome);
+			//var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(dic.Values.First(), imgNome);
 			var imagem = imgNome;
+
+			var fileAccess = Resolver.Resolve<IFileAccess>();
+			// save the media stream to a file 
+			var stream = (Stream)Application.Current.Properties["StreamAssinatura"];
+			var salvarImagem = fileAccess.WriteStream(imgNome, stream);
 
 			if (salvarImagem)
 			{
@@ -89,7 +94,6 @@ namespace TechSocial
 				try
 				{
 					db.SalvarAssinatura(imagem, dic.Keys.First());
-					await this.Navigation.PopAsync();
 				}
 				catch
 				{

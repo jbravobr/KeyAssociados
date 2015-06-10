@@ -4,20 +4,26 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using XLabs.Ioc;
+using XLabs.Platform.Services.IO;
 
 namespace TechSocial.iOS
 {
-    [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
-    {
-        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
-        {
-            global::Xamarin.Forms.Forms.Init();
+	[Register("AppDelegate")]
+	public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+	{
+		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+		{
+			var resolverContainer = new SimpleContainer();
+			resolverContainer.Register<IFileAccess>(t => new FIleAccess()); // maybe just this line
+			Resolver.SetResolver(resolverContainer.GetResolver());
 
-            LoadApplication(new App());
+			global::Xamarin.Forms.Forms.Init();
 
-            return base.FinishedLaunching(app, options);
-        }
-    }
+			LoadApplication(new App());
+
+			return base.FinishedLaunching(app, options);
+		}
+	}
 }
 

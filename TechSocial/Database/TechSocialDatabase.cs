@@ -436,6 +436,19 @@ namespace TechSocial
 			database.Update(auditoria);
 		}
 
+		public void SubtraiPontuacaoAntesDeAtualizar(int pontuacao, int audi, int modulo)
+		{
+			var mod = this.database.Table<Modulos>().First(x => x.audi == audi && x.modulo == modulo);
+			mod.pontuacao -= pontuacao;
+			var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
+			mod.completo = modCompleto;
+			database.Update(mod);
+
+			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
+			auditoria.nota = auditoria.nota == null ? pontuacao : auditoria.nota - pontuacao;
+			database.Update(auditoria);
+		}
+
 		/// <summary>
 		/// Atualiza o valor da pontuação da questão.
 		/// </summary>

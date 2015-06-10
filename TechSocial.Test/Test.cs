@@ -39,7 +39,8 @@ namespace TechSocial.Test
 		{
 			const string auditoria = "3792";
 			const string questao = "4";
-			const string urlFoto = "foto.json/";
+			//const string urlFoto = "foto.json/";
+			const string urlFoto = "assinatura.json/";
 			var img = File.ReadAllBytes("IMG_14052015_152040.png");
 			const string url = "http://techsocial.com.br/hering/webservices/app/api/";
 		
@@ -52,7 +53,7 @@ namespace TechSocial.Test
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 		
-				var json = JsonConvert.SerializeObject(new ImagemPOST{ audi = auditoria, questao = questao, foto = base64String });
+				var json = JsonConvert.SerializeObject(new ImagemPOST{ audi = auditoria, foto = base64String });
 				HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 		
 				try

@@ -69,7 +69,7 @@ namespace TechSocial
 
 			#region Ações Requeridas
 			entAcoesRequeridas = new MyButton();
-			entAcoesRequeridas.entry.HeightRequest = 200;
+			entAcoesRequeridas.entry.HeightRequest = 130;
 			entAcoesRequeridas.entry.IsEnabled = false;
 			if (!String.IsNullOrEmpty(resp.acoesRequeridadas))
 				entAcoesRequeridas.entry.Text = resp.acoesRequeridadas;
@@ -94,7 +94,7 @@ namespace TechSocial
 
 			#region Bases Legais
 			entryDescricaoBaseLegal = new MyButton();
-			entryDescricaoBaseLegal.entry.HeightRequest = 200;
+			entryDescricaoBaseLegal.entry.HeightRequest = 130;
 			entryDescricaoBaseLegal.entry.IsEnabled = false;
 			if (!String.IsNullOrEmpty(resp.baseLegalTexto))
 				entryDescricaoBaseLegal.entry.Text = resp.baseLegalTexto;
@@ -119,7 +119,7 @@ namespace TechSocial
 
 			#region Observações
 			entObservacoes = new MyButton();
-			entObservacoes.entry.HeightRequest = 200;
+			entObservacoes.entry.HeightRequest = 130;
 			entObservacoes.entry.IsEnabled = false;
 			if (!String.IsNullOrEmpty(resp.observacao))
 				entObservacoes.entry.Text = resp.observacao;

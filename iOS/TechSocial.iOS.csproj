@@ -176,6 +176,18 @@
     <Reference Include="SignaturePad.iOS">
       <HintPath>..\packages\Acr.XamForms.SignaturePad.2.0.5\lib\Xamarin.iOS10\SignaturePad.iOS.dll</HintPath>
     </Reference>
+    <Reference Include="XLabs.Core">
+      <HintPath>..\packages\XLabs.Core.2.0.5610.2\lib\portable-net45+netcore45+wp8+MonoAndroid1+MonoTouch1\XLabs.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Ioc">
+      <HintPath>..\packages\XLabs.IoC.2.0.5610.2\lib\portable-net45+netcore45+wp8+MonoAndroid1+MonoTouch1\XLabs.Ioc.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Platform.iOS">
+      <HintPath>..\packages\XLabs.Platform.2.0.5610.2\lib\Xamarin.iOS10\XLabs.Platform.iOS.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.Platform">
+      <HintPath>..\packages\XLabs.Platform.2.0.5610.2\lib\Xamarin.iOS10\XLabs.Platform.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TechSocial\TechSocial.csproj">
@@ -200,6 +212,7 @@
     <Compile Include="SaveAndLoadFile_IOS.cs" />
     <Compile Include="Bootstrap\SignaturePadBootstrap.cs" />
     <Compile Include="MyButton.cs" />
+    <Compile Include="FIleAccess.cs" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="ITunesArtwork" />

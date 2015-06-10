@@ -113,7 +113,7 @@ namespace TechSocial
 
 			#region Bases Legais
 			entryDescricaoBaseLegal = new MyButton();
-			entryDescricaoBaseLegal.entry.HeightRequest = 200;
+			entryDescricaoBaseLegal.entry.HeightRequest = 90;
             
 			var btnBaseLegal = new Button{ Text = "Base Legal" };
 			btnBaseLegal.Clicked += async (sender, e) =>
@@ -169,12 +169,12 @@ namespace TechSocial
 
 			#region Observações
 			entObservacoes = new MyButton();
-			entObservacoes.entry.HeightRequest = 200;
+			entObservacoes.entry.HeightRequest = 90;
 			#endregion
 
 			#region Ações Requeridas
 			entAcoesRequeridas = new MyButton();
-			entAcoesRequeridas.entry.HeightRequest = 200;
+			entAcoesRequeridas.entry.HeightRequest = 90;
 			#endregion
 
 			#region Requisito (Título)
