@@ -25,7 +25,7 @@ namespace TechSocial
 			questoes = new List<Questoes>();
 
 			var respostas = data.GetRespostaPorAuditoria(Convert.ToInt32(audi))
-				.Where(r => (r.atende != "2" || r.atende != "Sim" || r.atende != "NA")
+				.Where(r => (r.atende != "2" && r.atende != "Sim" && r.atende != "NA")
 				                && !String.IsNullOrEmpty(r.atende));
 
 			foreach (var resposta in respostas)
@@ -45,15 +45,19 @@ namespace TechSocial
 			};
 
 			#region ToolbarItem
-			this.ToolbarItems.Add(new ToolbarItem(String.Empty, "less.png", () =>
-					{
-						MessagingCenter.Send<QuestoesComProblema>(this, "anterior");
-					}, ToolbarItemOrder.Secondary));
 
-			this.ToolbarItems.Add(new ToolbarItem(String.Empty, "more.png", () =>
-					{
-						MessagingCenter.Send<QuestoesComProblema>(this, "proxima");
-					}, ToolbarItemOrder.Secondary));
+			if (respostas != null && respostas.Any())
+			{
+				this.ToolbarItems.Add(new ToolbarItem(String.Empty, "less.png", () =>
+						{
+							MessagingCenter.Send<QuestoesComProblema>(this, "anterior");
+						}, ToolbarItemOrder.Secondary));
+
+				this.ToolbarItems.Add(new ToolbarItem(String.Empty, "more.png", () =>
+						{
+							MessagingCenter.Send<QuestoesComProblema>(this, "proxima");
+						}, ToolbarItemOrder.Secondary));
+			}
 			#endregion
 
 			#region Message Subscribe >> Próxima
@@ -91,8 +95,11 @@ namespace TechSocial
 				{
 					this.pagina--;
 
-					if (this.pagina < questoes.Count())
+					if (this.pagina >= questoes.Count)
+					{
+						DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert(String.Empty, "Não há mais questões com problema", "OK");
 						return;
+					}
 
 					questaoParaExibicao = questoes.Skip(this.pagina).Take(1).First();
 					questaoProblemaView = new QuestaoProblemaView(questaoParaExibicao, auditoriaId, questaoParaExibicao.modulo.ToString());

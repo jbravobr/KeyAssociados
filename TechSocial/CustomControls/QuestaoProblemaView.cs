@@ -100,6 +100,23 @@ namespace TechSocial
 				entryDescricaoBaseLegal.entry.Text = resp.baseLegalTexto;
 			#endregion
 
+			#region Grid Bases Legais
+			var gridBaseLegal = new Grid
+			{
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+				}
+			};
+			gridBaseLegal.Children.Add(new Label { Text = "Base Legal" }, 0, 1);
+			gridBaseLegal.Children.Add(entryDescricaoBaseLegal, 1, 1);
+			#endregion
+
 			#region Observações
 			entObservacoes = new MyButton();
 			entObservacoes.entry.HeightRequest = 200;
@@ -195,6 +212,7 @@ namespace TechSocial
 					gridData,
 					gridObs,
 					gridAcoesRequeridas, 
+					gridBaseLegal,
 					btnSalvar 
 				},
 				Orientation = StackOrientation.Vertical,
