@@ -127,7 +127,7 @@ namespace TechSocial
 				HorizontalOptions = LayoutOptions.EndAndExpand
 			};
 			var encerrar_Click = new TapGestureRecognizer();
-			encerrar_Click.Tapped += (sender, e) => this.Navigation.PopAsync();
+			encerrar_Click.Tapped += (sender, e) => this.Navigation.PopModalAsync();
 			lblConcluir.GestureRecognizers.Add(encerrar_Click);
 
 			imgCapturada = new Image();
