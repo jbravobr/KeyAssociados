@@ -15,6 +15,8 @@ namespace TechSocial
 		int pagina = 0;
 		QuestaoProblemaView questaoProblemaView;
 		Questoes questaoParaExibicao;
+		StackLayout mainLayout;
+		string Data;
 
 		public QuestoesComProblema(string auditoriaId)
 		{
@@ -32,7 +34,7 @@ namespace TechSocial
 					.Where(q => q.questao.ToString() == resposta.questao));
 			}
 
-			var mainLayout = new StackLayout
+			mainLayout = new StackLayout
 			{
 				Orientation = StackOrientation.Vertical,
 				VerticalOptions = LayoutOptions.FillAndExpand,
@@ -68,12 +70,12 @@ namespace TechSocial
 						return;
 					}
 
+					this.pagina++;
+
 					questaoParaExibicao = questoes.Skip(this.pagina).Take(1).First();
 					questaoProblemaView = new QuestaoProblemaView(questaoParaExibicao, auditoriaId, questaoParaExibicao.modulo.ToString());
 					mainLayout.Children.Clear();
 					mainLayout.Children.Add(questaoProblemaView);
-
-					this.pagina++;
 				}
 			);
 

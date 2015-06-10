@@ -35,7 +35,7 @@ namespace TechSocial
 		                          string peso, int? _id = null)
 		{
 			var db = new TechSocialDatabase(false);
-			var c = criterio == "Sim" ? "1" : criterio == "Não" ? "0" : criterio;
+			var c = criterio == "Sim" ? "2" : criterio == "Não" ? "0" : criterio;
 			var p = peso.Split(':')[1];
 			TechSocial.Respostas _resposta;
 

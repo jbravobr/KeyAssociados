@@ -13,8 +13,8 @@ namespace TechSocial
 		MyButton entAcoesRequeridas;
 		MyButton entryDescricaoBaseLegal;
 		MyButton entObservacoes;
-		DatePicker dataPicker;
-		string prazo;
+		public DatePicker dataPicker;
+		const string prazo = "1";
 		QuestoesViewModel model;
 		Questoes q;
 		string audi;
@@ -43,9 +43,34 @@ namespace TechSocial
 			lblRequisito.Text = _questao.Pergunta;
 			#endregion
 
+			#region Atende/Critério
+
+			var entCriterio = new Entry();
+			entCriterio.IsEnabled = false;
+			entCriterio.Text = resp.atende;
+			#endregion
+
+			#region Grid Atende
+			var gridAtende = new Grid
+			{
+				RowDefinitions =
+				{
+					new RowDefinition { Height = GridLength.Auto }
+				},
+				ColumnDefinitions =
+				{
+					new ColumnDefinition { Width = GridLength.Auto },
+					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+				}
+			};
+			gridAtende.Children.Add(new Button{ Text = "Critério" }, 0, 1);
+			gridAtende.Children.Add(entCriterio, 1, 1);
+			#endregion
+
 			#region Ações Requeridas
 			entAcoesRequeridas = new MyButton();
 			entAcoesRequeridas.entry.HeightRequest = 200;
+			entAcoesRequeridas.entry.IsEnabled = false;
 			if (!String.IsNullOrEmpty(resp.acoesRequeridadas))
 				entAcoesRequeridas.entry.Text = resp.acoesRequeridadas;
 			#endregion
@@ -70,11 +95,15 @@ namespace TechSocial
 			#region Bases Legais
 			entryDescricaoBaseLegal = new MyButton();
 			entryDescricaoBaseLegal.entry.HeightRequest = 200;
+			entryDescricaoBaseLegal.entry.IsEnabled = false;
+			if (!String.IsNullOrEmpty(resp.baseLegalTexto))
+				entryDescricaoBaseLegal.entry.Text = resp.baseLegalTexto;
 			#endregion
 
 			#region Observações
 			entObservacoes = new MyButton();
 			entObservacoes.entry.HeightRequest = 200;
+			entObservacoes.entry.IsEnabled = false;
 			if (!String.IsNullOrEmpty(resp.observacao))
 				entObservacoes.entry.Text = resp.observacao;
 			#endregion
@@ -100,33 +129,14 @@ namespace TechSocial
 			dataPicker = new DatePicker
 			{
 				Format = "dd/MM/yyyy",
-				IsVisible = false
 			};
-			var btnData = new Button
-			{
-				Text = "Data Prazo"
-			};
-			btnData.Clicked += (sender, e) =>
-			{
-				var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-				var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
+			dataPicker.DateSelected += (sender, e) => Application.Current.Properties["DataAtende"] = e.NewDate;
 
-				config.SetTitle("Data Prazo");
-				Action _imediato = () =>
-				{
-					this.prazo = "1";
-					this.dataPicker.Date = DateTime.Now;
-					this.dataPicker.IsVisible = true;
-				};
-				Action _pedeData = () =>
-				{
-					this.prazo = "2";
-					this.dataPicker.IsVisible = true;
-				};
-				config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Imediato", _imediato));
-				config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Pede Data", _pedeData));
-				dialogService.ActionSheet(config);
-			};
+			if (App.Current.Properties.ContainsKey("DataAtende"))
+			{
+				dataPicker.Date = (DateTime)Application.Current.Properties["DataAtende"];
+				dataPicker.IsEnabled = false;
+			}
 			#endregion
 
 			#region Grid para Data
@@ -143,7 +153,7 @@ namespace TechSocial
 					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
 				}
 			};
-			gridData.Children.Add(btnData, 0, 1);
+			gridData.Children.Add(new Label { Text = "Data" }, 0, 1);
 			gridData.Children.Add(dataPicker, 1, 1);
 			#endregion
 
@@ -155,15 +165,21 @@ namespace TechSocial
 			btnSalvar.Clicked += (sender, e) =>
 			{
 				var obs = entObservacoes.entry.Text;
-				var data = dataPicker.Date.ToString("yyyy-MM-dd");
+				DateTime data;
+
+				if (App.Current.Properties.ContainsKey("DataAtende"))
+					data = (DateTime)Application.Current.Properties["DataAtende"];
+				else
+					data = dataPicker.Date;
+					
 				var acoesRequeridas = entAcoesRequeridas.entry.Text;
-				var tp_prazo = this.prazo;
+				var tp_prazo = prazo;
 
 
 				var dbResposta = new TechSocialDatabase(false);
 				var resposta = dbResposta.GetRespostaPorAuditoria(Convert.ToInt32(this.audi)).First(x => x.questao == _questao.questao.ToString());
 				
-				SalvarResposta(resposta._id, tp_prazo, data, obs, acoesRequeridas);
+				SalvarResposta(resposta._id, tp_prazo, data.ToString("yyyy-MM-dd"), obs, acoesRequeridas);
 			};
 
 			var stack = new StackLayout
@@ -175,6 +191,7 @@ namespace TechSocial
 				Children =
 				{ 
 					lblRequisito, 
+					gridAtende,
 					gridData,
 					gridObs,
 					gridAcoesRequeridas, 

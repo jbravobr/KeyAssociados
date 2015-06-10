@@ -11,6 +11,8 @@ namespace TechSocial
 	{
 		public AssinaturaPage(int audi)
 		{
+			Application.Current.Properties.Remove("DataAtende");
+
 			Title = "Assinatura";
 
 			var signature = new SignaturePadView();
