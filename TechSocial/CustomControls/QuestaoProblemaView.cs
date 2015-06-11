@@ -71,8 +71,8 @@ namespace TechSocial
 			entAcoesRequeridas = new MyButton();
 			entAcoesRequeridas.entry.HeightRequest = 130;
 			entAcoesRequeridas.entry.IsEnabled = false;
-			if (!String.IsNullOrEmpty(resp.acoesRequeridadas))
-				entAcoesRequeridas.entry.Text = resp.acoesRequeridadas;
+			if (!String.IsNullOrEmpty(resp.acoesRequeridas))
+				entAcoesRequeridas.entry.Text = resp.acoesRequeridas;
 			#endregion
 
 			#region Grid Ações Requeridas

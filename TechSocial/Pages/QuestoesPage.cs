@@ -73,7 +73,7 @@ namespace TechSocial
 					dataPicker.IsVisible = true;
 				}
 
-				entAcoesRequeridas.entry.Text = resposta.acoesRequeridadas;
+				entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
 				entObservacoes.entry.Text = resposta.observacao;
 
 				if (!String.IsNullOrEmpty(resposta.evidencia))
@@ -259,7 +259,7 @@ namespace TechSocial
 									dataPicker.IsVisible = true;
 								}
 
-								entAcoesRequeridas.entry.Text = resposta.acoesRequeridadas;
+								entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
 								entObservacoes.entry.Text = resposta.observacao;
 
 								if (!String.IsNullOrEmpty(resposta.evidencia))
@@ -312,7 +312,7 @@ namespace TechSocial
 								dataPicker.IsVisible = true;
 							}
 
-							entAcoesRequeridas.entry.Text = resposta.acoesRequeridadas;
+							entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
 							entObservacoes.entry.Text = resposta.observacao;
 
 							if (!String.IsNullOrEmpty(resposta.evidencia))

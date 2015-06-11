@@ -18,7 +18,7 @@ namespace TechSocial
 
         public string observacao { get; set; }
 
-        public string acoesRequeridadas { get; set; }
+        public string acoesRequeridas { get; set; }
 
         public string imagem { get; set; }
 

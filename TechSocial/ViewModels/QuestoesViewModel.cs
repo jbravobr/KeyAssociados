@@ -68,7 +68,7 @@ namespace TechSocial
 				_resposta.observacao = obs;
 				_resposta.questao = questao;
 				_resposta.tp_prazo = tpprazo;
-				_resposta.acoesRequeridadas = acoesRequeridas;
+				_resposta.acoesRequeridas = acoesRequeridas;
 				_resposta._id = (int)_id;
 				_resposta.respondida = true;
 			}
@@ -117,7 +117,7 @@ namespace TechSocial
 				observacao = obs,
 				questao = questao,
 				tp_prazo = tpprazo,
-				acoesRequeridadas = acoesRequeridas,
+				acoesRequeridas = acoesRequeridas,
 				respondida = true
 			};
 		}
@@ -135,7 +135,7 @@ namespace TechSocial
 			var dbResposta = new TechSocialDatabase(false);
 			var _resposta = dbResposta.GetRespostaById(idResposta);
 
-			_resposta.acoesRequeridadas = acoesRequeridas;
+			_resposta.acoesRequeridas = acoesRequeridas;
 			_resposta.tp_prazo = tp_prazo;
 			_resposta.dt_prazo = data;
 			_resposta.observacao = obs;
