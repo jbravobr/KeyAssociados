@@ -8,6 +8,8 @@ namespace TechSocial
 	{
 		Task<bool> SaveImage(ImageSource img, string imageName);
 
+		void RemoveImage(string imageName);
+
 		string GetImage(string imageName);
 
 		byte[] GetImageArray(string imageName);

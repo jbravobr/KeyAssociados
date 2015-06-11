@@ -56,7 +56,7 @@ namespace TechSocial
 							db.InserirFotoAuditoria(this.auditoria, this.modulo, imgNome);
 
 							this.Imagem = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNome);
-							areaFotosCapturadasThumb.Children.Add(new Image{ Source = ImageSource.FromFile(this.Imagem) });
+							areaFotosCapturadasThumb.Children.Add(new Image{ Source = ImageSource.FromFile(this.Imagem), ClassId = this.Imagem });
 							imgCapturada.Source = ImageSource.FromFile(this.Imagem);
 
 							if (areaFotosCapturadasThumb.Children.Any())
@@ -93,7 +93,7 @@ namespace TechSocial
 					foreach (var imagem in imagens)
 					{
 						var imgNome = DependencyService.Get<ISaveAndLoadFile>().GetImage(imagem);
-						var imgSrc = new Image { Source = ImageSource.FromFile(imgNome) };
+						var imgSrc = new Image { Source = ImageSource.FromFile(imgNome), ClassId = imgNome };
 
 						areaFotosCapturadasThumb.Children.Add(imgSrc);
 					}
@@ -133,6 +133,7 @@ namespace TechSocial
 
 				var index = areaFotosCapturadasThumb.Children.IndexOf(this.imgSelecionada);
 				areaFotosCapturadasThumb.Children.RemoveAt(index);
+				DependencyService.Get<ISaveAndLoadFile>().RemoveImage(this.imgSelecionada.ClassId);
 				this.imgCapturada.Source = ((Image)areaFotosCapturadasThumb.Children[index - 1 > 0 ? index - 1 : 0]).Source;
 				this.imgSelecionada = this.imgCapturada;
 			};

@@ -55,6 +55,15 @@ namespace TechSocial.iOS
 			return File.ReadAllBytes(nomeImagem);
 		}
 
+
+		public void RemoveImage(string imageName)
+		{
+			var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			var nomeImagem = Path.Combine(path, imageName);
+
+			File.Delete(nomeImagem);
+		}
+
 		#endregion
         
 	}
