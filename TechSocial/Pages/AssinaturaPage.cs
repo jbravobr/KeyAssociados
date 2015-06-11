@@ -34,10 +34,10 @@ namespace TechSocial
 			{
 				var imgSource = ImageSource.FromStream(() =>
 					{
-						var stream = signature.GetImage(ImageFormatType.Jpg);
+						var stream = signature.GetImage(ImageFormatType.Png);
 						return stream;
 					});
-				Application.Current.Properties["StreamAssinatura"] = signature.GetImage(ImageFormatType.Jpg);
+				Application.Current.Properties["StreamAssinatura"] = signature.GetImage(ImageFormatType.Png);
 					
 				var dic = new Dictionary<int,ImageSource>();
 				dic.Add(audi, imgSource);

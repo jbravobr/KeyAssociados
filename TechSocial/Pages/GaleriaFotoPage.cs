@@ -46,7 +46,7 @@ namespace TechSocial
 								return stream;
 							});
 
-						var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+						var imgNome = String.Concat(Path.GetRandomFileName(), ".png");
 
 						var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
 
@@ -56,7 +56,7 @@ namespace TechSocial
 							db.InserirFotoAuditoria(this.auditoria, this.modulo, imgNome);
 
 							this.Imagem = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNome);
-							areaFotosCapturadasThumb.Children.Add(new Image{ Source = ImageSource.FromFile(this.Imagem), ClassId = this.Imagem });
+							areaFotosCapturadasThumb.Children.Add(new Image{ Source = ImageSource.FromFile(this.Imagem), ClassId = imgNome });
 							imgCapturada.Source = ImageSource.FromFile(this.Imagem);
 
 							if (areaFotosCapturadasThumb.Children.Any())
@@ -93,7 +93,7 @@ namespace TechSocial
 					foreach (var imagem in imagens)
 					{
 						var imgNome = DependencyService.Get<ISaveAndLoadFile>().GetImage(imagem);
-						var imgSrc = new Image { Source = ImageSource.FromFile(imgNome), ClassId = imgNome };
+						var imgSrc = new Image { Source = ImageSource.FromFile(imgNome), ClassId = imagem };
 
 						areaFotosCapturadasThumb.Children.Add(imgSrc);
 					}

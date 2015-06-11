@@ -79,7 +79,7 @@ namespace TechSocial
 
 		async Task Assina(Dictionary<int,ImageSource> dic)
 		{
-			var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+			var imgNome = String.Concat(Path.GetRandomFileName(), ".png");
 			//var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(dic.Values.First(), imgNome);
 			var imagem = imgNome;
 

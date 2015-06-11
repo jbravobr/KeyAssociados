@@ -232,5 +232,9 @@
     <BundleResource Include="Resources\more.png" />
     <BundleResource Include="Resources\less.png" />
     <BundleResource Include="Resources\setaParaDireita.png" />
+    <BundleResource Include="Resources\Icon-72.png" />
+    <BundleResource Include="Resources\Icon-72%402x.png" />
+    <BundleResource Include="Resources\Icon-76.png" />
+    <BundleResource Include="Resources\Icon-76%402x.png" />
   </ItemGroup>
 </Project>

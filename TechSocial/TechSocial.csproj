@@ -121,7 +121,6 @@
     <Folder Include="Sketches\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Images\logo.png" />
     <EmbeddedResource Include="Content\Images\administrador.png" />
     <EmbeddedResource Include="Content\Images\check.png" />
     <EmbeddedResource Include="Content\Images\setaDireitaCircular.png" />
@@ -138,6 +137,7 @@
     <EmbeddedResource Include="Content\Images\imagemteste.jpg" />
     <EmbeddedResource Include="Content\Images\excluirFoto.png" />
     <EmbeddedResource Include="Content\Images\adicionarFoto.png" />
+    <EmbeddedResource Include="Content\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http">
