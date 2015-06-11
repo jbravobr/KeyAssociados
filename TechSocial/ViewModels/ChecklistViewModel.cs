@@ -57,18 +57,17 @@ namespace TechSocial
 			//{
 			if (await this.RespostaService.EnviarResposta(respostas))
 			{
-				foreach (var resposta in respostas)
-				{
-					var imagens = db.GetImagensAuditoria(resposta.audi);
+				var imagens = db.GetImagensAuditoria(audi.ToString());
 
-					if (imagens != null && imagens.Any())
+				if (imagens != null && imagens.Any())
+				{
+					foreach (var imagem in imagens)
 					{
-						foreach (var imagem in imagens)
-						{
-							var img = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(imagem.NomeImagem);
-							var base64Img = Convert.ToBase64String(img);
-							await this.EnvioImagemService.Enviar(base64Img, resposta.audi, resposta.questao);
-						}
+						var img = DependencyService.Get<ISaveAndLoadFile>().GetImageArray(imagem.NomeImagem);
+						var base64Img = Convert.ToBase64String(img);
+
+						if (await this.EnvioImagemService.Enviar(base64Img, audi.ToString(), imagem.Questao))
+							continue;
 					}
 				}
 				var auditoria = db.GetAuditorias().First(x => x.audi == audi);

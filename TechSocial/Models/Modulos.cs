@@ -55,14 +55,26 @@ namespace TechSocial
 				ImageSource imgSrc = null;
 				var pont = (this.pontuacao * 100) / this.valor_meta;
 
-				if (pont < Convert.ToDouble(this.meta))
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
-//                else if (pont == Convert.ToDouble(this.meta))
-//                    imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
-                else if (pont > Convert.ToDouble(this.meta))
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
+				if (this.valor_meta <= 99)
+				{
+					if (pont < Convert.ToDouble(this.meta))
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
+					else if (pont == Convert.ToDouble(this.meta))
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
+					else if (pont > Convert.ToDouble(this.meta))
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
+					else
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
+				}
 				else
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
+				{
+					if (pont < Convert.ToDouble(this.meta))
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
+					else if (pont >= Convert.ToDouble(this.meta))
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
+					else
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
+				}
 
 				return imgSrc;
 			}

@@ -17,6 +17,7 @@ namespace TechSocial
 		StackLayout areaFotosCapturadasThumb;
 		string auditoria;
 		string modulo;
+		string questao;
 		Image icoAdicionar;
 		Respostas resp;
 		bool carregou = false;
@@ -46,14 +47,14 @@ namespace TechSocial
 								return stream;
 							});
 
-						var imgNome = String.Concat(Path.GetRandomFileName(), ".png");
+						var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
 
 						var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
 
 						if (salvarImagem)
 						{
 							var db = new TechSocialDatabase(false);
-							db.InserirFotoAuditoria(this.auditoria, this.modulo, imgNome);
+							db.InserirFotoAuditoria(this.auditoria, this.modulo, questao, imgNome);
 
 							this.Imagem = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNome);
 							areaFotosCapturadasThumb.Children.Add(new Image{ Source = ImageSource.FromFile(this.Imagem), ClassId = imgNome });
@@ -83,7 +84,7 @@ namespace TechSocial
 			icoAdicionar.GestureRecognizers.Add(GetPhoto);
 
 
-			if (this.resp != null && carregou == false)
+			if (this.resp != null && this.resp._id > 0 && carregou == false)
 			{
 				var imagens = this.CarregaImagensSeHouver();
 
@@ -105,11 +106,12 @@ namespace TechSocial
 			}
 		}
 
-		public GaleriaFotoPage(string audi, string modulo, Respostas resposta = null)
+		public GaleriaFotoPage(string audi, string modulo, string questao, Respostas resposta = null)
 		{
 			this.auditoria = audi;
 			this.modulo = modulo;
 			this.resp = resposta;
+			this.questao = questao;
 				
 			var menu = new StackLayout
 			{
@@ -209,7 +211,7 @@ namespace TechSocial
 		{
 			var db = new TechSocialDatabase(false);
 
-			return db.GetImagensAuditoriaModulos(this.auditoria, this.modulo);
+			return db.GetImagensAuditoriaModulos(this.auditoria, this.modulo, this.questao);
 		}
 	}
 }

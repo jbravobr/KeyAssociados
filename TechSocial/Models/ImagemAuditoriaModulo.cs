@@ -13,6 +13,8 @@ namespace TechSocial
 
 		public string ModoloId { get; set; }
 
+		public string Questao { get; set; }
+
 		public string NomeImagem { get; set; }
 	}
 }

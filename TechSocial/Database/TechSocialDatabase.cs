@@ -482,9 +482,9 @@ namespace TechSocial
 			this.database.Update(auditoria);
 		}
 
-		public void InserirFotoAuditoria(string auditoria, string modulo, string nomeimagem)
+		public void InserirFotoAuditoria(string auditoria, string modulo, string questao, string nomeimagem)
 		{
-			this.database.Insert(new ImagemAuditoriaModulo{ AuditoriaId = auditoria, ModoloId = modulo, NomeImagem = nomeimagem });
+			this.database.Insert(new ImagemAuditoriaModulo{ AuditoriaId = auditoria, ModoloId = modulo, Questao = questao, NomeImagem = nomeimagem });
 		}
 
 		public List<ImagemAuditoriaModulo> GetImagensAuditoria(string auditoria)
@@ -495,10 +495,11 @@ namespace TechSocial
 			return null;
 		}
 
-		public List<string> GetImagensAuditoriaModulos(string audi, string mod)
+		public List<string> GetImagensAuditoriaModulos(string audi, string mod, string questao)
 		{
 			if (this.database.Table<ImagemAuditoriaModulo>().Any(a => a.AuditoriaId == audi && a.ModoloId == mod))
-				return this.database.Table<ImagemAuditoriaModulo>().Where(a => a.AuditoriaId == audi && a.ModoloId == mod)
+				return this.database.Table<ImagemAuditoriaModulo>().Where(a => a.AuditoriaId == audi && a.ModoloId == mod
+					&& a.Questao == questao)
 					.Select(a => a.NomeImagem)
 					.ToList();
 
