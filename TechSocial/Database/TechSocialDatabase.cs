@@ -494,6 +494,16 @@ namespace TechSocial
 
 			return null;
 		}
+
+		public List<string> GetImagensAuditoriaModulos(string audi, string mod)
+		{
+			if (this.database.Table<ImagemAuditoriaModulo>().Any(a => a.AuditoriaId == audi && a.ModoloId == mod))
+				return this.database.Table<ImagemAuditoriaModulo>().Where(a => a.AuditoriaId == audi && a.ModoloId == mod)
+					.Select(a => a.NomeImagem)
+					.ToList();
+
+			return null;
+		}
 	}
 }
 

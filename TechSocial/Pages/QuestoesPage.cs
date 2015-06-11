@@ -435,7 +435,7 @@ namespace TechSocial
 				var acoesRequeridas = entAcoesRequeridas.entry.Text;
 
 				await TrataFoto(obs, criterio, baseLegalId, baseLegalTexto, data, 
-					imagemEvidencia, audi, acoesRequeridas);
+					imagemEvidencia, audi, acoesRequeridas, resposta);
 			};
 
 			thumbImagem = new Image
@@ -514,7 +514,7 @@ namespace TechSocial
 		// Tira foto.
 		private async Task TrataFoto(string obs, string criterio, string base_id,
 		                             string baseLegalTexto, string data, string imagemEvidencia, 
-		                             string _audi, string acoesRequeridas, int? _id = null)
+		                             string _audi, string acoesRequeridas, Respostas _resposta, int? _id = null)
 		{
 			this.entObservacoes.entry.Text = obs;
 			this.entryCriterio.Text = criterio;
@@ -525,7 +525,11 @@ namespace TechSocial
 			this.entAcoesRequeridas.entry.Text = acoesRequeridas;
 			var mediaPickerService = DependencyService.Get<IMediaPicker>();
 
-			await this.Navigation.PushModalAsync(new GaleriaFotoPage(audi, modulo.ToString()));
+			if (_resposta != null)
+				await this.Navigation.PushModalAsync(new GaleriaFotoPage(audi, modulo.ToString(), _resposta));
+			else
+				await this.Navigation.PushModalAsync(new GaleriaFotoPage(audi, modulo.ToString(), null));
+
 
 //			if (mediaPickerService.IsCameraAvailable || mediaPickerService.IsPhotoGalleryAvailable)
 //			{

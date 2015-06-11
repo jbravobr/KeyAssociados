@@ -18,6 +18,8 @@ namespace TechSocial
 		string auditoria;
 		string modulo;
 		Image icoAdicionar;
+		Respostas resp;
+		bool carregou = false;
 
 		protected async override void OnAppearing()
 		{
@@ -79,12 +81,35 @@ namespace TechSocial
 				}
 			};
 			icoAdicionar.GestureRecognizers.Add(GetPhoto);
+
+
+			if (this.resp != null && carregou == false)
+			{
+				var imagens = this.CarregaImagensSeHouver();
+
+				if (imagens != null && imagens.Any())
+				{
+					carregou = true;
+					foreach (var imagem in imagens)
+					{
+						var imgNome = DependencyService.Get<ISaveAndLoadFile>().GetImage(imagem);
+						var imgSrc = new Image { Source = ImageSource.FromFile(imgNome) };
+
+						areaFotosCapturadasThumb.Children.Add(imgSrc);
+					}
+
+					var imgNomePrincipal = imagens.First();
+					var imgPrincipal = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNomePrincipal);
+					imgCapturada.Source = ImageSource.FromFile(imgPrincipal);
+				}
+			}
 		}
 
-		public GaleriaFotoPage(string audi, string modulo)
+		public GaleriaFotoPage(string audi, string modulo, Respostas resposta = null)
 		{
 			this.auditoria = audi;
 			this.modulo = modulo;
+			this.resp = resposta;
 				
 			var menu = new StackLayout
 			{
@@ -177,6 +202,13 @@ namespace TechSocial
 			mainLayout.Children.Add(scrollAreaFotosCapturadas);
 
 			this.Content = mainLayout;
+		}
+
+		public List<string> CarregaImagensSeHouver()
+		{
+			var db = new TechSocialDatabase(false);
+
+			return db.GetImagensAuditoriaModulos(this.auditoria, this.modulo);
 		}
 	}
 }
