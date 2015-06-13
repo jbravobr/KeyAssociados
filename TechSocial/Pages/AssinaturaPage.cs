@@ -23,7 +23,7 @@ namespace TechSocial
 			signature.StrokeColor = Color.Blue;
 			signature.StrokeWidth = 2.5f;
 			signature.HeightRequest = 400;
-			signature.WidthRequest = 420;
+			signature.WidthRequest = DependencyService.Get<Acr.XamForms.Mobile.IDeviceInfo>().ScreenWidth - 10;
 			signature.BackgroundColor = Color.FromHex("#F5F5DC");
 				
 			var btnSalvar = new Button
@@ -34,10 +34,10 @@ namespace TechSocial
 			{
 				var imgSource = ImageSource.FromStream(() =>
 					{
-						var stream = signature.GetImage(ImageFormatType.Png);
+						var stream = signature.GetImage(ImageFormatType.Jpg);
 						return stream;
 					});
-				Application.Current.Properties["StreamAssinatura"] = signature.GetImage(ImageFormatType.Png);
+				Application.Current.Properties["StreamAssinatura"] = signature.GetImage(ImageFormatType.Jpg);
 					
 				var dic = new Dictionary<int,ImageSource>();
 				dic.Add(audi, imgSource);
@@ -71,7 +71,7 @@ namespace TechSocial
 				}
 			};
 
-			this.Content = new ScrollView { Content = stack };
+			this.Content = stack;
 		}
 	}
 }

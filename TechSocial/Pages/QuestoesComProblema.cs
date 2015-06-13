@@ -93,13 +93,13 @@ namespace TechSocial
 				"anterior",
 				(sender) =>
 				{
-					this.pagina--;
-
-					if (this.pagina >= questoes.Count)
+					if (this.pagina < 1)
 					{
 						DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert(String.Empty, "Não há mais questões com problema", "OK");
 						return;
 					}
+
+					this.pagina--;
 
 					questaoParaExibicao = questoes.Skip(this.pagina).Take(1).First();
 					questaoProblemaView = new QuestaoProblemaView(questaoParaExibicao, auditoriaId, questaoParaExibicao.modulo.ToString());
