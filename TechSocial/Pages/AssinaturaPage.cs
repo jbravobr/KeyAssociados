@@ -25,7 +25,7 @@ namespace TechSocial
 			signature.HeightRequest = 400;
 			signature.WidthRequest = 420;
 			signature.BackgroundColor = Color.FromHex("#F5F5DC");
-
+				
 			var btnSalvar = new Button
 			{
 				Text = "Salvar"
@@ -34,10 +34,10 @@ namespace TechSocial
 			{
 				var imgSource = ImageSource.FromStream(() =>
 					{
-						var stream = signature.GetImage(ImageFormatType.Jpg);
+						var stream = signature.GetImage(ImageFormatType.Png);
 						return stream;
 					});
-				Application.Current.Properties["StreamAssinatura"] = signature.GetImage(ImageFormatType.Jpg);
+				Application.Current.Properties["StreamAssinatura"] = signature.GetImage(ImageFormatType.Png);
 					
 				var dic = new Dictionary<int,ImageSource>();
 				dic.Add(audi, imgSource);
@@ -52,10 +52,26 @@ namespace TechSocial
 				HorizontalOptions = LayoutOptions.Center,
 				Padding = 30,
 				Spacing = 14,
-				Children = { signature, btnSalvar }
+				Children =
+				{
+					new Label
+					{
+						Text = DateTime.Now.ToString("dd/MM/yyyy"),
+						FontSize = 24,
+						XAlign = TextAlignment.Center
+					},
+					new Label
+					{
+						Text = "Declaro ter ciência das pendências identificadas durante a Auditoria, bem como as atividades e prazos de conclusão do Plano de Ação.",
+						FontSize = 24,
+						XAlign = TextAlignment.Center
+					},
+					signature, 
+					btnSalvar
+				}
 			};
 
-			this.Content = stack;
+			this.Content = new ScrollView { Content = stack };
 		}
 	}
 }

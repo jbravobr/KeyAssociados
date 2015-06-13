@@ -343,8 +343,8 @@ namespace TechSocial
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridCriterio.Children.Add(btnCriterio, 0, 0);
@@ -354,14 +354,15 @@ namespace TechSocial
 			#region Grid Bases Legais
 			var gridBaseLegal = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridBaseLegal.Children.Add(btnBaseLegal, 0, 1);
@@ -378,8 +379,8 @@ namespace TechSocial
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridData.Children.Add(btnData, 0, 1);
@@ -389,14 +390,15 @@ namespace TechSocial
 			#region Grid Observações
 			var gridObs = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridObs.Children.Add(new Button{ Text = "Observações" }, 0, 1);
@@ -406,23 +408,25 @@ namespace TechSocial
 			#region Grid Ações Requeridas
 			var gridAcoesRequeridas = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
-			gridAcoesRequeridas.Children.Add(new Button{ Text = "Ações Requeridas" }, 0, 1);
+			gridAcoesRequeridas.Children.Add(new Button{ Text = "Ações Requeridas", FontSize = 12 }, 0, 1);
 			gridAcoesRequeridas.Children.Add(entAcoesRequeridas, 1, 1);
 			#endregion
 
 			var btnAnexo = new Button
 			{
-				Text = "Capturar Foto", Style = Estilos.buttonDefaultStyle
+				Text = "Capturar Foto", 
+				Style = Estilos.buttonDefaultStyle
 			};
 			btnAnexo.Clicked += async (sender, e) =>
 			{
@@ -456,17 +460,18 @@ namespace TechSocial
 				ColumnDefinitions =
 				{
 					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
-				}
+					new ColumnDefinition { Width = GridLength.Auto }
+				},
+				ColumnSpacing = 110
 			};
-			gridFoto.Children.Add(btnAnexo, 0, 1);
-			gridFoto.Children.Add(thumbImagem, 1, 1);
+			gridFoto.Children.Add(btnSalvar, 0, 1);
+			gridFoto.Children.Add(btnAnexo, 1, 1);
 			#endregion
 		
 			var stack = new StackLayout
 			{
-				Padding = new Thickness(10, 10, 10, 0),
-				Spacing = 5,
+				Padding = new Thickness(15, 10, 5, 5),
+				Spacing = 10,
 				Children =
 				{ 
 					lblRequisito, 
@@ -477,9 +482,10 @@ namespace TechSocial
 					gridObs,
 					gridAcoesRequeridas, 
 					gridFoto,
-					btnSalvar 
+					//btnSalvar 
 				},
 				Orientation = StackOrientation.Vertical,
+				VerticalOptions = LayoutOptions.FillAndExpand
 			};
 
 			this.Content = new ScrollView{ Content = stack, Orientation = ScrollOrientation.Vertical };

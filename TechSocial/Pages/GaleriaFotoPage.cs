@@ -47,7 +47,7 @@ namespace TechSocial
 								return stream;
 							});
 
-						var imgNome = String.Concat(Path.GetRandomFileName(), ".jpg");
+						var imgNome = String.Concat(Path.GetRandomFileName(), ".jpeg");
 
 						var salvarImagem = await DependencyService.Get<ISaveAndLoadFile>().SaveImage(imgSource, imgNome);
 

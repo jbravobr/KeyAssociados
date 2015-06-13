@@ -40,7 +40,7 @@ namespace TechSocial
 				FontSize = 20,
 				TextColor = Color.FromHex("#333333")
 			};
-			lnlNota.SetBinding(Label.TextProperty, new Binding("nota"){ StringFormat = "Nota: {0}" });
+			lnlNota.SetBinding(Label.TextProperty, new Binding("nota"){ StringFormat = "Nota: {0:0.00}" });
 
 			var imgSeta = new Image
 			{ 

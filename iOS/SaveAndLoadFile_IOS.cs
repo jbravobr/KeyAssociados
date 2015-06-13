@@ -29,7 +29,7 @@ namespace TechSocial.iOS
 				NSError erro = null;
 
 				image = await render.LoadImageAsync(img);
-				imgData = image.AsJPEG(1);
+				imgData = image.AsJPEG(0.5f);
 						
 				return imgData.Save(nomeImagem, false, out erro);
 			}

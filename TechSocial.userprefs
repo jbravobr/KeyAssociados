@@ -1,6 +1,13 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Ad-Hoc|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TechSocial/Pages/AssinaturaPage.cs">
+    <Files>
+      <File FileName="iOS/SaveAndLoadFile_IOS.cs" Line="32" Column="33" />
+      <File FileName="TechSocial/Pages/GaleriaFotoPage.cs" Line="48" Column="10" />
+      <File FileName="TechSocial/Pages/QuestoesPage.cs" Line="1" Column="1" />
+      <File FileName="TechSocial/Pages/AssinaturaPage.cs" Line="74" Column="53" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
