@@ -31,6 +31,8 @@ namespace TechSocial
 			set;
 		}
 
+		public double somaPesos { get; set; }
+
 		public bool completo { get; set; }
 
 		public int? atende { get; set; }
@@ -52,8 +54,9 @@ namespace TechSocial
 		{
 			get
 			{
+				//Nm = Nota do módulo = 100 * S / (SP * 2) ou simplesmente 50 * S / SP;
 				ImageSource imgSrc = null;
-				var pont = (this.pontuacao * 100) / this.valor_meta;
+				var pont = (this.pontuacao * 100) / (somaPesos * 2);
 
 				if (this.valor_meta <= 99)
 				{

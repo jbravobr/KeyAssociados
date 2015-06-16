@@ -40,17 +40,24 @@ namespace TechSocial
 			TechSocial.Respostas _resposta;
 			var pontuacaoSimNao = true;
 			var pontuacaoAnterior = 0;
+			var SomaDoPeso = 0;
+			var criterioENA = false;
+			var criterioStringAnterior = string.Empty;
+
+			if (criterio == "NA")
+				criterioENA = true;
 
 			if (_id == null || _id == 0)
 			{
 				_resposta = CriaResposta(obs, evidencia, c, baseLegalId,
-					baseLegalTexto, data, imagemEvidencia, audi, modulo, questao, tpprazo, acoesRequeridas);
+					baseLegalTexto, data, imagemEvidencia, audi, modulo, questao, tpprazo, acoesRequeridas, criterio);
 			}
 			else
 			{
 				_resposta = db.GetRespostaById((int)_id);
 
 				pontuacaoAnterior = Convert.ToInt32(_resposta.atende);
+				criterioStringAnterior = _resposta.criterio;
 
 				if (_resposta.atende == c)
 					pontuacaoSimNao = false;
@@ -71,6 +78,7 @@ namespace TechSocial
 				_resposta.acoesRequeridas = acoesRequeridas;
 				_resposta._id = (int)_id;
 				_resposta.respondida = true;
+				_resposta.criterio = criterio;
 			}
                            
 			try
@@ -85,8 +93,21 @@ namespace TechSocial
 						db.SubtraiPontuacaoAntesDeAtualizar(subtrair, Convert.ToInt32(audi), Convert.ToInt32(modulo));
 					}
 
+					if (criterioENA)
+					{
+						if (criterioStringAnterior != "NA")
+						{
+							SomaDoPeso = (Convert.ToInt32(criterioStringAnterior) * 2) * -1;
+							db.SubtraiSomaPesoModulo(Convert.ToInt32(modulo), SomaDoPeso);
+						}
+						else
+							SomaDoPeso = 0;
+					}
+					else
+						SomaDoPeso = 2 * Convert.ToInt32(p);
+
 					var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
-					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi));
+					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi), SomaDoPeso);
 				}
 
 				return true;
@@ -99,7 +120,8 @@ namespace TechSocial
 
 		private static Respostas CriaResposta(string obs, string evidencia, string criterio, string baseLegalId,
 		                                      string baseLegalTexto, string data, string imagemEvidencia, 
-		                                      string audi, string modulo, string questao, string tpprazo, string acoesRequeridas)
+		                                      string audi, string modulo, string questao, string tpprazo, string acoesRequeridas,
+		                                      string _criterio)
 		{
 
 			var atende = criterio == "Não" ? "0" : criterio == "Sim" ? "1" : criterio;
@@ -118,7 +140,8 @@ namespace TechSocial
 				questao = questao,
 				tp_prazo = tpprazo,
 				acoesRequeridas = acoesRequeridas,
-				respondida = true
+				respondida = true,
+				criterio = _criterio
 			};
 		}
 

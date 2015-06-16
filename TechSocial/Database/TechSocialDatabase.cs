@@ -432,7 +432,7 @@ namespace TechSocial
 			database.Update(mod);
         
 			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-			auditoria.nota = auditoria.nota == null ? nota : auditoria.nota + nota;
+			auditoria.nota = mod.pontuacao <= 0 ? 0 : 100 * mod.pontuacao / mod.somaPesos;
 			database.Update(auditoria);
 		}
 
@@ -455,13 +455,27 @@ namespace TechSocial
 		/// <param name="questao">Questao.</param>
 		/// <param name="pontuacao">Pontuacao.</param>
 		/// <param name="modulo">Modulo.</param>
-		public void AtualizaPontuacaoQuestao(int questao, int pontuacao, int modulo, int audi)
+		public void AtualizaPontuacaoQuestao(int questao, int pontuacao, int modulo, int audi, int SomaPeso)
 		{
 			var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
 			q.pontuacao = pontuacao;
 
 			// Atualizando a pontuação do Módulo.
 			this.AtualizaPontuacaoModuloAuditoria(pontuacao, audi, modulo);
+		}
+
+		public void AtualizaSomaPesoModulo(int modulo, int SomaPeso)
+		{
+			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo);
+			mod.somaPesos += SomaPeso;
+			database.Update(mod);
+		}
+
+		public void SubtraiSomaPesoModulo(int modulo, int SomaPeso)
+		{
+			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo);
+			mod.somaPesos -= SomaPeso;
+			database.Update(mod);
 		}
 
 		public bool CarregaOffline()
