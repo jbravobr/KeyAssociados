@@ -430,9 +430,20 @@ namespace TechSocial
 			var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 			mod.completo = modCompleto;
 			database.Update(mod);
+
+
+			var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
+			var sumNotas = 0.0;
+			var sumPesos = 0.0;
+
+			foreach (var m in mods)
+			{
+				sumNotas += m.pontuacao;
+				sumPesos += m.somaPesos;
+			}
         
 			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-			auditoria.nota = mod.pontuacao <= 0 ? 0 : 100 * mod.pontuacao / mod.somaPesos;
+			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumPesos);
 			database.Update(auditoria);
 		}
 
@@ -460,13 +471,15 @@ namespace TechSocial
 			var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
 			q.pontuacao = pontuacao;
 
+			this.AtualizaSomaPesoModulo(modulo, SomaPeso, audi);
+
 			// Atualizando a pontuação do Módulo.
 			this.AtualizaPontuacaoModuloAuditoria(pontuacao, audi, modulo);
 		}
 
-		public void AtualizaSomaPesoModulo(int modulo, int SomaPeso)
+		public void AtualizaSomaPesoModulo(int modulo, int SomaPeso, int audi)
 		{
-			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo);
+			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
 			mod.somaPesos += SomaPeso;
 			database.Update(mod);
 		}
