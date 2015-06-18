@@ -57,49 +57,24 @@ namespace TechSocial
 
 		async Task TrataCliqueBtnAcessar(string usuario, string senha)
 		{
-//			#if DEBUG
-//			usuario = "helton";
-//			senha = "zzz";
-//			#endif
-
 			if (String.IsNullOrEmpty(usuario) || String.IsNullOrEmpty(senha))
 				await DisplayAlert("Erro", "É necessário informa um usuário e senha!", "OK");
 			else
 			{
 				model = App.Container.Resolve<LoginViewModel>();
 
-				var netStatus = DependencyService.Get<Acr.XamForms.Mobile.Net.INetworkService>().IsConnected;
-				if (!netStatus)
+				var loading = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+				loading.ShowLoading("Carregando dados");
+
+				if (await model.ExecutarLogin(usuario, senha))
 				{
-					var dialog = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-					await dialog.AlertAsync(String.Empty, "Seu primeiro logon deve ser feito online!", "OK");
-					return;
+					loading.HideLoading();
+					await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
 				}
 				else
 				{
-					var loading = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-					loading.ShowLoading("Carregando dados");
-
-//					if (true)
-//					{
-//						loading.HideLoading();
-//						await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
-//					}
-//					else
-//					{
-//						loading.HideLoading();
-//						await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
-//					}
-					if (await model.ExecutarLogin(usuario, senha))
-					{
-						loading.HideLoading();
-						await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
-					}
-					else
-					{
-						loading.HideLoading();
-						await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
-					}
+					loading.HideLoading();
+					await DisplayAlert("Erro", "Usuário ou senha inválidos", "OK");
 				}
 			}
 		}

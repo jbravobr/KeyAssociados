@@ -455,8 +455,18 @@ namespace TechSocial
 			mod.completo = modCompleto;
 			database.Update(mod);
 
+			var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
+			var sumNotas = 0.0;
+			var sumPesos = 0.0;
+
+			foreach (var m in mods)
+			{
+				sumNotas += m.pontuacao;
+				sumPesos += m.somaPesos;
+			}
+
 			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-			auditoria.nota = auditoria.nota == null ? pontuacao : auditoria.nota - pontuacao;
+			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumPesos);
 			database.Update(auditoria);
 		}
 

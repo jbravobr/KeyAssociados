@@ -36,84 +36,88 @@ namespace TechSocial
 			if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
 				throw new ArgumentException("Usuário ou senha em branco!");
 
-			var dadosFromServer = await service.ExecutarLogin(user, pass);
-
-			if (dadosFromServer != null && !String.IsNullOrEmpty(dadosFromServer.Auditor.nome))
+			if (await this.VerificaDados())
+				return await Task.FromResult(true);
+			else
 			{
-				var db = new TechSocialDatabase(false);
+				var dadosFromServer = await service.ExecutarLogin(user, pass);
 
-				// Gravando Auditor logado.
-				db.InsertAuditor(dadosFromServer.Auditor);
+				if (dadosFromServer != null && !String.IsNullOrEmpty(dadosFromServer.Auditor.nome))
+				{
+					var db = new TechSocialDatabase(false);
 
-				// Gravando Rotas recebidas.
-				db.InsertRotas(dadosFromServer.Rotas);
+					// Gravando Auditor logado.
+					db.InsertAuditor(dadosFromServer.Auditor);
 
-				// Gravando Semanas.
-				db.InsertSemanas(dadosFromServer.Semanas);
+					// Gravando Rotas recebidas.
+					db.InsertRotas(dadosFromServer.Rotas);
 
-				// Gravando Fornecedores recebidos.
-				var fornecedores = dadosFromServer.Rotas.Select(x => x.Fornecedores).ToList();
-				db.InsertFornecedores(fornecedores);
+					// Gravando Semanas.
+					db.InsertSemanas(dadosFromServer.Semanas);
+
+					// Gravando Fornecedores recebidos.
+					var fornecedores = dadosFromServer.Rotas.Select(x => x.Fornecedores).ToList();
+					db.InsertFornecedores(fornecedores);
                
-				// Gravando Auditorias.
-				foreach (var fornecedor in fornecedores)
-				{
-					dadosFromServer = await this.serviceAuditoria.RetornarAuditorias(fornecedor.fornecedor);
-
-					if (dadosFromServer != null && dadosFromServer.Auditorias != null && dadosFromServer.Auditorias.Any())
+					// Gravando Auditorias.
+					foreach (var fornecedor in fornecedores)
 					{
-						db.InsertAuditorias(dadosFromServer.Auditorias);
-					}
-				}
-                    
-				// Gravando Módulos.
-				var modulo = new JsonObjectModulo();
-				var auditorias = db.GetAuditorias();
-				foreach (var auditoria in auditorias)
-				{
-					modulo = await this.serviceChecklist.RetornaChecklist(auditoria.audi.ToString());
+						dadosFromServer = await this.serviceAuditoria.RetornarAuditorias(fornecedor.fornecedor);
 
-					if (modulo != null && modulo.Auditorias != null)
-					{
-						foreach (var item in modulo.Modulos)
+						if (dadosFromServer != null && dadosFromServer.Auditorias != null && dadosFromServer.Auditorias.Any())
 						{
-							item.audi = auditoria.audi;
+							db.InsertAuditorias(dadosFromServer.Auditorias);
 						}
-
-						db.InsertModulos(modulo.Modulos);
 					}
-				}
                     
-				// Gravando Questões.
-				foreach (var mod in modulo.Modulos)
-				{
-					var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
-
-					if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+					// Gravando Módulos.
+					var modulo = new JsonObjectModulo();
+					var auditorias = db.GetAuditorias();
+					foreach (var auditoria in auditorias)
 					{
-						db.InsertQuestao(questoes.Questoes);
-					}   
-				}
+						modulo = await this.serviceChecklist.RetornaChecklist(auditoria.audi.ToString());
 
-				// Gravando Bases Legais.
-				var _questoes = db.GetQuestoes();
+						if (modulo != null && modulo.Auditorias != null)
+						{
+							foreach (var item in modulo.Modulos)
+							{
+								item.audi = auditoria.audi;
+							}
 
-				foreach (var item in _questoes)
-				{
-					var dbMod = new TechSocialDatabase(false);
-					var checkList = dbMod.GetModuloById(item.modulo).checklist;
-					var baseLegal = await this.serviceBaseLegal.RetornarBasesLegaisPorChecklistQuestao(item.questao.ToString(), checkList);
-
-					if (baseLegal != null && baseLegal.BaseLegal != null && baseLegal.BaseLegal.Any())
-					{
-						item.BaseLegalDescricao = baseLegal.BaseLegal.First().descricao;
-						item.BaseLegalId = baseLegal.BaseLegal.First().id_baselegal;
-						item.BaseLegalNome = baseLegal.BaseLegal.First().nome;
+							db.InsertModulos(modulo.Modulos);
+						}
 					}
-				}
-				db.InsertQuestao(_questoes); // Atualiza questões com bases legais
+                    
+					// Gravando Questões.
+					foreach (var mod in modulo.Modulos)
+					{
+						var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
 
-				// Gravando Respostas.
+						if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+						{
+							db.InsertQuestao(questoes.Questoes);
+						}   
+					}
+
+					// Gravando Bases Legais.
+					var _questoes = db.GetQuestoes();
+
+					foreach (var item in _questoes)
+					{
+						var dbMod = new TechSocialDatabase(false);
+						var checkList = dbMod.GetModuloById(item.modulo).checklist;
+						var baseLegal = await this.serviceBaseLegal.RetornarBasesLegaisPorChecklistQuestao(item.questao.ToString(), checkList);
+
+						if (baseLegal != null && baseLegal.BaseLegal != null && baseLegal.BaseLegal.Any())
+						{
+							item.BaseLegalDescricao = baseLegal.BaseLegal.First().descricao;
+							item.BaseLegalId = baseLegal.BaseLegal.First().id_baselegal;
+							item.BaseLegalNome = baseLegal.BaseLegal.First().nome;
+						}
+					}
+					db.InsertQuestao(_questoes); // Atualiza questões com bases legais
+
+					// Gravando Respostas.
 //                foreach (var auditoria in auditorias)
 //                {
 //                    var respostas = await this.serviceRespostas.RetornarRespostasParaAuditoria(auditoria.audi);
@@ -136,30 +140,30 @@ namespace TechSocial
 //                    }
 //                }
 
-				// Atualizando Módulos com atende
-				if (db.ExistemRespostas())
-				{
-					var mods = db.GetModulos();
-					var q = db.GetQuestoes();
-					this.listaRespostas = db.GetRespostas();
-
-					foreach (var mod in mods)
+					// Atualizando Módulos com atende
+					if (db.ExistemRespostas())
 					{
-						int? operacao;
+						var mods = db.GetModulos();
+						var q = db.GetQuestoes();
+						this.listaRespostas = db.GetRespostas();
 
-						foreach (var questao in q.Where(x=>x.modulo == mod.modulo))
+						foreach (var mod in mods)
 						{
-							var peso = questao.peso;
-							if (this.listaRespostas.Any(b => b.questao == questao.questao.ToString()))
-							{
-								var atende = this.listaRespostas.First(x => x.questao == questao.questao.ToString()).atende;
-								operacao += atende == null ? 0 : Convert.ToInt32(atende) * peso;
-							}
-						}
-						mod.atende = operacao;
-					}
+							int? operacao;
 
-					// Atualizando Módulos com imagem do semáforo.
+							foreach (var questao in q.Where(x=>x.modulo == mod.modulo))
+							{
+								var peso = questao.peso;
+								if (this.listaRespostas.Any(b => b.questao == questao.questao.ToString()))
+								{
+									var atende = this.listaRespostas.First(x => x.questao == questao.questao.ToString()).atende;
+									operacao += atende == null ? 0 : Convert.ToInt32(atende) * peso;
+								}
+							}
+							mod.atende = operacao;
+						}
+
+						// Atualizando Módulos com imagem do semáforo.
 //                    foreach (var mod in mods)
 //                    {
 //                        ImageSource imgSrc = null;
@@ -176,13 +180,22 @@ namespace TechSocial
 //
 //                        mod.Image = imgSrc;
 //                    }
-					db.InsertModulos(mods);
-				}
+						db.InsertModulos(mods);
+					}
 
-				return true;
+					return true;
+				}
 			}
 
 			return false;
+		}
+
+		public async Task<bool> VerificaDados()
+		{
+			var db = new TechSocialDatabase(false);
+			var existeDados = db.GetAuditorias().Any();
+
+			return await Task.FromResult(existeDados);
 		}
 	}
 }
