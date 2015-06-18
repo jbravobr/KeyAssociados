@@ -38,6 +38,7 @@ namespace TechSocial
 			var c = criterio == "Sim" ? "2" : criterio == "Não" ? "0" : criterio == "NA" ? "0" : criterio;
 			var p = peso.Split(':')[1];
 			TechSocial.Respostas _resposta;
+
 			var pontuacaoSimNao = true;
 			var pontuacaoAnterior = 0;
 			var SomaDoPeso = 0;
@@ -98,13 +99,13 @@ namespace TechSocial
 						if (criterioStringAnterior != "NA")
 						{
 							SomaDoPeso = (Convert.ToInt32(criterioStringAnterior) * 2) * -1;
-							db.SubtraiSomaPesoModulo(Convert.ToInt32(modulo), SomaDoPeso);
+							db.SubtraiSomaPesoModulo(Convert.ToInt32(modulo), SomaDoPeso, Convert.ToInt32(audi));
 						}
 						else
 							SomaDoPeso = 0;
 					}
 					else
-						SomaDoPeso = 2 * Convert.ToInt32(p);
+						SomaDoPeso = Convert.ToInt32(p);
 
 					var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
 					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi), SomaDoPeso);

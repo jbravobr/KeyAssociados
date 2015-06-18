@@ -431,19 +431,28 @@ namespace TechSocial
 			mod.completo = modCompleto;
 			database.Update(mod);
 
-
 			var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
 			var sumNotas = 0.0;
-			var sumPesos = 0.0;
+			var sumNotasMaximas = 0.0;
 
 			foreach (var m in mods)
 			{
 				sumNotas += m.pontuacao;
-				sumPesos += m.somaPesos;
 			}
-        
+
+			foreach (var _mods in this.GetModulos().Where(m=>m.audi == audi))
+			{
+				foreach (var m in mods)
+				{
+					foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == m.modulo))
+					{
+						sumNotasMaximas += (qq.peso * 2);
+					}
+				}
+			}
+
 			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumPesos);
+			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
 			database.Update(auditoria);
 		}
 
@@ -458,15 +467,20 @@ namespace TechSocial
 			var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
 			var sumNotas = 0.0;
 			var sumPesos = 0.0;
+			var sumNotasMaximas = 0.0;
 
 			foreach (var m in mods)
 			{
 				sumNotas += m.pontuacao;
-				sumPesos += m.somaPesos;
+			}
+
+			foreach (var q in this.database.Table<Questoes>().Where(qq=>qq.modulo == modulo))
+			{
+				sumNotasMaximas += (q.peso * 2);
 			}
 
 			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumPesos);
+			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
 			database.Update(auditoria);
 		}
 
@@ -494,9 +508,9 @@ namespace TechSocial
 			database.Update(mod);
 		}
 
-		public void SubtraiSomaPesoModulo(int modulo, int SomaPeso)
+		public void SubtraiSomaPesoModulo(int modulo, int SomaPeso, int audi)
 		{
-			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo);
+			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
 			mod.somaPesos -= SomaPeso;
 			database.Update(mod);
 		}

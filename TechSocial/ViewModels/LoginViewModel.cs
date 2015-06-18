@@ -36,8 +36,14 @@ namespace TechSocial
 			if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
 				throw new ArgumentException("Usuário ou senha em branco!");
 
-			if (await this.VerificaDados())
+			var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
+
+			if (!netStatus && await this.VerificaDados())
 				return await Task.FromResult(true);
+			else if (!netStatus && !await this.VerificaDados())
+			{
+				await DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().AlertAsync("Sem Conexão", "Não existe carga na aplicação, efetue o login online", "OK");
+			}
 			else
 			{
 				var dadosFromServer = await service.ExecutarLogin(user, pass);

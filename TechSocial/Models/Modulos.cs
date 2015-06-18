@@ -56,29 +56,14 @@ namespace TechSocial
 			{
 				//Nm = Nota do módulo = 100 * S / (SP * 2) ou simplesmente 50 * S / SP;
 				ImageSource imgSrc = null;
-				var pont = (this.pontuacao * 100) / (somaPesos * 2);
+				var pont = 100 * this.pontuacao / (somaPesos * 2);
 
-				if (this.valor_meta <= 99)
-				{
-					if (pont < Convert.ToDouble(this.meta))
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
-					else if (pont == Convert.ToDouble(this.meta))
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
-					else if (pont > Convert.ToDouble(this.meta))
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
-					else
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
-				}
+				if (pont < Convert.ToDouble(this.meta))
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
+				else if (pont >= Convert.ToDouble(this.meta))
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
 				else
-				{
-					if (pont < Convert.ToDouble(this.meta))
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
-					else if (pont >= Convert.ToDouble(this.meta))
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
-					else
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
-				}
-
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
 				return imgSrc;
 			}
 		}
