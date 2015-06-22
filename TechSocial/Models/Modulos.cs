@@ -21,7 +21,7 @@ namespace TechSocial
 
 		public int valor_meta { get; set; }
 
-		public string nao_atiginda { get; set; }
+		public string nao_atingida { get; set; }
 
 		public int meta { get; set; }
 
@@ -34,6 +34,8 @@ namespace TechSocial
 			get;
 			set;
 		}
+
+		public bool respondido { get; set; }
 
 		public double somaPesos { get; set; }
 
@@ -60,9 +62,11 @@ namespace TechSocial
 			{
 				//Nm = Nota do módulo = 100 * S / (SP * 2) ou simplesmente 50 * S / SP;
 				ImageSource imgSrc = null;
-				var pont = 100 * this.pontuacao / (somaPesos * 2);
+				var pont = this.pontuacao > 0 ? 100 * this.pontuacao / (somaPesos * 2) : 0;
 
-				if (pont < Convert.ToDouble(this.meta))
+				if (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente") && this.respondido)
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
+				else if (pont < Convert.ToDouble(this.meta) && !this.nao_atingida.ToLower().Contains("pendente"))
 					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
 				else if (pont >= Convert.ToDouble(this.meta))
 					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");

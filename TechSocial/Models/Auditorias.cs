@@ -65,7 +65,7 @@ namespace TechSocial
 					case 0:
 					case 5:
 					case 6:
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVermelho.png");
+						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
 						break;
 					case 1:
 						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");

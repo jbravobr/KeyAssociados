@@ -429,9 +429,9 @@ namespace TechSocial
 			mod.pontuacao += nota;
 			var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 
-			if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atiginda) && mod.nao_atiginda.ToLower().Contains("pendente")))
+			if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
 				mod.status = "Pendente";
-			else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atiginda) && mod.nao_atiginda.ToLower().Contains("reprovado")))
+			else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("reprovado")))
 				mod.status = "Reprovado";
 			else
 				mod.status = "Aprovado";
@@ -470,9 +470,9 @@ namespace TechSocial
 			mod.pontuacao -= pontuacao;
 			var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 
-			if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atiginda) && mod.nao_atiginda.ToLower().Contains("pendente")))
+			if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
 				mod.status = "Pendente";
-			else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atiginda) && mod.nao_atiginda.ToLower().Contains("reprovado")))
+			else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("reprovado")))
 				mod.status = "Reprovado";
 			else
 				mod.status = "Aprovado";
@@ -527,6 +527,7 @@ namespace TechSocial
 		{
 			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
 			mod.somaPesos += SomaPeso;
+			mod.respondido = true;
 			database.Update(mod);
 		}
 
@@ -534,6 +535,7 @@ namespace TechSocial
 		{
 			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
 			mod.somaPesos -= SomaPeso;
+			mod.respondido = true;
 			database.Update(mod);
 		}
 
@@ -583,12 +585,14 @@ namespace TechSocial
 		{
 			var _audi = this.database.Table<Auditorias>().First(x => x.audi == audi);
 
-			if (_audi.nota > 70 && this.database.Table<Modulos>().Any(m => m.status.ToLower() == "pendente" && m.audi == _audi.audi))
+			if (_audi.nota > 70 && this.database.Table<Modulos>().Any(m => m.status.ToLower().Contains("pendente") && m.audi == _audi.audi))
 				_audi.status = 2;
 			else if (_audi.nota < 70)
 				_audi.status = 0;
-			else if (_audi.nota == 70 && this.database.Table<Modulos>().All(m => m.status.ToLower() != "pendente" || m.status.ToLower() != "reprovado"))
+			else if (_audi.nota == 70 && this.database.Table<Modulos>().All(m => !m.status.ToLower().Contains("pendente") || !m.status.ToLower().Contains("reprovado")))
 				_audi.status = 1;
+
+			this.database.Update(_audi);
 		}
 	}
 }
