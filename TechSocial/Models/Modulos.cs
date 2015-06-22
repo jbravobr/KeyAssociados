@@ -35,7 +35,11 @@ namespace TechSocial
 			set;
 		}
 
+		public double valorMaxPontuacao { get; set; }
+
 		public bool respondido { get; set; }
+
+		public bool soUmaEhNA { get; set; }
 
 		public double somaPesos { get; set; }
 
@@ -62,16 +66,19 @@ namespace TechSocial
 			{
 				//Nm = Nota do módulo = 100 * S / (SP * 2) ou simplesmente 50 * S / SP;
 				ImageSource imgSrc = null;
-				var pont = this.pontuacao > 0 ? 100 * this.pontuacao / (somaPesos * 2) : 0;
+				var pont = this.pontuacao > 0 ? 100 * this.pontuacao / valorMaxPontuacao : 0;
 
-				if (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente") && this.respondido)
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
-				else if (pont < Convert.ToDouble(this.meta) && !this.nao_atingida.ToLower().Contains("pendente"))
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
-				else if (pont >= Convert.ToDouble(this.meta))
+
+				if (this.soUmaEhNA)
 					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
-				else
+				else if (!this.respondido)
 					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
+				else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente")))
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
+				else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("reprovado")))
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
+				else
+					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
 				return imgSrc;
 			}
 		}

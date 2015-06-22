@@ -23,6 +23,21 @@ namespace TechSocial
 		{
 			var db = new TechSocialDatabase(false);
 			this.Modulos = db.GetModulosByAuditoria(auditoria);
+			var qqq = db.GetQuestoes();
+
+			var maxPont = 0;
+			foreach (var _mods in Modulos)
+			{
+				if (maxPont > 0)
+					db.AtualizarModulo(_mods);
+
+				maxPont = 0;
+				foreach (var qq in qqq.Where(q=>q.modulo == _mods.modulo))
+				{
+					maxPont += qq.peso * 2;
+					_mods.valorMaxPontuacao = maxPont;
+				}
+			}
 
 			foreach (var modulo in Modulos)
 			{

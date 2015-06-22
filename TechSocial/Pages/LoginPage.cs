@@ -43,7 +43,7 @@ namespace TechSocial
 				Spacing = 8,
 				Children =
 				{
-					imgLayout,
+					//imgLayout,
 					txtLogin,
 					txtSenha,
 					btnAcessar

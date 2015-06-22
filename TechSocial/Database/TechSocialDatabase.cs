@@ -20,6 +20,11 @@ namespace TechSocial
 
 		public bool ExisteSchema()
 		{
+//			var column = this.database.Table<Modulos>().Table.FindColumn("soUmaEhNA");
+//
+//			if (column == null)
+//				this.database.CreateCommand("ALTER TABLE MODULOS ADD COLUMN bit soUmaEhNA", null);
+//			
 			if (database.TableMappings.All(b => b.TableName != "Auditor"
 				    || b.TableName != "Rotas"
 				    || b.TableName != "Fornecedores"
@@ -193,6 +198,16 @@ namespace TechSocial
 				this.database.Insert(resposta);
 			else
 				this.database.Update(resposta);
+
+//			int _m = Convert.ToInt32(resposta.modulo);
+//
+//			if (this.database.Table<Questoes>().Count(m => m.modulo == _m) == 1 && resposta.criterio == "NA")
+//			{
+//				var _mod = this.database.Table<Modulos>().First(m => m.modulo == _m);
+//				_mod.soUmaEhNA = true;
+//
+//				this.database.Update(_mod);
+//			}
 		}
 
 		/// <summary>
@@ -514,10 +529,13 @@ namespace TechSocial
 		/// <param name="modulo">Modulo.</param>
 		public void AtualizaPontuacaoQuestao(int questao, int pontuacao, int modulo, int audi, int SomaPeso, bool NA)
 		{
-			var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
-			q.pontuacao = pontuacao;
+			if (!NA)
+			{
+				var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
+				q.pontuacao = pontuacao;
 
-			this.AtualizaSomaPesoModulo(modulo, SomaPeso, audi);
+				this.AtualizaSomaPesoModulo(modulo, SomaPeso, audi);
+			}
 
 			// Atualizando a pontuação do Módulo.
 			this.AtualizaPontuacaoModuloAuditoria(pontuacao, audi, modulo, NA);
@@ -593,6 +611,11 @@ namespace TechSocial
 				_audi.status = 1;
 
 			this.database.Update(_audi);
+		}
+
+		public void AtualizarModulo(Modulos mod)
+		{
+			this.database.Update(mod);
 		}
 	}
 }

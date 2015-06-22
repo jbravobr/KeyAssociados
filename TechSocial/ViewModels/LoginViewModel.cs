@@ -38,9 +38,9 @@ namespace TechSocial
 
 			var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
 
-			if (!netStatus && await this.VerificaDados())
+			if (netStatus && await this.VerificaDados())
 				return await Task.FromResult(true);
-			else if (!netStatus && !await this.VerificaDados())
+			else if (netStatus && !await this.VerificaDados())
 			{
 				DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
 				await DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().AlertAsync("Sem Conexão", "Não existe carga na aplicação, efetue o login online", "OK");
@@ -94,7 +94,7 @@ namespace TechSocial
 							db.InsertModulos(modulo.Modulos);
 						}
 					}
-                    
+
 					// Gravando Questões.
 					foreach (var mod in modulo.Modulos)
 					{
@@ -108,6 +108,19 @@ namespace TechSocial
 
 					// Gravando Bases Legais.
 					var _questoes = db.GetQuestoes();
+					var maxPont = 0;
+					foreach (var _mods in modulo.Modulos)
+					{
+						if (maxPont > 0)
+							db.AtualizarModulo(_mods);
+						
+						maxPont = 0;
+						foreach (var qq in _questoes.Where(q=>q.modulo == _mods.modulo))
+						{
+							maxPont += qq.peso * 2;
+							_mods.valorMaxPontuacao = maxPont;
+						}
+					}
 
 					foreach (var item in _questoes)
 					{
