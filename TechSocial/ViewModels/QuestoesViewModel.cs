@@ -91,7 +91,7 @@ namespace TechSocial
 					if (pontuacaoAnterior > 0)
 					{
 						var subtrair = pontuacaoAnterior * Convert.ToInt32(p);
-						db.SubtraiPontuacaoAntesDeAtualizar(subtrair, Convert.ToInt32(audi), Convert.ToInt32(modulo));
+						db.SubtraiPontuacaoAntesDeAtualizar(subtrair, Convert.ToInt32(audi), Convert.ToInt32(modulo), criterioENA);
 					}
 
 					if (criterioENA)
@@ -108,7 +108,7 @@ namespace TechSocial
 						SomaDoPeso = Convert.ToInt32(p);
 
 					var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
-					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi), SomaDoPeso);
+					db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi), SomaDoPeso, criterioENA);
 				}
 
 				return true;

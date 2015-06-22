@@ -10,6 +10,8 @@ namespace TechSocial
 
 		public int modulo { get; set; }
 
+		public int audi { get; set; }
+
 		public int questao { get; set; }
 
 		public string label { get; set; }

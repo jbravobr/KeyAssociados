@@ -7,26 +7,26 @@ using TechSocial.iOS;
 
 namespace TechSocial.iOS
 {
-    public class NetworkStatus_IOS : INetworkStatus
-    {
-        public NetworkStatus_IOS()
-        {
+	public class NetworkStatus_IOS : INetworkStatus
+	{
+		public NetworkStatus_IOS()
+		{
 
-        }
+		}
 
-        #region INetworkStatus implementation
+		#region INetworkStatus implementation
 
-        public bool VerificaStatusConexao()
-        {
-            return VerificaConexao();
-        }
+		public bool VerificaStatusConexao()
+		{
+			return VerificaConexao();
+		}
 
-        #endregion
+		#endregion
 
-        private bool VerificaConexao()
-        {
-            return (!NetworkCheck.IsHostReachable("http://google.com"));
-        }
-    }
+		private bool VerificaConexao()
+		{
+			return (!NetworkCheck.IsHostReachable("http://google.com"));
+		}
+	}
 }
 

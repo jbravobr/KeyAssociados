@@ -21,9 +21,13 @@ namespace TechSocial
 
 		public int valor_meta { get; set; }
 
+		public string nao_atiginda { get; set; }
+
 		public int meta { get; set; }
 
 		public int ord { get; set; }
+
+		public string status { get; set; }
 
 		public double pontuacao
 		{

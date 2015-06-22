@@ -42,6 +42,7 @@ namespace TechSocial
 				return await Task.FromResult(true);
 			else if (!netStatus && !await this.VerificaDados())
 			{
+				DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
 				await DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().AlertAsync("Sem Conexão", "Não existe carga na aplicação, efetue o login online", "OK");
 			}
 			else

@@ -94,6 +94,8 @@ namespace TechSocial
 				try
 				{
 					db.SalvarAssinatura(imagem, dic.Keys.First());
+
+					db.AtualizarSemaforoAuditoria(dic.Keys.First());
 				}
 				catch
 				{
