@@ -60,7 +60,7 @@ namespace TechSocial
 			{
 				ImageSource imgSrc = null;
 
-				switch (this.status)
+				switch (this.resultado)
 				{
 					case 0:
 					case 5:

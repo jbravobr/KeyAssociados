@@ -509,7 +509,7 @@ namespace TechSocial
 
 			var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
 			auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
-
+			database.Update(auditoria);
 		}
 
 		/// <summary>

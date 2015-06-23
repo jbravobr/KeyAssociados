@@ -129,8 +129,16 @@ namespace TechSocial
 					this.baseLegalId = questao.BaseLegalId;
 					entryDescricaoBaseLegal.IsEnabled = true;
 				};
-				config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(questao.BaseLegalNome, _selecionaBase));
-				dialogService.ActionSheet(config);
+
+				if (String.IsNullOrEmpty(questao.BaseLegalNome) || String.IsNullOrEmpty(questao.BaseLegalDescricao))
+				{
+					DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert("Questão sem base legal", "Erro", "OK");
+				}
+				else
+				{
+					config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(questao.BaseLegalNome, _selecionaBase));
+					dialogService.ActionSheet(config);
+				}
 			};
 			#endregion
 
