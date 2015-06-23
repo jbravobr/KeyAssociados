@@ -550,6 +550,9 @@ namespace TechSocial
 
 		public void AplicaNANoValorMaxDoModulo(int modulo, int valor, int audi)
 		{
+			if (valor <= 0)
+				return;
+			
 			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
 			mod.valorMaxPontuacao -= valor;
 			database.Update(mod);

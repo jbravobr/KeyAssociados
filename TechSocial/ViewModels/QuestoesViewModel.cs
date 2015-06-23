@@ -98,7 +98,7 @@ namespace TechSocial
 					{
 						db.AplicaNANoValorMaxDoModulo(Convert.ToInt32(modulo), (2 * Convert.ToInt32(p)), Convert.ToInt32(audi));
 
-						if (criterioStringAnterior != "NA")
+						if (criterioStringAnterior != "NA" && !String.IsNullOrEmpty(criterioStringAnterior))
 						{
 							SomaDoPeso = (Convert.ToInt32(criterioStringAnterior) * 2) * -1;
 							db.SubtraiSomaPesoModulo(Convert.ToInt32(modulo), SomaDoPeso, Convert.ToInt32(audi));
