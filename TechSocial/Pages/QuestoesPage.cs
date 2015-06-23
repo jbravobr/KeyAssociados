@@ -120,15 +120,9 @@ namespace TechSocial
 			{
 				var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
 				var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
+				var database = new TechSocialDatabase(false);
 				
 				config.SetTitle("Base Legal");
-				
-				Action _selecionaBase = () =>
-				{
-					entryDescricaoBaseLegal.entry.Text = questao.BaseLegalDescricao;
-					this.baseLegalId = questao.BaseLegalId;
-					entryDescricaoBaseLegal.IsEnabled = true;
-				};
 
 				if (String.IsNullOrEmpty(questao.BaseLegalNome) || String.IsNullOrEmpty(questao.BaseLegalDescricao))
 				{
@@ -136,8 +130,19 @@ namespace TechSocial
 				}
 				else
 				{
-					config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(questao.BaseLegalNome, _selecionaBase));
-					dialogService.ActionSheet(config);
+					foreach (var baseLEGAL in database.GetBaseLegalQuestao(questao.questao.ToString()))
+					{
+						Action _selecionaBase = () =>
+						{
+							var b = database.GetBaseLegalQuestao(questao.questao.ToString()).Where(ba => ba.nome == baseLEGAL.nome);
+
+							entryDescricaoBaseLegal.entry.Text = questao.BaseLegalDescricao;
+							this.baseLegalId = questao.BaseLegalId;
+							entryDescricaoBaseLegal.IsEnabled = true;
+						};
+						config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(baseLEGAL.nome, _selecionaBase));
+						dialogService.ActionSheet(config);
+					}
 				}
 			};
 			#endregion

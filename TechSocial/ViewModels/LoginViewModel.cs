@@ -116,6 +116,7 @@ namespace TechSocial
 							_mods.valorMaxPontuacao = maxPont;
 						}
 					}
+					var listaBases = new List<BaseLegal>();
 
 					foreach (var item in _questoes)
 					{
@@ -125,12 +126,20 @@ namespace TechSocial
 
 						if (baseLegal != null && baseLegal.BaseLegal != null && baseLegal.BaseLegal.Any())
 						{
-							item.BaseLegalDescricao = baseLegal.BaseLegal.First().descricao;
-							item.BaseLegalId = baseLegal.BaseLegal.First().id_baselegal;
-							item.BaseLegalNome = baseLegal.BaseLegal.First().nome;
+							foreach (var baselegalItem in baseLegal.BaseLegal)
+							{
+								listaBases.Add(new BaseLegal
+									{
+										descricao = baselegalItem.descricao,
+										id_baselegal = baselegalItem.id_baselegal,
+										nome = baselegalItem.nome,
+										questao = item.questao.ToString()
+									});
+							}
 						}
 					}
-					db.InsertQuestao(_questoes); // Atualiza questões com bases legais
+					db.InsertBaseLegal(listaBases);
+					//db.InsertQuestao(_questoes); // Atualiza questões com bases legais
 
 					// Gravando Respostas.
 //                foreach (var auditoria in auditorias)

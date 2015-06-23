@@ -9,6 +9,9 @@ namespace TechSocial
 	{
 		public static IContainer Container { get; set; }
 
+		public static double ScreenHeight;
+		public static double ScreenWidth;
+
 		public App()
 		{
 			// Inicializa Autofac.

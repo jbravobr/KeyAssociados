@@ -102,6 +102,9 @@
     <Compile Include="CustomControls\QuestaoProblemaView.cs" />
     <Compile Include="IFileAccess.cs" />
     <Compile Include="Service\HttpGZipClientHandler.cs" />
+    <Compile Include="CustomControls\SliderView.cs" />
+    <Compile Include="Pages\TesteAbrirCarrosselQuestoesPage.cs" />
+    <Compile Include="Pages\QuestoesComProblemaCarrosselPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

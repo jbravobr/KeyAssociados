@@ -62,7 +62,32 @@ namespace TechSocial
 
 			MessagingCenter.Subscribe<AuditoriaViewCell,int>(this, "finalizar", (sender, audi) =>
 				{
-					this.Navigation.PushAsync(new QuestoesComProblema(audi.ToString()));
+					DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().ShowLoading("Carregando....");
+
+					var data = new TechSocialDatabase(false);
+					var questoes = new List<Questoes>();
+					var viewsQuestaoProblema = new List<QuestaoProblemaView>();
+
+					var respostas = data.GetRespostaPorAuditoria(Convert.ToInt32(audi))
+						.Where(r => (r.atende != "2" && r.atende != "Sim" && r.atende != "NA")
+						                && !String.IsNullOrEmpty(r.atende));
+
+					foreach (var resposta in respostas)
+					{
+						questoes.AddRange(data.GetQuestoes()
+							.Where(q => q.questao.ToString() == resposta.questao));
+					}
+
+					foreach (var questao in questoes)
+					{
+						viewsQuestaoProblema.Add(new QuestaoProblemaView(questao, audi.ToString(), questao.modulo.ToString()));
+					}
+
+					DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
+
+					this.Navigation.PushAsync(new QuestoesComProblemaCarrosselPage(viewsQuestaoProblema));
+
+					//this.Navigation.PushAsync(new QuestoesComProblema(audi.ToString()));
 				});
 
 			listViewRotas.ItemTapped += async (sender, e) => await ExibeDetalheAuditoria(e.Item);

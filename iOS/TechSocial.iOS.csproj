@@ -216,6 +216,7 @@
     <Compile Include="Bootstrap\SignaturePadBootstrap.cs" />
     <Compile Include="MyButton.cs" />
     <Compile Include="FIleAccess.cs" />
+    <Compile Include="SliderCarouselViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="ITunesArtwork" />

@@ -384,6 +384,11 @@ namespace TechSocial
 			return this.database.Table<BaseLegal>().ToList();
 		}
 
+		public ICollection<BaseLegal> GetBaseLegalQuestao(string questao)
+		{
+			return this.database.Table<BaseLegal>().Where(b => b.questao == questao).ToList();
+		}
+
 		/// <summary>
 		/// Retorna o Id da base legal selecionada.
 		/// </summary>

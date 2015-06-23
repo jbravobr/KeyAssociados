@@ -170,7 +170,7 @@ namespace TechSocial
 					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
 				}
 			};
-			gridData.Children.Add(new Label { Text = "Data" }, 0, 1);
+			gridData.Children.Add(new Label { Text = "Prazo para regularização" }, 0, 1);
 			gridData.Children.Add(dataPicker, 1, 1);
 			#endregion
 
