@@ -41,6 +41,8 @@ namespace TechSocial
 
 			foreach (var modulo in Modulos)
 			{
+				modulo.completo = db.TrocaStatusModuloCompleto(Convert.ToInt32(auditoria), modulo.modulo);
+
 				if (db.GetRespostaPorAuditoriaModulo(modulo.audi, modulo.modulo).Any())
 				{
 					var _questoes = db.GetQuestoes().Where(c => c.modulo == modulo.modulo).ToList();

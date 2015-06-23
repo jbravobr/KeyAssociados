@@ -38,14 +38,9 @@ namespace TechSocial
 
 			var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
 
-			if (netStatus && await this.VerificaDados())
+			if (await this.VerificaDados())
 				return await Task.FromResult(true);
 			else if (netStatus && !await this.VerificaDados())
-			{
-				DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
-				await DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().AlertAsync("Sem Conexão", "Não existe carga na aplicação, efetue o login online", "OK");
-			}
-			else
 			{
 				var dadosFromServer = await service.ExecutarLogin(user, pass);
 
@@ -205,6 +200,11 @@ namespace TechSocial
 
 					return true;
 				}
+			}
+			else
+			{
+				DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
+				await DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().AlertAsync("Sem Conexão", "Não existe carga na aplicação, efetue o login online", "OK");
 			}
 
 			return false;

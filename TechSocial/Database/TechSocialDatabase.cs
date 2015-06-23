@@ -414,19 +414,10 @@ namespace TechSocial
 		{
 			if (this.database.Table<Modulos>().Any(x => x.audi == audi && x.modulo == modulo))
 			{
-				List<Respostas> _respostas = null;
+				var qtdeQuestoes = this.GetQuestoes().Where(q => q.modulo == modulo);
+				var respostas = this.GetRespostaPorAuditoriaModulo(audi, modulo);
 
-				if (this.database.Table<Respostas>().Any(x => x.audi == audi.ToString() && x.modulo == modulo.ToString()))
-				{
-					var _audi = audi.ToString();
-					var _modulo = modulo.ToString();
-					_respostas = this.database.Table<Respostas>().Where(x => x.audi == _audi && x.modulo == _modulo).ToList();
-				}
-
-				if (_respostas != null && _respostas.Any())
-				{
-					return _respostas.All(x => x.respondida);
-				}
+				return qtdeQuestoes.Count() == respostas.Count;
 			}
 
 			return false;
@@ -554,6 +545,13 @@ namespace TechSocial
 			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
 			mod.somaPesos -= SomaPeso;
 			mod.respondido = true;
+			database.Update(mod);
+		}
+
+		public void AplicaNANoValorMaxDoModulo(int modulo, int valor, int audi)
+		{
+			var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
+			mod.valorMaxPontuacao -= valor;
 			database.Update(mod);
 		}
 
