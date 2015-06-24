@@ -10,12 +10,12 @@ namespace TechSocial
 	{
 		public QuestoesComProblemaCarrosselPage(List<QuestaoProblemaView> view)
 		{
-			var slider = new SliderView(view.First(), App.ScreenHeight * 0.5, App.ScreenWidth)
+			var slider = new SliderView(view.First(), App.ScreenHeight, App.ScreenWidth)
 			{ 
 				BackgroundColor = Color.Transparent,
-				TransitionLength = 200,
+				TransitionLength = 500,
 				StyleId = "SliderView",
-				MinimumSwipeDistance = 50
+				MinimumSwipeDistance = 50,
 			};
 
 			for (int i = 1; i < view.Count; i++)
