@@ -12,8 +12,8 @@ namespace TechSocial
 		{
 			var slider = new SliderView(view.First(), App.ScreenHeight, App.ScreenWidth)
 			{ 
-				BackgroundColor = Color.Transparent,
-				TransitionLength = 500,
+				BackgroundColor = Color.White,
+				TransitionLength = 800,
 				StyleId = "SliderView",
 				MinimumSwipeDistance = 50,
 			};

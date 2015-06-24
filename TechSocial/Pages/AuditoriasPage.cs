@@ -85,7 +85,14 @@ namespace TechSocial
 
 					DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
 
-					this.Navigation.PushAsync(new QuestoesComProblemaCarrosselPage(viewsQuestaoProblema));
+					if (!viewsQuestaoProblema.Any())
+					{
+						DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().HideLoading();
+						DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert(String.Empty, "Não existem questões com problema", "OK");
+						return;
+					}
+					else
+						this.Navigation.PushAsync(new QuestoesComProblemaCarrosselPage(viewsQuestaoProblema));
 
 					//this.Navigation.PushAsync(new QuestoesComProblema(audi.ToString()));
 				});
