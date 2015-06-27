@@ -19,8 +19,10 @@ namespace TechSocial
 		string modulo;
 		string questao;
 		Image icoAdicionar;
+		Image icoExcluir;
 		Respostas resp;
 		bool carregou = false;
+		List<string> imgJaNoSlider;
 
 		protected async override void OnAppearing()
 		{
@@ -83,27 +85,58 @@ namespace TechSocial
 			};
 			icoAdicionar.GestureRecognizers.Add(GetPhoto);
 
-
-			if (this.resp != null && this.resp._id > 0 && carregou == false)
+			var excluir_click = new TapGestureRecognizer();
+			excluir_click.Tapped += (sender, e) =>
 			{
-				var imagens = this.CarregaImagensSeHouver();
+				if (this.imgSelecionada == null)
+					return;
 
-				if (imagens != null && imagens.Any())
+				var index = areaFotosCapturadasThumb.Children.IndexOf(this.imgSelecionada);
+				areaFotosCapturadasThumb.Children.RemoveAt(index);
+				DependencyService.Get<ISaveAndLoadFile>().RemoveImage(this.imgSelecionada.ClassId);
+				this.imgCapturada.Source = ((Image)areaFotosCapturadasThumb.Children[index - 1 > 0 ? index - 1 : 0]).Source;
+				this.imgSelecionada = this.imgCapturada;
+			};
+			icoExcluir.GestureRecognizers.Add(excluir_click);
+
+//			if (Application.Current.Properties.ContainsKey("CarregouGaleria") &&
+//			    Convert.ToBoolean(Application.Current.Properties["CarregouGaleria"])
+//			    || (this.resp != null && this.resp._id > 0 && carregou == false))
+//			{
+			var imagens = this.CarregaImagensSeHouver();
+
+			if (imagens != null && imagens.Any())
+			{
+				carregou = true;
+				foreach (var imagem in imagens)
 				{
-					carregou = true;
-					foreach (var imagem in imagens)
-					{
-						var imgNome = DependencyService.Get<ISaveAndLoadFile>().GetImage(imagem);
-						var imgSrc = new Image { Source = ImageSource.FromFile(imgNome), ClassId = imagem };
+					var imgNome = DependencyService.Get<ISaveAndLoadFile>().GetImage(imagem);
+					var imgSrc = new Image { Source = ImageSource.FromFile(imgNome), ClassId = imagem };
 
+					if (areaFotosCapturadasThumb.Children.All(c => c.ClassId != imagem))
 						areaFotosCapturadasThumb.Children.Add(imgSrc);
-					}
-
-					var imgNomePrincipal = imagens.First();
-					var imgPrincipal = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNomePrincipal);
-					imgCapturada.Source = ImageSource.FromFile(imgPrincipal);
 				}
+
+				if (areaFotosCapturadasThumb.Children.Any())
+				{
+					foreach (var item in areaFotosCapturadasThumb.Children)
+					{
+						var img = (Image)item;
+						var img_Click = new TapGestureRecognizer();
+						img_Click.Tapped += (s, elem) =>
+						{
+							imgCapturada.Source = img.Source;
+							this.imgSelecionada = img;
+						};
+						img.GestureRecognizers.Add(img_Click);
+					}
+				}
+
+				var imgNomePrincipal = imagens.First();
+				var imgPrincipal = DependencyService.Get<ISaveAndLoadFile>().GetImage(imgNomePrincipal);
+				imgCapturada.Source = ImageSource.FromFile(imgPrincipal);
 			}
+//			}
 		}
 
 		public GaleriaFotoPage(string audi, string modulo, string questao, Respostas resposta = null)
@@ -112,7 +145,7 @@ namespace TechSocial
 			this.modulo = modulo;
 			this.resp = resposta;
 			this.questao = questao;
-				
+							
 			var menu = new StackLayout
 			{
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -121,7 +154,7 @@ namespace TechSocial
 				BackgroundColor = Color.FromHex("#EEEEEE")
 			};
 
-			var icoExcluir = new Image
+			icoExcluir = new Image
 			{
 				Source = ImageSource.FromResource("TechSocial.Content.Images.excluirFoto.png"),
 				HorizontalOptions = LayoutOptions.Start,

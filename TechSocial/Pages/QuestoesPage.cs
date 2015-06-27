@@ -63,7 +63,7 @@ namespace TechSocial
 			// Se para a questão carregada houver resposta preenche os campos na tela.
 			if (resposta != null)
 			{
-				entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.criterio == "NA" ? "NA" : resposta.atende;
+				entryCriterio.Text = resposta.criterio;
 				this.criterioQuestao = resposta.atende;
 				entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
 
@@ -263,7 +263,7 @@ namespace TechSocial
 
 							if (resposta != null)
 							{
-								entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.criterio == "NA" ? "NA" : resposta.atende;
+								entryCriterio.Text = resposta.criterio;
 								entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
 								this.criterioQuestao = resposta.atende;
 
@@ -316,7 +316,7 @@ namespace TechSocial
 
 						if (resposta != null)
 						{
-							entryCriterio.Text = resposta.atende == "0" ? "Não" : resposta.atende == "1" ? "Sim" : resposta.criterio == "NA" ? "NA" : resposta.atende;
+							entryCriterio.Text = resposta.criterio;
 							this.criterioQuestao = resposta.atende;
 							entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
 
