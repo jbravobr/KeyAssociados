@@ -39,7 +39,10 @@ namespace TechSocial
 			var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
 
 			if (await this.VerificaDados())
+			{
 				return await Task.FromResult(true);
+
+			}
 			else if (netStatus && !await this.VerificaDados())
 			{
 				var dadosFromServer = await service.ExecutarLogin(user, pass);
@@ -225,6 +228,139 @@ namespace TechSocial
 			var existeDados = db.GetAuditorias().Any();
 
 			return await Task.FromResult(existeDados);
+		}
+
+		public async Task Refresh()
+		{
+			var user = Application.Current.Properties["usuario"].ToString();
+			var pass = Application.Current.Properties["senha"].ToString();
+
+			var dadosFromServer = await service.ExecutarLogin(user, pass);
+
+			if (dadosFromServer != null && !String.IsNullOrEmpty(dadosFromServer.Auditor.nome))
+			{
+				var db = new TechSocialDatabase(false);
+
+				// Gravando Auditor logado.
+				db.InsertAuditor(dadosFromServer.Auditor);
+
+				// Gravando Rotas recebidas.
+				db.InsertRotas(dadosFromServer.Rotas);
+
+				// Gravando Semanas.
+				db.InsertSemanas(dadosFromServer.Semanas);
+
+				// Gravando Fornecedores recebidos.
+				var fornecedores = dadosFromServer.Rotas.Select(x => x.Fornecedores).ToList();
+				db.InsertFornecedores(fornecedores);
+
+				// Gravando Auditorias.
+				foreach (var fornecedor in fornecedores)
+				{
+					dadosFromServer = await this.serviceAuditoria.RetornarAuditorias(fornecedor.fornecedor);
+
+					if (dadosFromServer != null && dadosFromServer.Auditorias != null && dadosFromServer.Auditorias.Any())
+					{
+						db.InsertAuditorias(dadosFromServer.Auditorias);
+					}
+				}
+
+				// Gravando Módulos.
+				var modulo = new JsonObjectModulo();
+				var auditorias = db.GetAuditorias();
+				foreach (var auditoria in auditorias)
+				{
+					modulo = await this.serviceChecklist.RetornaChecklist(auditoria.audi.ToString());
+
+					if (modulo != null && modulo.Auditorias != null)
+					{
+						foreach (var item in modulo.Modulos)
+						{
+							item.audi = auditoria.audi;
+						}
+
+						db.InsertModulos(modulo.Modulos);
+					}
+				}
+
+				// Gravando Questões.
+				foreach (var mod in modulo.Modulos)
+				{
+					var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
+
+					if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+					{
+						db.InsertQuestao(questoes.Questoes);
+					}   
+				}
+
+				// Gravando Bases Legais.
+				var _questoes = db.GetQuestoes();
+				var maxPont = 0;
+				foreach (var _mods in modulo.Modulos)
+				{
+					if (maxPont > 0)
+						db.AtualizarModulo(_mods);
+
+					maxPont = 0;
+					foreach (var qq in _questoes.Where(q=>q.modulo == _mods.modulo))
+					{
+						maxPont += qq.peso * 2;
+						_mods.valorMaxPontuacao = maxPont;
+					}
+				}
+				var listaBases = new List<BaseLegal>();
+
+				foreach (var item in _questoes)
+				{
+					var dbMod = new TechSocialDatabase(false);
+					var checkList = dbMod.GetModuloById(item.modulo).checklist;
+					var baseLegal = await this.serviceBaseLegal.RetornarBasesLegaisPorChecklistQuestao(item.questao.ToString(), checkList);
+
+					if (baseLegal != null && baseLegal.BaseLegal != null && baseLegal.BaseLegal.Any())
+					{
+						foreach (var baselegalItem in baseLegal.BaseLegal)
+						{
+							listaBases.Add(new BaseLegal
+								{
+									descricao = baselegalItem.descricao,
+									id_baselegal = baselegalItem.id_baselegal,
+									nome = baselegalItem.nome,
+									questao = item.questao.ToString()
+								});
+						}
+					}
+				}
+				db.InsertBaseLegal(listaBases);
+				//db.InsertQuestao(_questoes); // Atualiza questões com bases legais
+
+				// Atualizando Módulos com atende
+				if (db.ExistemRespostas())
+				{
+					var mods = db.GetModulos();
+					var q = db.GetQuestoes();
+					this.listaRespostas = db.GetRespostas();
+
+					foreach (var mod in mods)
+					{
+						int? operacao;
+
+						foreach (var questao in q.Where(x=>x.modulo == mod.modulo))
+						{
+							var peso = questao.peso;
+							if (this.listaRespostas.Any(b => b.questao == questao.questao.ToString()))
+							{
+								var atende = this.listaRespostas.First(x => x.questao == questao.questao.ToString()).atende;
+								operacao += atende == null ? 0 : Convert.ToInt32(atende) * peso;
+							}
+						}
+						mod.atende = operacao;
+					}
+
+					// Atualizando Módulos com imagem do semáforo.
+					db.InsertModulos(mods);
+				}
+			}
 		}
 	}
 }

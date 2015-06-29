@@ -5,9 +5,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>br.com.techsocial.MobileApp.iOS</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.8.2</string>
+	<string>1.8.3</string>
 	<key>CFBundleVersion</key>
-	<string>1.8.2</string>
+	<string>1.8.3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>

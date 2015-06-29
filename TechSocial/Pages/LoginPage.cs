@@ -68,8 +68,11 @@ namespace TechSocial
 
 				if (await model.ExecutarLogin(usuario, senha))
 				{
+					Application.Current.Properties["usuario"] = usuario;
+					Application.Current.Properties["senha"] = senha;
+
 					loading.HideLoading();
-					await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
+					await Navigation.PushModalAsync(new RootPage());
 				}
 				else
 				{

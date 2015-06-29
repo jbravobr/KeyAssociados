@@ -105,6 +105,17 @@
     <Compile Include="CustomControls\SliderView.cs" />
     <Compile Include="Pages\TesteAbrirCarrosselQuestoesPage.cs" />
     <Compile Include="Pages\QuestoesComProblemaCarrosselPage.cs" />
+    <Compile Include="Pages\RootPage.cs" />
+    <Compile Include="Pages\MenuPage.cs" />
+    <Compile Include="CustomControls\MenuListView.cs" />
+    <Compile Include="Models\MenuListData.cs" />
+    <Compile Include="Models\Configuracoes.cs" />
+    <Compile Include="Models\EnumUrlAtivo.cs" />
+    <Compile Include="Pages\TestePage.cs" />
+    <Compile Include="Pages\ProducaoPage.cs" />
+    <Compile Include="Models\MenuMasterItem.cs" />
+    <Compile Include="CustomControls\MenuItemCell.cs" />
+    <Compile Include="Pages\RefreshPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
@@ -142,6 +153,9 @@
     <EmbeddedResource Include="Content\Images\excluirFoto.png" />
     <EmbeddedResource Include="Content\Images\adicionarFoto.png" />
     <EmbeddedResource Include="Content\Images\logo.png" />
+    <EmbeddedResource Include="Content\Images\producao.png" />
+    <EmbeddedResource Include="Content\Images\teste.png" />
+    <EmbeddedResource Include="Content\Images\settings.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http">

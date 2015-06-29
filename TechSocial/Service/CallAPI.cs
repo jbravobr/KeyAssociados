@@ -16,7 +16,10 @@ namespace TechSocial
 				//if (!TestaConexao())
 				//new NetworkErrorAlert();
 
-				client.BaseAddress = new Uri(Constants.serverURL);
+				var db = new TechSocialDatabase(false);
+
+				client.BaseAddress = new Uri(db.GetConfiguracaoUrl().UrlAtiva == EnumUrlAtivo.Producao 
+					? new Configuracoes().urlProducao : new Configuracoes().urlTeste);
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				client.Timeout = TimeSpan.FromMinutes(10);

@@ -16,6 +16,12 @@ namespace TechSocial
 
 			if (checaExistenciaBase)
 				CriaSchema();
+
+			if (!this.database.Table<Configuracoes>().Any())
+			{
+				var c = new Configuracoes(){ UrlAtiva = EnumUrlAtivo.Teste };
+				this.database.Insert(c);
+			}
 		}
 
 		public bool ExisteSchema()
@@ -33,7 +39,8 @@ namespace TechSocial
 				    || b.TableName != "Questoes"
 				    || b.TableName != "Respostas"
 				    || b.TableName != "Semana"
-				    || b.TableName != "BaseLegal"))
+				    || b.TableName != "BaseLegal"
+				    || b.TableName != "Configuracoes"))
 			{
 				return false;
 			}
@@ -54,7 +61,8 @@ namespace TechSocial
 				    || b.TableName != "Questoes"
 				    || b.TableName != "Respostas"
 				    || b.TableName != "Semana"
-				    || b.TableName != "BaseLegal"))
+				    || b.TableName != "BaseLegal"
+				    || b.TableName != "Configuracoes"))
 			{
 				database.CreateTable<Auditor>();
 				database.CreateTable<Rotas>();
@@ -66,7 +74,22 @@ namespace TechSocial
 				database.CreateTable<Semana>();
 				database.CreateTable<BaseLegal>();
 				database.CreateTable<ImagemAuditoriaModulo>();
+				database.CreateTable<Configuracoes>();
 			}
+		}
+
+
+		public Configuracoes GetConfiguracaoUrl()
+		{
+			return this.database.Table<Configuracoes>().First();
+		}
+
+		public void SetConfiguracaoNovo(EnumUrlAtivo urlTipo)
+		{
+			var _url = this.database.Table<Configuracoes>().First();
+			_url.UrlAtiva = urlTipo;
+
+			this.database.Update(_url);
 		}
 
 		/// <summary>
