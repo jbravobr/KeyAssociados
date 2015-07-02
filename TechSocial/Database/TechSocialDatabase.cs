@@ -630,16 +630,23 @@ namespace TechSocial
 
 		public void AtualizarSemaforoAuditoria(int audi)
 		{
-			var _audi = this.database.Table<Auditorias>().First(x => x.audi == audi);
-
-			if (_audi.nota > 70 && this.database.Table<Modulos>().Any(m => m.status.ToLower().Contains("pendente") && m.audi == _audi.audi))
-				_audi.status = 2;
-			else if (_audi.nota < 70)
-				_audi.status = 0;
-			else if (_audi.nota == 70 && this.database.Table<Modulos>().All(m => !m.status.ToLower().Contains("pendente") || !m.status.ToLower().Contains("reprovado")))
-				_audi.status = 1;
-
-			this.database.Update(_audi);
+			try
+			{
+				var _audi = this.database.Table<Auditorias>().First(x => x.audi == audi);
+				
+				if (_audi.nota > 70 && this.database.Table<Modulos>().Any(m => m.status.ToLower().Contains("pendente") && m.audi == _audi.audi))
+					_audi.status = 2;
+				else if (_audi.nota < 70)
+					_audi.status = 0;
+				else if (_audi.nota == 70 && this.database.Table<Modulos>().All(m => !m.status.ToLower().Contains("pendente") || !m.status.ToLower().Contains("reprovado")))
+					_audi.status = 1;
+				
+				this.database.Update(_audi);
+			}
+			catch (Exception ex)
+			{
+				DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert("Erro ao atualizar semáforo, nota inválida");
+			}
 		}
 
 		public void AtualizarModulo(Modulos mod)

@@ -126,13 +126,13 @@ namespace TechSocial
 				try
 				{
 					db.SalvarAssinatura(imagem, dic.Keys.First());
-
-					db.AtualizarSemaforoAuditoria(dic.Keys.First());
 				}
 				catch
 				{
-					await DisplayAlert("Erro", "Erro ao salvar imagem", "OK");
+					await DisplayAlert("Erro", "Erro ao salvar assinatura", "OK");
 				}
+
+				db.AtualizarSemaforoAuditoria(dic.Keys.First());
 			}
 		}
 	}

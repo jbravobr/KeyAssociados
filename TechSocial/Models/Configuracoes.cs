@@ -5,6 +5,9 @@ namespace TechSocial
 {
 	public class Configuracoes
 	{
+		[PrimaryKey, AutoIncrement]
+		public int Id{ get; set; }
+
 		[Ignore] 
 		public string urlProducao
 		{

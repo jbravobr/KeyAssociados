@@ -43,7 +43,7 @@ namespace TechSocial
 			Title = "Assinatura";
 
 			imgAss = new Image();
-			imgAss.Aspect = Aspect.Fill;
+			imgAss.Aspect = Aspect.AspectFit;
 
 			assinado = new StackLayout
 			{
