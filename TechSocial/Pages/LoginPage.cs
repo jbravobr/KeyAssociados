@@ -136,7 +136,7 @@ namespace TechSocial
 					Application.Current.Properties["senha"] = senha;
 
 					loading.HideLoading();
-					await Navigation.PushModalAsync(new SemanaPage());
+					await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
 				}
 				else
 				{
