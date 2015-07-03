@@ -169,8 +169,12 @@ namespace TechSocial
 				var index = areaFotosCapturadasThumb.Children.IndexOf(this.imgSelecionada);
 				areaFotosCapturadasThumb.Children.RemoveAt(index);
 				DependencyService.Get<ISaveAndLoadFile>().RemoveImage(this.imgSelecionada.ClassId);
-				this.imgCapturada.Source = ((Image)areaFotosCapturadasThumb.Children[index - 1 > 0 ? index - 1 : 0]).Source;
-				this.imgSelecionada = this.imgCapturada;
+
+				if (areaFotosCapturadasThumb.Children.Count >= 0)
+				{
+					this.imgCapturada.Source = ((Image)areaFotosCapturadasThumb.Children[index - 1 > 0 ? index - 1 : 0]).Source;
+					this.imgSelecionada = this.imgCapturada;
+				}
 			};
 			icoExcluir.GestureRecognizers.Add(excluir_click);
 			

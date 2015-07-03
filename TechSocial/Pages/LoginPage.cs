@@ -110,7 +110,7 @@ namespace TechSocial
 					txtLogin,
 					txtSenha,
 					btnAcessar,
-					grid
+					//grid
 				},
 				VerticalOptions = LayoutOptions.Center
 			};
@@ -136,7 +136,7 @@ namespace TechSocial
 					Application.Current.Properties["senha"] = senha;
 
 					loading.HideLoading();
-					await Navigation.PushModalAsync(new RootPage());
+					await Navigation.PushModalAsync(new SemanaPage());
 				}
 				else
 				{
