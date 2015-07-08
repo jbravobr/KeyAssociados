@@ -91,7 +91,7 @@
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchI18n>
     </MtouchI18n>
-    <CodesignProvision>de836435-eb46-4b8c-b2c8-de26cc336921</CodesignProvision>
+    <CodesignProvision>75323b47-df24-4c94-945a-5551b2387522</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>full</DebugType>

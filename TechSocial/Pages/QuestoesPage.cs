@@ -102,7 +102,7 @@ namespace TechSocial
                    
 				config.SetTitle("Critério");
                 
-				foreach (var valorCriterio in model.Questao.First().criterio.Split('/'))
+				foreach (var valorCriterio in questao.criterio.Split('/'))
 				{
 					Action _selecionaResposta = () => this.criterioQuestao = entryCriterio.Text = valorCriterio;
 					config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(valorCriterio, _selecionaResposta));
@@ -261,7 +261,7 @@ namespace TechSocial
 							BindingContext = questao;
 							resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
 
-							if (resposta != null)
+							if (resposta != null && resposta._id > 0)
 							{
 								entryCriterio.Text = resposta.criterio;
 								entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
@@ -314,7 +314,7 @@ namespace TechSocial
 						BindingContext = questao;
 						resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
 
-						if (resposta != null)
+						if (resposta != null && resposta._id > 0)
 						{
 							entryCriterio.Text = resposta.criterio;
 							this.criterioQuestao = resposta.atende;
