@@ -38,12 +38,7 @@ namespace TechSocial
 
 			var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
 
-			if (await this.VerificaDados())
-			{
-				return await Task.FromResult(true);
-
-			}
-			else if (netStatus && !await this.VerificaDados())
+			if (netStatus)
 			{
 				var dadosFromServer = await service.ExecutarLogin(user, pass);
 
@@ -212,6 +207,10 @@ namespace TechSocial
 
 					return true;
 				}
+			}
+			else if (!netStatus && await this.VerificaDados())
+			{
+				return await Task.FromResult(true);
 			}
 			else
 			{

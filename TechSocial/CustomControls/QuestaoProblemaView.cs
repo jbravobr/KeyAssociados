@@ -47,20 +47,21 @@ namespace TechSocial
 
 			var entCriterio = new Entry();
 			entCriterio.IsEnabled = false;
-			entCriterio.Text = resp.atende;
+			entCriterio.Text = resp.criterio;
 			#endregion
 
 			#region Grid Atende
 			var gridAtende = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridAtende.Children.Add(new Button{ Text = "Critério" }, 0, 1);
@@ -78,14 +79,15 @@ namespace TechSocial
 			#region Grid Ações Requeridas
 			var gridAcoesRequeridas = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridAcoesRequeridas.Children.Add(new Button{ Text = "Ações Requeridas" }, 0, 1);
@@ -103,14 +105,15 @@ namespace TechSocial
 			#region Grid Bases Legais
 			var gridBaseLegal = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridBaseLegal.Children.Add(new Label { Text = "Base Legal" }, 0, 1);
@@ -128,14 +131,15 @@ namespace TechSocial
 			#region Grid Observações
 			var gridObs = new Grid
 			{
+				VerticalOptions = LayoutOptions.Start,
 				RowDefinitions =
 				{
 					new RowDefinition { Height = GridLength.Auto }
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(500, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridObs.Children.Add(new Button{ Text = "Observações" }, 0, 1);
@@ -166,8 +170,8 @@ namespace TechSocial
 				},
 				ColumnDefinitions =
 				{
-					new ColumnDefinition { Width = GridLength.Auto },
-					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Absolute) }
+					new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+					new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
 				}
 			};
 			gridData.Children.Add(new Label { Text = "Prazo para regularização" }, 0, 1);
