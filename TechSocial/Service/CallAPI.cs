@@ -18,8 +18,8 @@ namespace TechSocial
 
 				var db = new TechSocialDatabase(false);
 
-				//client.BaseAddress = new Uri("http://compliance.ciahering.com.br/hering/webservices/app/api/");
-				client.BaseAddress = new Uri("http://techsocial.com.br/hering/webservices/app/api/");
+				client.BaseAddress = new Uri("http://compliance.ciahering.com.br/hering/webservices/app/api/");
+				//client.BaseAddress = new Uri("http://techsocial.com.br/hering/webservices/app/api/");
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				client.Timeout = TimeSpan.FromMinutes(10);

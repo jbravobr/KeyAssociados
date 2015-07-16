@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PropertyChanged;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using Connectivity.Plugin;
 
 namespace TechSocial
 {
@@ -36,9 +37,8 @@ namespace TechSocial
 			if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
 				throw new ArgumentException("Usuário ou senha em branco!");
 
-			var netStatus = DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
-
-			if (netStatus)
+			if (CrossConnectivity.Current.IsConnected && 
+				await CrossConnectivity.Current.IsReachable("http://www.google.com.br"))
 			{
 				var dadosFromServer = await service.ExecutarLogin(user, pass);
 
@@ -208,7 +208,8 @@ namespace TechSocial
 					return true;
 				}
 			}
-			else if (!netStatus && await this.VerificaDados())
+			else if ((!CrossConnectivity.Current.IsConnected && !await CrossConnectivity.Current.IsReachable("http://www.google.com.br"))
+				&& await this.VerificaDados())
 			{
 				return await Task.FromResult(true);
 			}
