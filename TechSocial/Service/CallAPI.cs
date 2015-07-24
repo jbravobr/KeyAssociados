@@ -5,38 +5,38 @@ using Xamarin.Forms;
 
 namespace TechSocial
 {
-	public static class CallAPI
-	{
-		// Retorna uma instância da chamada para a API
-		public static HttpClient RetornaClientHttp()
-		{
-			var client = new HttpClient();
-			try
-			{
-				//if (!TestaConexao())
-				//new NetworkErrorAlert();
+    public static class CallAPI
+    {
+        // Retorna uma instância da chamada para a API
+        public static HttpClient RetornaClientHttp()
+        {
+            var client = new HttpClient();
+            try
+            {
+                //if (!TestaConexao())
+                //new NetworkErrorAlert();
 
-				var db = new TechSocialDatabase(false);
+                var db = new TechSocialDatabase(false);
 
-				client.BaseAddress = new Uri("http://compliance.ciahering.com.br/hering/webservices/app/api/");
-				//client.BaseAddress = new Uri("http://techsocial.com.br/hering/webservices/app/api/");
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				client.Timeout = TimeSpan.FromMinutes(10);
-			}
-			catch (Exception ex)
-			{
-				throw ex;
-			}
+                client.BaseAddress = new Uri("http://compliance.ciahering.com.br/hering/webservices/app/api/");
+                //client.BaseAddress = new Uri("http://techsocial.com.br/hering/webservices/app/api/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.Timeout = TimeSpan.FromMinutes(10);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-			return client;
-		}
+            return client;
+        }
 
-		// Testa conexão com a internet
-		internal static bool TestaConexao()
-		{
-			return DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
-		}
-	}
+        // Testa conexão com a internet
+        internal static bool TestaConexao()
+        {
+            return DependencyService.Get<INetworkStatus>().VerificaStatusConexao();
+        }
+    }
 }
 

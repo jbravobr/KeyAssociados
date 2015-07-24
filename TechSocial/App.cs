@@ -8,6 +8,7 @@ namespace TechSocial
 	public class App : Application
 	{
 		public static IContainer Container { get; set; }
+		public static Auditor AuditorLogado { get; set; }
 
 		public static double ScreenHeight;
 		public static double ScreenWidth;

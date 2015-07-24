@@ -12,6 +12,8 @@ namespace TechSocial
 		[PrimaryKey,AutoIncrement]
 		public int _id { get; set; }
 
+		public Guid auditorId { get; set; }
+
 		public string empresa { get; set; }
 
 		public string fornecedor { get; set; }
@@ -24,19 +26,15 @@ namespace TechSocial
 
 		public int status { get; set; }
 
-		public double pontuacao
-		{
-			get
-			{
-				var db = new TechSocialDatabase(false);
-				var auditoria = this.audi.ToString();
+		public double pontuacao {
+			get {
+				var db = new TechSocialDatabase (false);
+				var auditoria = this.audi.ToString ();
 
-				if (db.GetModulosByAuditoria(auditoria).Any())
-				{
-					var _modulos = db.GetModulosByAuditoria(auditoria).ToList();
+				if (db.GetModulosByAuditoria (auditoria).Any ()) {
+					var _modulos = db.GetModulosByAuditoria (auditoria).ToList ();
 
-					foreach (var item in _modulos)
-					{
+					foreach (var item in _modulos) {
 						return +item.pontuacao;
 					}
 				}
@@ -54,31 +52,28 @@ namespace TechSocial
 		public bool enviado { get; set; }
 
 		[Ignore]
-		public ImageSource Imagem
-		{
-			get
-			{
+		public ImageSource Imagem {
+			get {
 				ImageSource imgSrc = null;
 
-				switch (this.resultado)
-				{
-					case 0:
-					case 5:
-					case 6:
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
-						break;
-					case 1:
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
-						break;
-					case 2:
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
-						break;
-					case 3:
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
-						break;
-					case 4:
-						imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloAzul.png");
-						break;
+				switch (this.resultado) {
+				case 0:
+				case 5:
+				case 6:
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloRed.png");
+					break;
+				case 1:
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloVerde.png");
+					break;
+				case 2:
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloLaranja.png");
+					break;
+				case 3:
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloCinza.png");
+					break;
+				case 4:
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloAzul.png");
+					break;
 				}
 
 				return imgSrc;            
@@ -86,10 +81,8 @@ namespace TechSocial
 		}
 
 		[Ignore]
-		public bool Ativo
-		{
-			get
-			{
+		public bool Ativo {
+			get {
 				return this.status != 1; 
 			}
 		}

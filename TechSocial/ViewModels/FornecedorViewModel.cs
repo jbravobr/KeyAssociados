@@ -21,7 +21,7 @@ namespace TechSocial
         {
             var db = new TechSocialDatabase(false);
 
-            var lista = db.GetFornecedores();
+            var lista = db.GetFornecedores().ToList();
             this.Fornecedores = lista;
         }
     }

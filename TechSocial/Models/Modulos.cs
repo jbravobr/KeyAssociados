@@ -15,6 +15,8 @@ namespace TechSocial
 
 		public int modulo { get; set; }
 
+		public Guid auditorId { get; set; }
+
 		public int audi { get; set; }
 
 		public string nome { get; set; }
@@ -29,8 +31,7 @@ namespace TechSocial
 
 		public string status { get; set; }
 
-		public double pontuacao
-		{
+		public double pontuacao {
 			get;
 			set;
 		}
@@ -60,38 +61,34 @@ namespace TechSocial
 		public Auditorias Auditorias { get; set; }
 
 		[Ignore]
-		public ImageSource Image
-		{
-			get
-			{
+		public ImageSource Image {
+			get {
 				//Nm = Nota do módulo = 100 * S / (SP * 2) ou simplesmente 50 * S / SP;
 				ImageSource imgSrc = null;
 				var pont = this.pontuacao > 0 ? 100 * this.pontuacao / valorMaxPontuacao : 0;
 
 
 				if (this.soUmaEhNA)
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloVerde.png");
 				else if (!this.respondido)
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
-				else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente")))
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
-				else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("reprovado")))
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloCinza.png");
+				else if (this.respondido && (pont < Convert.ToDouble (this.meta) && this.nao_atingida.ToLower ().Contains ("pendente")))
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloLaranja.png");
+				else if (this.respondido && (pont < Convert.ToDouble (this.meta) && this.nao_atingida.ToLower ().Contains ("reprovado")))
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloRed.png");
 				else
-					imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
+					imgSrc = ImageSource.FromResource ("TechSocial.Content.Images.circuloVerde.png");
 				return imgSrc;
 			}
 		}
 
 		[Ignore]
-		public ImageSource ImgCompleto
-		{
-			get
-			{
+		public ImageSource ImgCompleto {
+			get {
 				ImageSource src = null;
 
-				src = this.completo ? ImageSource.FromResource("TechSocial.Content.Images.completo.png") :
-                    ImageSource.FromResource("TechSocial.Content.Images.incompleto.png");
+				src = this.completo ? ImageSource.FromResource ("TechSocial.Content.Images.completo.png") :
+                    ImageSource.FromResource ("TechSocial.Content.Images.incompleto.png");
 
 				return src;
 			}

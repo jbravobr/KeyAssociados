@@ -1,17 +1,16 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Ad-Hoc|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.iPhone" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPadRetina.8.4" />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/iOS/NetworkStatus_IOS.cs" line="28" column="1" />
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/ViewModels/LoginViewModel.cs" line="40" column="1" />
+      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/ViewModels/FornecedorViewModel.cs" line="24" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="TechSocial/ViewModels/LoginViewModel.cs" line="99" offsetX="804" offsetY="1142" expression="questoes.Questoes" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <DisabledProjects>
-    <String>Droid/TechSocial.Droid.csproj</String>
     <String>TechSocial.Test/TechSocial.Test.csproj</String>
   </DisabledProjects>
 </Properties>

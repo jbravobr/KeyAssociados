@@ -24,7 +24,8 @@ namespace TechSocial
             var db = new TechSocialDatabase(false);
 
             this.Rotas = db.GetRotasById(IdRota);
-            this.Fornecedores = db.GetFornecedoresByRotaId(IdRota).OrderBy(x => x.razaoSocial).ToList();
+            this.Fornecedores = db.GetFornecedoresByRotaId(IdRota)
+				.OrderBy(x => x.razaoSocial).ToList();
         }
     }
 }

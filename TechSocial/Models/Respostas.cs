@@ -10,6 +10,8 @@ namespace TechSocial
 
 		public string audi { get; set; }
 
+		public int auditorId { get; set; }
+
 		public string modulo { get; set; }
 
 		public string questao { get; set; }
