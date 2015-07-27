@@ -103,8 +103,10 @@ namespace TechSocial
                         db.AtualiarAuditoria(auditoria);
                     }
 
+                    var auditoriasNecessarias = db.GetAuditorias().Where(x => x.resultado == 3).Select(c => c.audi);
+
                     // Gravando Questões.
-                    foreach (var mod in modulo.Modulos)
+                    foreach (var mod in modulo.Modulos.Where(x=>auditoriasNecessarias.Contains(x.audi)))
                     {
                         var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
 
