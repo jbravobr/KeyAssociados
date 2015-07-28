@@ -1,6 +1,11 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.iPhone" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPadRetina.8.4" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TechSocial/Pages/ChecklistPage.cs">
+    <Files>
+      <File FileName="TechSocial/Pages/QuestoesPage.cs" Line="335" Column="25" />
+      <File FileName="TechSocial/Pages/ChecklistPage.cs" Line="64" Column="45" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/iOS/NetworkStatus_IOS.cs" line="28" column="1" />

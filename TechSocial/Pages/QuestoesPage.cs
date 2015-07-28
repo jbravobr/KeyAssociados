@@ -37,271 +37,333 @@ namespace TechSocial
 
         protected async override void OnAppearing()
         {
-            base.OnAppearing();
-
-            if (model != null)
-                return;
-            
-            model = App.Container.Resolve<QuestoesViewModel>();
-            await model.MontarQuestao(modulo);
-            _questoes = model.Questao;
-            BindingContext = questao = _questoes.First();
-            resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
-            lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
-            lblPeso.SetBinding(Label.TextProperty, "PesoPergunta");
-            entObservacoes.SetBinding(Label.TextProperty, "Texto");
-            entryComoEvidenciar.entry.SetBinding(Editor.TextProperty, "como_evidenciar");
-
-            // Exibe os paginadores.
-            if (model.Questao.Count > 1 && !this.ToolbarItems.Any())
+            try
             {
-                this.ToolbarItems.Add(new ToolbarItem("anterior", "less.png", () =>
-                    MessagingCenter.Send<QuestoesPage, ICollection<Questoes>>(this, "anterior", _questoes), ToolbarItemOrder.Primary));
+                base.OnAppearing();
                 
-                this.ToolbarItems.Add(new ToolbarItem("próxima", "more.png", () => 
-                        MessagingCenter.Send<QuestoesPage, ICollection<Questoes>>(this, "proximo", _questoes), ToolbarItemOrder.Default));
+                if (model != null)
+                    return;
+                
+                model = App.Container.Resolve<QuestoesViewModel>();
+                await model.MontarQuestao(modulo);
+                _questoes = model.Questao;
+                BindingContext = questao = _questoes.First();
+                resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
+                lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
+                lblPeso.SetBinding(Label.TextProperty, "PesoPergunta");
+                entObservacoes.SetBinding(Label.TextProperty, "Texto");
+                entryComoEvidenciar.entry.SetBinding(Editor.TextProperty, "como_evidenciar");
+                
+                // Exibe os paginadores.
+                if (model.Questao.Count > 1 && !this.ToolbarItems.Any())
+                {
+                    this.ToolbarItems.Add(new ToolbarItem("anterior", "less.png", () =>
+                        MessagingCenter.Send<QuestoesPage, ICollection<Questoes>>(this, "anterior", _questoes), ToolbarItemOrder.Primary));
+                    
+                    this.ToolbarItems.Add(new ToolbarItem("próxima", "more.png", () => 
+                            MessagingCenter.Send<QuestoesPage, ICollection<Questoes>>(this, "proximo", _questoes), ToolbarItemOrder.Default));
+                }
+                
+                // Se para a questão carregada houver resposta preenche os campos na tela.
+                if (resposta != null)
+                {
+                    entryCriterio.Text = resposta.criterio;
+                    this.criterioQuestao = resposta.atende;
+                    entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
+                
+                    if (!String.IsNullOrEmpty(resposta.dt_prazo))
+                    {
+                        dataPicker.Date = Convert.ToDateTime(resposta.dt_prazo);
+                        dataPicker.IsVisible = true;
+                    }
+                
+                    entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
+                    entObservacoes.entry.Text = resposta.observacao;
+                
+                    if (!String.IsNullOrEmpty(resposta.evidencia))
+                    {
+                        var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
+                        thumbImagem.Source = imgSrc;
+                    }
+                }
             }
-
-            // Se para a questão carregada houver resposta preenche os campos na tela.
-            if (resposta != null)
+            catch (Exception ex)
             {
-                entryCriterio.Text = resposta.criterio;
-                this.criterioQuestao = resposta.atende;
-                entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
-
-                if (!String.IsNullOrEmpty(resposta.dt_prazo))
-                {
-                    dataPicker.Date = Convert.ToDateTime(resposta.dt_prazo);
-                    dataPicker.IsVisible = true;
-                }
-
-                entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
-                entObservacoes.entry.Text = resposta.observacao;
-
-                if (!String.IsNullOrEmpty(resposta.evidencia))
-                {
-                    var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
-                    thumbImagem.Source = imgSrc;
-                }
+                Xamarin.Insights.Report(ex);
             }
         }
 
         public QuestoesPage(int modulo, string audi, string checklistId)
         {
-            this.checklistId = checklistId;
-            this.modulo = modulo;
-            this.audi = audi;
-            this.Title = "Questão";
-
-            #region Critério
-            entryCriterio = new Entry{ IsEnabled = false };
-			
-            var btnCriterio = new Button{ Text = "Critério" };
-            btnCriterio.Clicked += (sender, e) =>
+            try
             {
-                var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-                var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();	
-                   
-                config.SetTitle("Critério");
+                this.checklistId = checklistId;
+                this.modulo = modulo;
+                this.audi = audi;
+                this.Title = "Questão";
                 
-                foreach (var valorCriterio in questao.criterio.Split('/'))
+                #region Critério
+                entryCriterio = new Entry{ IsEnabled = false };
+                
+                var btnCriterio = new Button{ Text = "Critério" };
+                btnCriterio.Clicked += (sender, e) =>
                 {
-                    Action _selecionaResposta = () => this.criterioQuestao = entryCriterio.Text = valorCriterio;
-                    config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(valorCriterio, _selecionaResposta));
-                }
-                dialogService.ActionSheet(config);
-            };
-            #endregion
-
-            #region Bases Legais
-            entryDescricaoBaseLegal = new MyButton();
-            entryDescricaoBaseLegal.entry.HeightRequest = 90;
-            
-            var btnBaseLegal = new Button{ Text = "Base Legal" };
-            btnBaseLegal.Clicked += async (sender, e) =>
-            {
-                var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-                var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
-                var database = new TechSocialDatabase(false);
-                var bases = database.GetBaseLegalQuestao(questao.questao.ToString());
-				
-                config.SetTitle("Base Legal");
-
-                if (!bases.Any())
-                {
-                    DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert("Questão sem base legal", "Erro", "OK");
-                }
-                else
-                {
-                    foreach (var baseLEGAL in bases)
+                    var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+                    var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();  
+                       
+                    config.SetTitle("Critério");
+                    
+                    foreach (var valorCriterio in questao.criterio.Split('/'))
                     {
-                        Action _selecionaBase = () =>
-                        {
-                            var b = database.GetBaseLegalQuestao(questao.questao.ToString()).First(ba => ba.nome == baseLEGAL.nome);
-
-                            entryDescricaoBaseLegal.entry.Text = b.descricao;
-                            this.baseLegalId = b.id_baselegal;
-                            entryDescricaoBaseLegal.IsEnabled = true;
-                        };
-                        config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(baseLEGAL.nome, _selecionaBase));
-                        dialogService.ActionSheet(config);
+                        Action _selecionaResposta = () => this.criterioQuestao = entryCriterio.Text = valorCriterio;
+                        config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(valorCriterio, _selecionaResposta));
                     }
-                }
-            };
-            #endregion
-
-            #region Data
-            dataPicker = new DatePicker
-            {
-                Format = "dd/MM/yyyy",
-                IsVisible = false
-            };
-            var btnData = new Button
-            {
-                Text = "Data Prazo"
-            };
-            btnData.Clicked += (sender, e) =>
-            {
-                var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
-                var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
-
-                config.SetTitle("Data Prazo");
-                Action _imediato = () =>
-                {
-                    this.prazo = "1";
-                    this.dataPicker.Date = DateTime.Now;
-                    this.dataPicker.IsVisible = true;
+                    dialogService.ActionSheet(config);
                 };
-                Action _pedeData = () =>
+                #endregion
+                
+                #region Bases Legais
+                entryDescricaoBaseLegal = new MyButton();
+                entryDescricaoBaseLegal.entry.HeightRequest = 90;
+                
+                var btnBaseLegal = new Button{ Text = "Base Legal" };
+                btnBaseLegal.Clicked += async (sender, e) =>
                 {
-                    this.prazo = "2";
-                    this.dataPicker.IsVisible = true;
-                };
-                config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Imediato", _imediato));
-                config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Pede Data", _pedeData));
-                dialogService.ActionSheet(config);
-            };
-            #endregion
-
-            #region Observações
-            entObservacoes = new MyButton();
-            entObservacoes.entry.HeightRequest = 90;
-            #endregion
-
-            #region Ações Requeridas
-            entAcoesRequeridas = new MyButton();
-            entAcoesRequeridas.entry.HeightRequest = 90;
-            #endregion
-
-            #region Requisito (Título)
-            lblRequisito = new Label
-            {
-                FontFamily = "ArialHebrew-Bold",
-                FontSize = 18,
-                TextColor = Color.FromHex("#333333"),
-                LineBreakMode = LineBreakMode.WordWrap,
-                HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.Start
-            };
-            #endregion
-            
-            #region Peso
-            lblPeso = new Label
-            {
-                FontFamily = "ArialHebrew-Bold",
-                FontSize = 24,
-                TextColor = Color.FromHex("#333333"),
-                LineBreakMode = LineBreakMode.WordWrap
-            };
-            #endregion
-
-            #region Como Evidenciar
-            entryComoEvidenciar = new MyButton();
-            entryComoEvidenciar.entry.HeightRequest = 130;
-            entryComoEvidenciar.entry.IsEnabled = false;
-            #endregion
-
-            #region Grid Como Evidenciar
-            var gridComoEvidenciar = new Grid
-            {
-                VerticalOptions = LayoutOptions.Start,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
-                }
-            };
-            gridComoEvidenciar.Children.Add(new Label { Text = "Como Evidenciar" }, 0, 1);
-            gridComoEvidenciar.Children.Add(entryComoEvidenciar, 1, 1);
-            #endregion
-
-            var btnSalvar = new Button
-            {
-                Text = "Salvar",
-                Style = Estilos.buttonDefaultStyle
-            };
-            btnSalvar.Clicked += async (sender, e) =>
-            {
-                var obs = entObservacoes.entry.Text;
-                var evidencia = string.Empty;
-                var criterio = this.criterioQuestao;
-                var baseLegalId = this.baseLegalId;
-                var baseLegalTexto = entryDescricaoBaseLegal.entry.Text;
-                var data = dataPicker.Date.ToString("yyyy-MM-dd");
-                var imagemEvidencia = this.imagem;
-                var acoesRequeridas = entAcoesRequeridas.entry.Text;
-                var peso = this.lblPeso.Text;
-
-                // Salva uma nova resposta.
-                if (this.resposta == null)
-                    await SalvarResposta(obs, evidencia, criterio, baseLegalId, baseLegalTexto, data, 
-                        imagemEvidencia, audi, acoesRequeridas, peso);
-                else // Atualiza uma resposta dada.
-                    await SalvarResposta(obs, evidencia, criterio, baseLegalId, baseLegalTexto, data, 
-                        imagemEvidencia, audi, acoesRequeridas, peso, this.resposta._id);
-            };
-
-            // Paginação de próximo.
-            MessagingCenter.Subscribe<QuestoesPage,ICollection<Questoes>>(this, "proximo", (sender, questoes) =>
-                {
-                    try
+                    var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+                    var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
+                    var database = new TechSocialDatabase(false);
+                    var bases = database.GetBaseLegalQuestao(questao.questao.ToString());
+                
+                    config.SetTitle("Base Legal");
+                
+                    if (!bases.Any())
                     {
-                        if (_questoes.Count > 1 && page < _questoes.Count)
+                        DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert("Questão sem base legal", "Erro", "OK");
+                    }
+                    else
+                    {
+                        foreach (var baseLEGAL in bases)
                         {
-                            this.entObservacoes.entry.Text = string.Empty;
-                            this.criterioQuestao = string.Empty;
-                            this.entryCriterio.Text = string.Empty;
-                            this.entryDescricaoBaseLegal.entry.Text = string.Empty;
-                            this.prazo = string.Empty;
-                            this.dataPicker = new DatePicker{ Format = "dd/MM/yyyy" };
-                            this.dataPicker.IsVisible = false;
-                            this.entAcoesRequeridas.entry.Text = string.Empty;
-                            this.thumbImagem.Source = null;
-                            this.imagem = String.Empty;
-
+                            Action _selecionaBase = () =>
+                            {
+                                var b = database.GetBaseLegalQuestao(questao.questao.ToString()).First(ba => ba.nome == baseLEGAL.nome);
+                
+                                entryDescricaoBaseLegal.entry.Text = b.descricao;
+                                this.baseLegalId = b.id_baselegal;
+                                entryDescricaoBaseLegal.IsEnabled = true;
+                            };
+                            config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption(baseLEGAL.nome, _selecionaBase));
+                            dialogService.ActionSheet(config);
+                        }
+                    }
+                };
+                #endregion
+                
+                #region Data
+                dataPicker = new DatePicker
+                {
+                    Format = "dd/MM/yyyy",
+                    IsVisible = false
+                };
+                var btnData = new Button
+                {
+                    Text = "Data Prazo"
+                };
+                btnData.Clicked += (sender, e) =>
+                {
+                    var dialogService = DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>();
+                    var config = new Acr.XamForms.UserDialogs.ActionSheetConfig();
+                
+                    config.SetTitle("Data Prazo");
+                    Action _imediato = () =>
+                    {
+                        this.prazo = "1";
+                        this.dataPicker.Date = DateTime.Now;
+                        this.dataPicker.IsVisible = true;
+                    };
+                    Action _pedeData = () =>
+                    {
+                        this.prazo = "2";
+                        this.dataPicker.IsVisible = true;
+                    };
+                    config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Imediato", _imediato));
+                    config.Options.Add(new Acr.XamForms.UserDialogs.ActionSheetOption("Pede Data", _pedeData));
+                    dialogService.ActionSheet(config);
+                };
+                #endregion
+                
+                #region Observações
+                entObservacoes = new MyButton();
+                entObservacoes.entry.HeightRequest = 90;
+                #endregion
+                
+                #region Ações Requeridas
+                entAcoesRequeridas = new MyButton();
+                entAcoesRequeridas.entry.HeightRequest = 90;
+                #endregion
+                
+                #region Requisito (Título)
+                lblRequisito = new Label
+                {
+                    FontFamily = "ArialHebrew-Bold",
+                    FontSize = 18,
+                    TextColor = Color.FromHex("#333333"),
+                    LineBreakMode = LineBreakMode.WordWrap,
+                    HorizontalOptions = LayoutOptions.Start,
+                    VerticalOptions = LayoutOptions.Start
+                };
+                #endregion
+                
+                #region Peso
+                lblPeso = new Label
+                {
+                    FontFamily = "ArialHebrew-Bold",
+                    FontSize = 24,
+                    TextColor = Color.FromHex("#333333"),
+                    LineBreakMode = LineBreakMode.WordWrap
+                };
+                #endregion
+                
+                #region Como Evidenciar
+                entryComoEvidenciar = new MyButton();
+                entryComoEvidenciar.entry.HeightRequest = 130;
+                entryComoEvidenciar.entry.IsEnabled = false;
+                #endregion
+                
+                #region Grid Como Evidenciar
+                var gridComoEvidenciar = new Grid
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                    RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
+                    }
+                };
+                gridComoEvidenciar.Children.Add(new Label { Text = "Como Evidenciar" }, 0, 1);
+                gridComoEvidenciar.Children.Add(entryComoEvidenciar, 1, 1);
+                #endregion
+                
+                var btnSalvar = new Button
+                {
+                    Text = "Salvar",
+                    Style = Estilos.buttonDefaultStyle
+                };
+                btnSalvar.Clicked += async (sender, e) =>
+                {
+                    var obs = entObservacoes.entry.Text;
+                    var evidencia = string.Empty;
+                    var criterio = this.criterioQuestao;
+                    var baseLegalId = this.baseLegalId;
+                    var baseLegalTexto = entryDescricaoBaseLegal.entry.Text;
+                    var data = dataPicker.Date.ToString("yyyy-MM-dd");
+                    var imagemEvidencia = this.imagem;
+                    var acoesRequeridas = entAcoesRequeridas.entry.Text;
+                    var peso = this.lblPeso.Text;
+                
+                    // Salva uma nova resposta.
+                    if (this.resposta == null)
+                        await SalvarResposta(obs, evidencia, criterio, baseLegalId, baseLegalTexto, data, 
+                            imagemEvidencia, audi, acoesRequeridas, peso);
+                    else // Atualiza uma resposta dada.
+                        await SalvarResposta(obs, evidencia, criterio, baseLegalId, baseLegalTexto, data, 
+                            imagemEvidencia, audi, acoesRequeridas, peso, this.resposta._id);
+                };
+                
+                // Paginação de próximo.
+                MessagingCenter.Subscribe<QuestoesPage,ICollection<Questoes>>(this, "proximo", (sender, questoes) =>
+                    {
+                        try
+                        {
+                            if (_questoes.Count > 1 && page < _questoes.Count)
+                            {
+                                this.entObservacoes.entry.Text = string.Empty;
+                                this.criterioQuestao = string.Empty;
+                                this.entryCriterio.Text = string.Empty;
+                                this.entryDescricaoBaseLegal.entry.Text = string.Empty;
+                                this.prazo = string.Empty;
+                                this.dataPicker = new DatePicker{ Format = "dd/MM/yyyy" };
+                                this.dataPicker.IsVisible = false;
+                                this.entAcoesRequeridas.entry.Text = string.Empty;
+                                this.thumbImagem.Source = null;
+                                this.imagem = String.Empty;
+                
+                                questao = questoes.Skip(page).Take(1).First();
+                                BindingContext = questao;
+                                resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
+                
+                                if (resposta != null && resposta._id > 0)
+                                {
+                                    entryCriterio.Text = resposta.criterio;
+                                    entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
+                                    this.criterioQuestao = resposta.atende;
+                
+                                    if (!String.IsNullOrEmpty(resposta.dt_prazo))
+                                    {
+                                        dataPicker.Date = Convert.ToDateTime(resposta.dt_prazo);
+                                        dataPicker.IsVisible = true;
+                                    }
+                
+                                    entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
+                                    entObservacoes.entry.Text = resposta.observacao;
+                
+                                    if (!String.IsNullOrEmpty(resposta.evidencia))
+                                    {
+                                        var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
+                                        thumbImagem.Source = ImageSource.FromFile(imgSrc);
+                                    }
+                                    this.imagem = resposta.evidencia;
+                                }
+                
+                                lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
+                                lblPeso.SetBinding(Label.TextProperty, "PesoPergunta");
+                                entObservacoes.SetBinding(Label.TextProperty, "Texto");
+                
+                                page++;
+                            }
+                            else
+                            {
+                                DisplayAlert("Aviso", "Não existem mais questões para este módulo", "OK");
+                                return;
+                            }
+                        }
+                        catch
+                        {
+                            return;
+                        }
+                
+                    });
+                
+                // Paginação de anterior.
+                MessagingCenter.Subscribe<QuestoesPage,ICollection<Questoes>>(this, "anterior", (sender, questoes) =>
+                    {
+                        try
+                        {
+                            page--;
+                            
                             questao = questoes.Skip(page).Take(1).First();
                             BindingContext = questao;
                             resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
-
+                
                             if (resposta != null && resposta._id > 0)
                             {
                                 entryCriterio.Text = resposta.criterio;
-                                entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
                                 this.criterioQuestao = resposta.atende;
-
+                                entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
+                
                                 if (!String.IsNullOrEmpty(resposta.dt_prazo))
                                 {
                                     dataPicker.Date = Convert.ToDateTime(resposta.dt_prazo);
                                     dataPicker.IsVisible = true;
                                 }
-
+                
                                 entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
                                 entObservacoes.entry.Text = resposta.observacao;
-
+                
                                 if (!String.IsNullOrEmpty(resposta.evidencia))
                                 {
                                     var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
@@ -309,227 +371,180 @@ namespace TechSocial
                                 }
                                 this.imagem = resposta.evidencia;
                             }
-
+                
                             lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
                             lblPeso.SetBinding(Label.TextProperty, "PesoPergunta");
                             entObservacoes.SetBinding(Label.TextProperty, "Texto");
-
-                            page++;
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            DisplayAlert("Aviso", "Não existem mais questões para este módulo", "OK");
+                            Xamarin.Insights.Report(ex);
                             return;
                         }
-                    }
-                    catch
+                    });
+                
+                #region Grid para Critério
+                var gridCriterio = new Grid
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                    RowDefinitions =
                     {
-                        return;
-                    }
-
-                });
-
-            // Paginação de anterior.
-            MessagingCenter.Subscribe<QuestoesPage,ICollection<Questoes>>(this, "anterior", (sender, questoes) =>
-                {
-                    try
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
                     {
-                        page--;
-                        
-                        questao = questoes.Skip(page).Take(1).First();
-                        BindingContext = questao;
-                        resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());
-
-                        if (resposta != null && resposta._id > 0)
-                        {
-                            entryCriterio.Text = resposta.criterio;
-                            this.criterioQuestao = resposta.atende;
-                            entryDescricaoBaseLegal.entry.Text = resposta.baseLegalTexto;
-
-                            if (!String.IsNullOrEmpty(resposta.dt_prazo))
-                            {
-                                dataPicker.Date = Convert.ToDateTime(resposta.dt_prazo);
-                                dataPicker.IsVisible = true;
-                            }
-
-                            entAcoesRequeridas.entry.Text = resposta.acoesRequeridas;
-                            entObservacoes.entry.Text = resposta.observacao;
-
-                            if (!String.IsNullOrEmpty(resposta.evidencia))
-                            {
-                                var imgSrc = DependencyService.Get<ISaveAndLoadFile>().GetImage(resposta.evidencia);
-                                thumbImagem.Source = ImageSource.FromFile(imgSrc);
-                            }
-                            this.imagem = resposta.evidencia;
-                        }
-
-                        lblRequisito.SetBinding(Label.TextProperty, "Pergunta");
-                        lblPeso.SetBinding(Label.TextProperty, "PesoPergunta");
-                        entObservacoes.SetBinding(Label.TextProperty, "Texto");
+                        new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
                     }
-                    catch
+                };
+                gridCriterio.Children.Add(btnCriterio, 0, 0);
+                gridCriterio.Children.Add(entryCriterio, 1, 0);
+                #endregion
+                
+                #region Grid Bases Legais
+                var gridBaseLegal = new Grid
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                    RowDefinitions =
                     {
-                        return;
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
                     }
-                });
-
-            #region Grid para Critério
-            var gridCriterio = new Grid
+                };
+                gridBaseLegal.Children.Add(btnBaseLegal, 0, 1);
+                gridBaseLegal.Children.Add(entryDescricaoBaseLegal, 1, 1);
+                #endregion
+                
+                #region Grid para Data
+                var gridData = new Grid
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                    RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
+                    }
+                };
+                gridData.Children.Add(btnData, 0, 1);
+                gridData.Children.Add(dataPicker, 1, 1);
+                #endregion
+                
+                #region Grid Observações
+                var gridObs = new Grid
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                    RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
+                    }
+                };
+                gridObs.Children.Add(new Button{ Text = "Observações" }, 0, 1);
+                gridObs.Children.Add(entObservacoes, 1, 1);
+                #endregion
+                
+                #region Grid Ações Requeridas
+                var gridAcoesRequeridas = new Grid
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                    RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
+                    }
+                };
+                gridAcoesRequeridas.Children.Add(new Button{ Text = "Ações Requeridas", FontSize = 12 }, 0, 1);
+                gridAcoesRequeridas.Children.Add(entAcoesRequeridas, 1, 1);
+                #endregion
+                
+                var btnAnexo = new Button
+                {
+                    Text = "Capturar Foto", 
+                    Style = Estilos.buttonDefaultStyle
+                };
+                btnAnexo.Clicked += async (sender, e) =>
+                {
+                    var obs = entObservacoes.entry.Text;
+                    var criterio = this.criterioQuestao;
+                    var baseLegalId = this.baseLegalId;
+                    var baseLegalTexto = entryDescricaoBaseLegal.entry.Text;
+                    var data = dataPicker.Date.ToString("yyyy-MM-dd");
+                    var imagemEvidencia = this.imagem;
+                    var acoesRequeridas = entAcoesRequeridas.entry.Text;
+                
+                    await TrataFoto(obs, criterio, baseLegalId, baseLegalTexto, data, 
+                        imagemEvidencia, audi, acoesRequeridas, questao.questao.ToString(), resposta);
+                };
+                
+                thumbImagem = new Image
+                {
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                    HeightRequest = 100,
+                    WidthRequest = 100
+                };
+                
+                #region Grid Foto
+                var gridFoto = new Grid
+                {
+                    RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto }
+                    },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = GridLength.Auto }
+                    },
+                    ColumnSpacing = 110
+                };
+                gridFoto.Children.Add(btnSalvar, 0, 1);
+                gridFoto.Children.Add(btnAnexo, 1, 1);
+                #endregion
+                
+                var stack = new StackLayout
+                {
+                    Padding = new Thickness(15, 10, 5, 5),
+                    Spacing = 10,
+                    Children =
+                    { 
+                        lblRequisito, 
+                        lblPeso, 
+                        gridCriterio,    
+                        gridBaseLegal,
+                        gridComoEvidenciar,
+                        //gridData,
+                        gridObs,
+                        gridAcoesRequeridas, 
+                        gridFoto,
+                        //btnSalvar 
+                    },
+                    Orientation = StackOrientation.Vertical,
+                    VerticalOptions = LayoutOptions.FillAndExpand
+                };
+                
+                this.Content = new ScrollView{ Content = stack, Orientation = ScrollOrientation.Vertical };
+            }
+            catch (Exception ex)
             {
-                VerticalOptions = LayoutOptions.Start,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
-                }
-            };
-            gridCriterio.Children.Add(btnCriterio, 0, 0);
-            gridCriterio.Children.Add(entryCriterio, 1, 0);
-            #endregion
-
-            #region Grid Bases Legais
-            var gridBaseLegal = new Grid
-            {
-                VerticalOptions = LayoutOptions.Start,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
-                }
-            };
-            gridBaseLegal.Children.Add(btnBaseLegal, 0, 1);
-            gridBaseLegal.Children.Add(entryDescricaoBaseLegal, 1, 1);
-            #endregion
-
-            #region Grid para Data
-            var gridData = new Grid
-            {
-                VerticalOptions = LayoutOptions.Start,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
-                }
-            };
-            gridData.Children.Add(btnData, 0, 1);
-            gridData.Children.Add(dataPicker, 1, 1);
-            #endregion
-
-            #region Grid Observações
-            var gridObs = new Grid
-            {
-                VerticalOptions = LayoutOptions.Start,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
-                }
-            };
-            gridObs.Children.Add(new Button{ Text = "Observações" }, 0, 1);
-            gridObs.Children.Add(entObservacoes, 1, 1);
-            #endregion
-
-            #region Grid Ações Requeridas
-            var gridAcoesRequeridas = new Grid
-            {
-                VerticalOptions = LayoutOptions.Start,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(300, GridUnitType.Star) }
-                }
-            };
-            gridAcoesRequeridas.Children.Add(new Button{ Text = "Ações Requeridas", FontSize = 12 }, 0, 1);
-            gridAcoesRequeridas.Children.Add(entAcoesRequeridas, 1, 1);
-            #endregion
-
-            var btnAnexo = new Button
-            {
-                Text = "Capturar Foto", 
-                Style = Estilos.buttonDefaultStyle
-            };
-            btnAnexo.Clicked += async (sender, e) =>
-            {
-                var obs = entObservacoes.entry.Text;
-                var criterio = this.criterioQuestao;
-                var baseLegalId = this.baseLegalId;
-                var baseLegalTexto = entryDescricaoBaseLegal.entry.Text;
-                var data = dataPicker.Date.ToString("yyyy-MM-dd");
-                var imagemEvidencia = this.imagem;
-                var acoesRequeridas = entAcoesRequeridas.entry.Text;
-
-                await TrataFoto(obs, criterio, baseLegalId, baseLegalTexto, data, 
-                    imagemEvidencia, audi, acoesRequeridas, questao.questao.ToString(), resposta);
-            };
-
-            thumbImagem = new Image
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
-                HeightRequest = 100,
-                WidthRequest = 100
-            };
-			
-            #region Grid Foto
-            var gridFoto = new Grid
-            {
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = GridLength.Auto }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = GridLength.Auto },
-                    new ColumnDefinition { Width = GridLength.Auto }
-                },
-                ColumnSpacing = 110
-            };
-            gridFoto.Children.Add(btnSalvar, 0, 1);
-            gridFoto.Children.Add(btnAnexo, 1, 1);
-            #endregion
-		
-            var stack = new StackLayout
-            {
-                Padding = new Thickness(15, 10, 5, 5),
-                Spacing = 10,
-                Children =
-                { 
-                    lblRequisito, 
-                    lblPeso, 
-                    gridCriterio,    
-                    gridBaseLegal,
-                    gridComoEvidenciar,
-                    //gridData,
-                    gridObs,
-                    gridAcoesRequeridas, 
-                    gridFoto,
-                    //btnSalvar 
-                },
-                Orientation = StackOrientation.Vertical,
-                VerticalOptions = LayoutOptions.FillAndExpand
-            };
-
-            this.Content = new ScrollView{ Content = stack, Orientation = ScrollOrientation.Vertical };
+                Xamarin.Insights.Report(ex); 
+            }
         }
 
         // Salva a resposta.
