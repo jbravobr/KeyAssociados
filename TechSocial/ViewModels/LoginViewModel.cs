@@ -18,11 +18,13 @@ namespace TechSocial
         readonly IQuestoesService serviceQuestoes;
         readonly IRespostaService serviceRespostas;
         readonly IBaseService serviceBaseLegal;
+        readonly IServiceUltimaAuditoria serviceUltimaAuditoria;
 
         public ICollection<Respostas> listaRespostas { get; set; }
 
         public LoginViewModel(ILoginService service, IAuditoriaService serviceAuditoria, ICheckListService serviceChecklist,
-                              IQuestoesService serviceQuestoes, IRespostaService serviceRespostas, IBaseService serviceBaseLegal)
+                              IQuestoesService serviceQuestoes, IRespostaService serviceRespostas, IBaseService serviceBaseLegal,
+                              IServiceUltimaAuditoria srvUltima)
         {
             this.service = service;
             this.serviceAuditoria = serviceAuditoria;
@@ -30,6 +32,7 @@ namespace TechSocial
             this.serviceQuestoes = serviceQuestoes;
             this.serviceRespostas = serviceRespostas;
             this.serviceBaseLegal = serviceBaseLegal;
+            this.serviceUltimaAuditoria = srvUltima;
         }
 
         public async Task<bool> ExecutarLogin(string user, string pass)
@@ -71,7 +74,7 @@ namespace TechSocial
                     // Gravando Fornecedores recebidos.
                     var fornecedores = dadosFromServer.Rotas.Select(x => x.Fornecedores).ToList();
                     db.InsertFornecedores(fornecedores);
-               
+
                     // Gravando Auditorias.
                     foreach (var fornecedor in fornecedores)
                     {
@@ -81,6 +84,11 @@ namespace TechSocial
                             db.InsertAuditorias(dadosFromServer.Auditorias);
                         }
                         db.AtualizaFornecedor(fornecedor);
+
+                        // Gravando última Auditoria
+                        var ultimas = await this.serviceUltimaAuditoria.GetUltimaAuditoria(fornecedor.fornecedor);
+
+                        db.InserirRespostaUltima(ultimas.Ultima_Auditoria.RespostaUltima);
                     }
 
                     // Gravando Módulos.

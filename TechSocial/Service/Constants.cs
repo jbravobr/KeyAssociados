@@ -2,37 +2,39 @@
 
 namespace TechSocial
 {
-	public static class Constants
-	{
-		public const string serverURL = "http://techsocial.com.br/hering/webservices/app/api/";
-		// URL base da API.
+    public static class Constants
+    {
+        public const string serverURL = "http://techsocial.com.br/hering/webservices/app/api/";
+        // URL base da API.
 
-		public const string LoginMethod = "login.json";
-		// Faz o login do usuário.
+        public const string LoginMethod = "login.json";
+        // Faz o login do usuário.
 
-		public const string AuditoriaEmpresa = "auditing.json/hering";
-		// Coletas as auditorias do usuário.
+        public const string AuditoriaEmpresa = "auditing.json/hering";
+        // Coletas as auditorias do usuário.
 
-		public const string CheckListEmpresa = "checklist.json";
-		// Coleta os módulos da auditoria.
+        public const string CheckListEmpresa = "checklist.json";
+        // Coleta os módulos da auditoria.
 
-		public const string CheckListDados = "answers.json";
-		// Coleta as respostas dos módulos da auditoria.
+        public const string CheckListDados = "answers.json";
+        // Coleta as respostas dos módulos da auditoria.
 
-		public const string Questao = "question.json";
-		// Coleta as questões dos módulos da auditoria.
+        public const string Questao = "question.json";
+        // Coleta as questões dos módulos da auditoria.
 
-		public const string BaseLegal = "baselegal.json/0/0/0";
-		//Coleta as bases legais.
+        public const string BaseLegal = "baselegal.json/0/0/0";
+        //Coleta as bases legais.
 
-		public const string BaseLegalCheckListQuestao = "baselegal.json/";
+        public const string BaseLegalCheckListQuestao = "baselegal.json/";
 
-		public const string PostResposta = "Answer.json";
-		//Envia uma resposta.
+        public const string PostResposta = "Answer.json";
+        //Envia uma resposta.
 
-		public const string EnviaImagemResposta = "foto.json/";
+        public const string EnviaImagemResposta = "foto.json/";
 
-		public const string EnviarImagemAssinatura = "assinatura.json/";
-	}
+        public const string EnviarImagemAssinatura = "assinatura.json/";
+
+        public const string UltimaAuditoria = "last_auditing.json/hering/";
+    }
 }
 

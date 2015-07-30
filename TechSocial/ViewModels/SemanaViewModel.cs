@@ -19,8 +19,9 @@ namespace TechSocial
         private void MontaSemanas()
         {
             var db = new TechSocialDatabase(false);
+            var usuario = db.GetAuditor();
 
-            this.Semanas = db.GetSemanas().OrderByDescending(x => x.dataInicio).ToList();
+            this.Semanas = db.GetSemanas().Where(c => c.userAuditor == usuario.user).OrderByDescending(x => x.dataInicio).ToList();
         }
     }
 }

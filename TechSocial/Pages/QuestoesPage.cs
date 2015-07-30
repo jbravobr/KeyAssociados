@@ -499,6 +499,15 @@ namespace TechSocial
                     HeightRequest = 100,
                     WidthRequest = 100
                 };
+
+                var btnUltimaResposta = new Button();
+                btnUltimaResposta.Text = "Ver última resposta";
+                btnUltimaResposta.FontSize = 14;
+                btnUltimaResposta.Style = Estilos.buttonDefaultStyle;
+                btnUltimaResposta.Clicked += async (object sender, EventArgs e) =>
+                {
+                    await this.Navigation.PushAsync(new ExibeUltimaAuditoriaPage(this.questao.questao.ToString()));
+                };
                 
                 #region Grid Foto
                 var gridFoto = new Grid
@@ -510,12 +519,14 @@ namespace TechSocial
                     ColumnDefinitions =
                     {
                         new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = GridLength.Auto },
                         new ColumnDefinition { Width = GridLength.Auto }
                     },
                     ColumnSpacing = 110
                 };
                 gridFoto.Children.Add(btnSalvar, 0, 1);
                 gridFoto.Children.Add(btnAnexo, 1, 1);
+                gridFoto.Children.Add(btnUltimaResposta, 2, 1);
                 #endregion
                 
                 var stack = new StackLayout
@@ -533,6 +544,7 @@ namespace TechSocial
                         gridObs,
                         gridAcoesRequeridas, 
                         gridFoto,
+                        //btnUltimaResposta,
                         //btnSalvar 
                     },
                     Orientation = StackOrientation.Vertical,
