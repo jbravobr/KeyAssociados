@@ -53,7 +53,7 @@ namespace TechSocial
                     // Gravando Rotas recebidas.
                     db.InsertRotas(dadosFromServer.Rotas);
 
-                    var _rotas = db.GetRotas();
+                    //var _rotas = db.GetRotas();
 //					foreach (var rota in _rotas) {
 //						rota.auditorId = _auditor.id;
 //						db.AtualizarRota (rota);
@@ -103,18 +103,22 @@ namespace TechSocial
                         db.AtualiarAuditoria(auditoria);
                     }
 
-                    var auditoriasNecessarias = db.GetAuditorias().Where(x => x.resultado == 3).Select(c => c.audi);
+                    var auditoriasNecessarias = db.GetAuditorias().Where(x => x.resultado == 3).Select(c => c.audi).ToList();
+                    var _modulosValidos = db.GetModulos();
 
                     // Gravando Questões.
-                    foreach (var mod in modulo.Modulos.Where(x=>auditoriasNecessarias.Contains(x.audi)))
+                    foreach (var mod in _modulosValidos)
                     {
-                        var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
-
-                        if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+                        if (auditoriasNecessarias.Contains(mod.audi))
                         {
-                            db.InsertQuestao(questoes.Questoes);
-                        }   
-                        db.AtualizarModulo(mod);
+                            var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
+
+                            if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+                            {
+                                db.InsertQuestao(questoes.Questoes);
+                            }   
+                            db.AtualizarModulo(mod);
+                        }
                     }
 
                     // Gravando Bases Legais.
