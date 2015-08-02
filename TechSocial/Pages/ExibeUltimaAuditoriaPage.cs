@@ -18,19 +18,21 @@ namespace TechSocial
         Entry entryCriterio;
         MyButton entryDescricaoBaseLegal;
         DatePicker dataPicker;
+        QuestaUltimaAuditoria model;
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
             var db = new TechSocialDatabase(false);
-            this.BindingContext = db.GetRespostaUltimaPorId(_q);
+            var _r = db.GetRespostaUltimaPorId(_q);
+            model = new QuestaUltimaAuditoria(_r);
+
+            this.BindingContext = model.Resposta;
 
             this.entryCriterio.SetBinding(Entry.TextProperty, "atende");
-            //this.entryDescricaoBaseLegal.entry.SetBinding(Entry.TextProperty,""
             this.entObservacoes.entry.SetBinding(Entry.TextProperty, "observacao");
             this.entAcoesRequeridas.entry.SetBinding(Entry.TextProperty, "acaorequerida");
-
         }
 
         public ExibeUltimaAuditoriaPage(string questaoId)
@@ -39,6 +41,7 @@ namespace TechSocial
 
             #region Critério
             entryCriterio = new Entry();
+            entryCriterio.IsEnabled = false;
 
             var btnCriterio = new Button{ Text = "Critério", IsEnabled = false };
 
@@ -48,6 +51,7 @@ namespace TechSocial
             entryDescricaoBaseLegal = new MyButton();
             entryDescricaoBaseLegal.entry.HeightRequest = 90;
             entryDescricaoBaseLegal.IsEnabled = false;
+            entryDescricaoBaseLegal.entry.IsEnabled = false;
 
             var btnBaseLegal = new Button{ Text = "Base Legal", IsEnabled = false };
             #endregion
@@ -61,7 +65,8 @@ namespace TechSocial
             };
             var btnData = new Button
             {
-                Text = "Data Prazo"
+                Text = "Data Prazo",
+                IsEnabled = false
             };
             #endregion
 
@@ -69,12 +74,14 @@ namespace TechSocial
             entObservacoes = new MyButton();
             entObservacoes.entry.HeightRequest = 90;
             entObservacoes.IsEnabled = false;
+            entObservacoes.entry.IsEnabled = false;
             #endregion
 
             #region Ações Requeridas
             entAcoesRequeridas = new MyButton();
             entAcoesRequeridas.entry.HeightRequest = 90;
             entAcoesRequeridas.IsEnabled = false;
+            entAcoesRequeridas.entry.IsEnabled = false;
             #endregion
 
             #region Como Evidenciar
@@ -202,11 +209,7 @@ namespace TechSocial
                 Spacing = 10,
                 Children =
                 { 
-                    //lblRequisito, 
-                    //lblPeso, 
-                    gridCriterio,    
-                    //gridBaseLegal,
-                    //gridComoEvidenciar,
+                    gridCriterio,
                     gridObs,
                     gridAcoesRequeridas, 
                     btnClose
