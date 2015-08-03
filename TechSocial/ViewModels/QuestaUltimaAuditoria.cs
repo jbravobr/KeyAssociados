@@ -14,13 +14,12 @@ namespace TechSocial
 
         private void ConfiguraUltimaQuestao(RespostaUltima ultimaResposta)
         {
+            this.Resposta = ultimaResposta;
 
             if (ultimaResposta.atende == null)
             {
                 this.Resposta.atende = "NA";
             }
-
-            this.Resposta = ultimaResposta;
         }
     }
 }

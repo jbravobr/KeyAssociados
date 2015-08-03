@@ -31,8 +31,8 @@ namespace TechSocial
             this.BindingContext = model.Resposta;
 
             this.entryCriterio.SetBinding(Entry.TextProperty, "atende");
-            this.entObservacoes.entry.SetBinding(Entry.TextProperty, "observacao");
-            this.entAcoesRequeridas.entry.SetBinding(Entry.TextProperty, "acaorequerida");
+            this.entObservacoes.entry.SetBinding(Editor.TextProperty, "observacao");
+            this.entAcoesRequeridas.entry.SetBinding(Editor.TextProperty, "acaorequerida");
         }
 
         public ExibeUltimaAuditoriaPage(string questaoId)
