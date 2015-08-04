@@ -254,9 +254,7 @@ namespace TechSocial
 
         private void SalvarResposta(int idResposta, string tp_prazo, string data, string obs, string acoesRequeridas)
         {
-            if (model.AtualizarRespostaQuestaoComProblema(idResposta, tp_prazo, data, obs, acoesRequeridas))
-                DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert("Sucesso", "Resposta gravada!", "OK");
-            else
+            if (!model.AtualizarRespostaQuestaoComProblema(idResposta, tp_prazo, data, obs, acoesRequeridas))
                 DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert("Erro", "Erro ao salvar questão", "OK");
         }
     }

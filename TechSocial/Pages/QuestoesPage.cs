@@ -570,7 +570,7 @@ namespace TechSocial
                 , data, imagemEvidencia, audi, this.modulo.ToString(), this.questao.questao.ToString(), this.prazo, acoesRequeridas, peso
                 , _id))
                 {
-                    await DisplayAlert("Sucesso", "Resposta Salva com sucesso!", "OK");
+                    //await DisplayAlert("Sucesso", "Resposta Salva com sucesso!", "OK");
 
                     // Troca de questão em caso de haver mais de 1 e não estar na última.
                     if (_questoes.Count > 1 && page < _questoes.Count)
