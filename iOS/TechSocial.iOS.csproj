@@ -72,7 +72,7 @@
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchI18n>
     </MtouchI18n>
-    <CodesignProvision>6526cab3-96ce-4514-804b-c6fdf09d14dc</CodesignProvision>
+    <CodesignProvision>0af00dd7-b3cc-4e17-bafb-1de35cb78a09</CodesignProvision>
     <IpaPackageName>
     </IpaPackageName>
   </PropertyGroup>
