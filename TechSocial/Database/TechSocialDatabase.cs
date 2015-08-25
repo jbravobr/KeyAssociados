@@ -517,28 +517,32 @@ namespace TechSocial
                 mod.respondido = true;
                 database.Update(mod);
 
-                var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
-                var sumNotas = 0.0;
-                var sumNotasMaximas = 0.0;
 
-                foreach (var m in mods)
+                if (mod.compile == "1")
                 {
-                    if (m.pontuacao >= 0)
-                        sumNotas += m.pontuacao;
-                }
+                    var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
+                    var sumNotas = 0.0;
+                    var sumNotasMaximas = 0.0;
 
-                foreach (var _mods in mods)
-                {
-                    foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                    foreach (var m in mods)
                     {
-                        sumNotasMaximas += (qq.peso * 2);
+                        if (m.pontuacao >= 0)
+                            sumNotas += m.pontuacao;
                     }
+
+                    foreach (var _mods in mods)
+                    {
+                        foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                        {
+                            sumNotasMaximas += (qq.peso * 2);
+                        }
+                    }
+
+                    var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
+
+                    auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
+                    database.Update(auditoria);
                 }
-
-                var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-
-                auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
-                database.Update(auditoria);
             }
         }
 
