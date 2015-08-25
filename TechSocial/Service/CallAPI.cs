@@ -1,4 +1,5 @@
 ﻿using System;
+
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Xamarin.Forms;
@@ -10,7 +11,10 @@ namespace TechSocial
         // Retorna uma instância da chamada para a API
         public static HttpClient RetornaClientHttp()
         {
-            var client = new HttpClient();
+            var handler = new HttpClientHandler();
+            handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
+
+            var client = new HttpClient(handler);
             try
             {
                 //if (!TestaConexao())
@@ -18,7 +22,7 @@ namespace TechSocial
 
                 var db = new TechSocialDatabase(false);
 
-                client.BaseAddress = new Uri("http://compliance.ciahering.com.br/hering/webservices/app/api/");
+                client.BaseAddress = new Uri("https://compliance.ciahering.com.br/hering/webservices/app/api/");
                 //client.BaseAddress = new Uri("http://techsocial.com.br/hering/webservices/app/api/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

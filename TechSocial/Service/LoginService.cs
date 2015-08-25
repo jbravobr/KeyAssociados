@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Xamarin;
 
 namespace TechSocial
 {
@@ -20,12 +21,19 @@ namespace TechSocial
             {
                 response = await client.GetAsync(String.Format("{0}/{1}/{2}", Constants.LoginMethod, user, pass));
 
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var json = JsonConvert.DeserializeObject<JsonObject>(jsonResponse);
-
-                    return json;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        var json = JsonConvert.DeserializeObject<JsonObject>(jsonResponse);
+                    
+                        return json;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Insights.Report(ex);
                 }
 
                 throw new ArgumentException("Erro de acesso ao servidor.");

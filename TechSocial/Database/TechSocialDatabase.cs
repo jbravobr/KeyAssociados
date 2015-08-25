@@ -495,45 +495,48 @@ namespace TechSocial
         /// <param name="nota">Nota.</param>
         /// <param name="audi">Audi.</param>
         /// <param name="modulo">Modulo.</param>
-        public void AtualizaPontuacaoModuloAuditoria(int nota, int audi, int modulo, bool NA)
+        public void AtualizaPontuacaoModuloAuditoria(int nota, int audi, int modulo)
         {
             var mod = this.database.Table<Modulos>().First(x => x.audi == audi && x.modulo == modulo);
-            mod.pontuacao += nota;
-            var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
+            if (mod.pontuacao >= 0)
+            {
+                if (nota == 0)
+                    mod.pontuacao = 0;
+                else
+                    mod.pontuacao += nota;
+                var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 
-            if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
-                mod.status = "Pendente";
-            else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("reprovado")))
-                mod.status = "Reprovado";
-            else
-                mod.status = "Aprovado";
+                if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
+                    mod.status = "Pendente";
+                else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("reprovado")))
+                    mod.status = "Reprovado";
+                else
+                    mod.status = "Aprovado";
 			
-            mod.completo = modCompleto;
-            database.Update(mod);
+                mod.completo = modCompleto;
+                mod.respondido = true;
+                database.Update(mod);
 
-            var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
-            var sumNotas = 0.0;
-            var sumNotasMaximas = 0.0;
+                var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
+                var sumNotas = 0.0;
+                var sumNotasMaximas = 0.0;
 
-            foreach (var m in mods)
-            {
-                sumNotas += m.pontuacao;
-            }
-
-            foreach (var _mods in mods)
-            {
-                foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                foreach (var m in mods)
                 {
-                    if (NA)
-                        continue;
-                    else
-                        sumNotasMaximas += (qq.peso * 2);
+                    if (m.pontuacao >= 0)
+                        sumNotas += m.pontuacao;
                 }
-            }
 
-            var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-            if (!NA)
-            {
+                foreach (var _mods in mods)
+                {
+                    foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                    {
+                        sumNotasMaximas += (qq.peso * 2);
+                    }
+                }
+
+                var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
+
                 auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
                 database.Update(auditoria);
             }
@@ -542,43 +545,47 @@ namespace TechSocial
         public void SubtraiPontuacaoAntesDeAtualizar(int pontuacao, int audi, int modulo, bool NA)
         {
             var mod = this.database.Table<Modulos>().First(x => x.audi == audi && x.modulo == modulo);
-            mod.pontuacao -= pontuacao;
-            var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 
-            if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
-                mod.status = "Pendente";
-            else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("reprovado")))
-                mod.status = "Reprovado";
-            else
-                mod.status = "Aprovado";
+            if (mod.pontuacao >= 0)
+            {
+                mod.pontuacao -= pontuacao;
+                var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
+
+                if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
+                    mod.status = "Pendente";
+                else if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("reprovado")))
+                    mod.status = "Reprovado";
+                else
+                    mod.status = "Aprovado";
 			
-            mod.completo = modCompleto;
-            database.Update(mod);
+                mod.completo = modCompleto;
+                database.Update(mod);
 
-            var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
-            var sumNotas = 0.0;
-            var sumPesos = 0.0;
-            var sumNotasMaximas = 0.0;
+                var mods = this.database.Table<Modulos>().Where(m => m.audi == audi);
+                var sumNotas = 0.0;
+                var sumPesos = 0.0;
+                var sumNotasMaximas = 0.0;
 
-            foreach (var m in mods)
-            {
-                sumNotas += m.pontuacao;
-            }
-
-            foreach (var _mods in mods)
-            {
-                foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                foreach (var m in mods)
                 {
-                    if (NA)
-                        continue;
-                    else
-                        sumNotasMaximas += (qq.peso * 2);
+                    sumNotas += m.pontuacao;
                 }
-            }
 
-            var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
-            auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
-            database.Update(auditoria);
+                foreach (var _mods in mods)
+                {
+                    foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                    {
+                        if (NA)
+                            continue;
+                        else
+                            sumNotasMaximas += (qq.peso * 2);
+                    }
+                }
+
+                var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
+                auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
+                database.Update(auditoria);
+            }
         }
 
         /// <summary>
@@ -598,23 +605,35 @@ namespace TechSocial
             }
 
             // Atualizando a pontuação do Módulo.
-            this.AtualizaPontuacaoModuloAuditoria(pontuacao, audi, modulo, NA);
+            this.AtualizaPontuacaoModuloAuditoria(pontuacao, audi, modulo);
+
+            // Atualizando resposta.
+//            var _resposta = this.GetRespostaById(respostaId);
+//            _resposta.rascunho = false;
+//            this.database.Update(_resposta);
         }
 
         public void AtualizaSomaPesoModulo(int modulo, int SomaPeso, int audi)
         {
             var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
-            mod.somaPesos += SomaPeso;
-            mod.respondido = true;
-            database.Update(mod);
+
+            if (mod.somaPesos >= 0)
+            {
+                mod.somaPesos += SomaPeso;
+                mod.respondido = true;
+                database.Update(mod);
+            }
         }
 
         public void SubtraiSomaPesoModulo(int modulo, int SomaPeso, int audi)
         {
             var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
-            mod.somaPesos -= SomaPeso;
-            mod.respondido = true;
-            database.Update(mod);
+            if (mod.somaPesos >= 0)
+            {
+                mod.somaPesos -= SomaPeso;
+                mod.respondido = true;
+                database.Update(mod);
+            }
         }
 
         public void AplicaNANoValorMaxDoModulo(int modulo, int valor, int audi)
@@ -623,8 +642,11 @@ namespace TechSocial
                 return;
 			
             var mod = this.database.Table<Modulos>().First(x => x.modulo == modulo && x.audi == audi);
-            mod.valorMaxPontuacao -= valor;
-            database.Update(mod);
+            if (mod.valorMaxPontuacao >= 0)
+            {
+                mod.valorMaxPontuacao -= valor;
+                database.Update(mod);
+            }
         }
 
         public bool CarregaOffline()
@@ -699,6 +721,11 @@ namespace TechSocial
         public void AtualizarModulo(Modulos mod)
         {
             this.database.Update(mod);
+        }
+
+        public void AtualizarRespostas(Respostas r)
+        {
+            this.database.Update(r);
         }
     }
 }

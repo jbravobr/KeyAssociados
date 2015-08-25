@@ -67,10 +67,13 @@ namespace TechSocial
                     var data = new TechSocialDatabase(false);
                     var questoes = new List<Questoes>();
                     var viewsQuestaoProblema = new List<QuestaoProblemaView>();
+                    var questaoVM = App.Container.Resolve<QuestoesViewModel>();
 
+//                    if (questaoVM.AtualizaPontos(audi.ToString()))
+//                    {
                     var respostas = data.GetRespostaPorAuditoria(Convert.ToInt32(audi))
 						.Where(r => (r.atende != "2" && r.atende != "Sim" && r.atende != "NA")
-                                        && !String.IsNullOrEmpty(r.atende) && r.criterio != "NA");
+                                            && !String.IsNullOrEmpty(r.atende) && r.criterio != "NA");
 
                     foreach (var resposta in respostas)
                     {
@@ -93,6 +96,9 @@ namespace TechSocial
                     }
                     else
                         this.Navigation.PushAsync(new QuestoesComProblemaCarrosselPage(viewsQuestaoProblema));
+//                    }
+//                    else
+//                        DependencyService.Get<Acr.XamForms.UserDialogs.IUserDialogService>().Alert(String.Empty, "Erro ao atualizar questões em modo rascunho", "OK");
 
                     //this.Navigation.PushAsync(new QuestoesComProblema(audi.ToString()));
                 });

@@ -123,6 +123,11 @@ namespace TechSocial
 
                             if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
                             {
+                                foreach (var item in questoes.Questoes)
+                                {
+                                    item.audi = mod.audi;
+                                }
+
                                 db.InsertQuestao(questoes.Questoes);
                             }   
                             db.AtualizarModulo(mod);

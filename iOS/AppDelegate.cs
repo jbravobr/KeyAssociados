@@ -7,6 +7,7 @@ using UIKit;
 using XLabs.Ioc;
 using XLabs.Platform.Services.IO;
 using Xamarin;
+using System.Net;
 
 namespace TechSocial.iOS
 {
@@ -15,6 +16,14 @@ namespace TechSocial.iOS
     {
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback +=
+                (sender, cert, chain, sslPolicyErrors) =>
+            {
+                if (cert != null)
+                    System.Diagnostics.Debug.WriteLine(cert);
+                return true;
+            };
+            
             var resolverContainer = new SimpleContainer();
             resolverContainer.Register<IFileAccess>(t => new FIleAccess()); // maybe just this line
             Resolver.SetResolver(resolverContainer.GetResolver());
