@@ -1,11 +1,16 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPad2.8.4" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/Database/TechSocialDatabase.cs" line="556" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="TechSocial/ViewModels/LoginViewModel.cs" line="99" offsetX="804" offsetY="1142" expression="questoes.Questoes" liveUpdate="False" />
+    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="227" offsetY="6500" expression="auditoria.nota" liveUpdate="False" />
+    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="481" offsetY="6500" expression="sumNotas" liveUpdate="False" />
+    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="638" offsetY="6500" expression="sumNotasMaximas" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <DisabledProjects>
     <String>Droid/TechSocial.Droid.csproj</String>

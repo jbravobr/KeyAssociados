@@ -130,6 +130,8 @@ namespace TechSocial
 
                                 db.InsertQuestao(questoes.Questoes);
                             }   
+
+                            mod.qtdeQuestoesNoModulo = questoes.Questoes.Count;
                             db.AtualizarModulo(mod);
                         }
                     }
@@ -143,10 +145,13 @@ namespace TechSocial
                             db.AtualizarModulo(_mods);
 						
                         maxPont = 0;
-                        foreach (var qq in _questoes.Where(q=>q.modulo == _mods.modulo))
+                        if (_mods.compile == "1")
                         {
-                            maxPont += qq.peso * 2;
-                            _mods.valorMaxPontuacao = maxPont;
+                            foreach (var qq in _questoes.Where(q=>q.modulo == _mods.modulo))
+                            {
+                                maxPont += qq.peso * 2;
+                                _mods.valorMaxPontuacao = maxPont;
+                            }
                         }
                     }
                     var listaBases = new List<BaseLegal>();

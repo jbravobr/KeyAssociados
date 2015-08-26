@@ -45,6 +45,10 @@ namespace TechSocial
 
         public double somaPesos { get; set; }
 
+        public int qtdeNA { get; set; }
+
+        public int qtdeQuestoesNoModulo { get; set; }
+
         public bool completo { get; set; }
 
         public string compile { get; set; }
@@ -79,7 +83,7 @@ namespace TechSocial
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
                 else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente")))
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
-                else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("reprovado")))
+                else if ((this.qtdeNA != this.qtdeQuestoesNoModulo) && this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("reprovado")))
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
                 else
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");

@@ -500,10 +500,13 @@ namespace TechSocial
             var mod = this.database.Table<Modulos>().First(x => x.audi == audi && x.modulo == modulo);
             if (mod.pontuacao >= 0)
             {
-                if (nota == 0)
+                if (nota == 0 && !NA)
                     mod.pontuacao = 0;
+                else if (NA)
+                    mod.pontuacao = mod.pontuacao;
                 else
                     mod.pontuacao += nota;
+                
                 var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 
                 if (mod.pontuacao < mod.meta && (!String.IsNullOrEmpty(mod.nao_atingida) && mod.nao_atingida.ToLower().Contains("pendente")))
@@ -515,6 +518,10 @@ namespace TechSocial
 			
                 mod.completo = modCompleto;
                 mod.respondido = true;
+
+                if (NA)
+                    mod.qtdeNA++;
+                
                 database.Update(mod);
 
 
@@ -526,15 +533,18 @@ namespace TechSocial
 
                     foreach (var m in mods)
                     {
-                        if (m.pontuacao >= 0)
+                        if (m.pontuacao >= 0 && m.compile == "1")
                             sumNotas += m.pontuacao;
                     }
 
                     foreach (var _mods in mods)
                     {
-                        foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                        if (_mods.compile == "1")
                         {
-                            sumNotasMaximas += (qq.peso * 2);
+                            foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                            {
+                                sumNotasMaximas += (qq.peso * 2);
+                            }
                         }
                     }
 
