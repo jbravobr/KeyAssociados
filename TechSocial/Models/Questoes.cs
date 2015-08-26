@@ -24,6 +24,8 @@ namespace TechSocial
 
         public string como_evidenciar { get; set; }
 
+        public bool NA { get; set; }
+
         public int pontuacao { get; set; }
 
         public string BaseLegalId { get; set; }

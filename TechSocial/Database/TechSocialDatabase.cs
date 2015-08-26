@@ -618,12 +618,18 @@ namespace TechSocial
         /// <param name="modulo">Modulo.</param>
         public int AtualizaPontuacaoQuestao(int questao, int pontuacao, int modulo, int audi, bool NA, int peso = 0)
         {
-            var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
+            var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo && x.audi == audi);
 
             if (!NA)
+            {
                 q.pontuacao = pontuacao;
+                q.NA = false;
+            }
             else
+            {
                 q.pontuacao = peso * 2;
+                q.NA = true;
+            }
 
             this.database.Update(q);
 
@@ -631,7 +637,7 @@ namespace TechSocial
 
             var pontuacaoModulo = 0;
 
-            foreach (var item in _questoesDoModulo)
+            foreach (var item in _questoesDoModulo.Where(x=>!x.NA))
             {
                 pontuacaoModulo += item.pontuacao;
             }
