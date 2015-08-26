@@ -121,6 +121,8 @@ namespace TechSocial
 
         async Task TrataCliqueBtnAcessar(string usuario, string senha)
         {
+            //await Navigation.PushModalAsync(new NavigationPage(new SemanaPage()));
+
             if (String.IsNullOrEmpty(usuario) || String.IsNullOrEmpty(senha))
                 await DisplayAlert("Erro", "É necessário informa um usuário e senha!", "OK");
             else

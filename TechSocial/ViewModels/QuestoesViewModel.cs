@@ -111,7 +111,7 @@ namespace TechSocial
 
                     var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
                     //db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi), SomaDoPeso, criterioENA);
-                    db.AtualizaPontuacaoModuloAuditoria(pontuacao, Convert.ToInt32(audi), Convert.ToInt32(modulo), Convert.ToInt32(p), criterioENA);
+                    db.AtualizaPontuacaoModuloAuditoria(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(audi), Convert.ToInt32(modulo), Convert.ToInt32(p), criterioENA);
                 }
 
                 return true;
@@ -122,41 +122,41 @@ namespace TechSocial
             }
         }
 
-        public bool AtualizaPontos(string audi)
-        {
-            int SomaDoPeso;
-            var db = new TechSocialDatabase(false);
-            var r = db.GetRespostaPorAuditoria(Convert.ToInt32(audi));
-
-            try
-            {
-                foreach (var item in r)
-                {
-                    if (item.rascunho)
-                    {
-                        if (item.criterio == "NA")
-                        {
-                            db.AplicaNANoValorMaxDoModulo(Convert.ToInt32(item.modulo), (2 * Convert.ToInt32(item.pesoQuestao)), Convert.ToInt32(audi));
-                            SomaDoPeso = 0;
-                        }
-                        else
-                            SomaDoPeso = Convert.ToInt32(item.pesoQuestao);
-                
-                        item.rascunho = false;
-                        db.AtualizarRespostas(item);
-
-                        var pontuacao = Convert.ToInt32(item.atende) * Convert.ToInt32(item.pesoQuestao);
-                        db.AtualizaPontuacaoQuestao(Convert.ToInt32(item.questao), pontuacao, Convert.ToInt32(item.modulo), Convert.ToInt32(audi), SomaDoPeso, item.criterio == "NA");   
-                    }
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+        //        public bool AtualizaPontos(string audi)
+        //        {
+        //            int SomaDoPeso;
+        //            var db = new TechSocialDatabase(false);
+        //            var r = db.GetRespostaPorAuditoria(Convert.ToInt32(audi));
+        //
+        //            try
+        //            {
+        //                foreach (var item in r)
+        //                {
+        //                    if (item.rascunho)
+        //                    {
+        //                        if (item.criterio == "NA")
+        //                        {
+        //                            db.AplicaNANoValorMaxDoModulo(Convert.ToInt32(item.modulo), (2 * Convert.ToInt32(item.pesoQuestao)), Convert.ToInt32(audi));
+        //                            SomaDoPeso = 0;
+        //                        }
+        //                        else
+        //                            SomaDoPeso = Convert.ToInt32(item.pesoQuestao);
+        //
+        //                        item.rascunho = false;
+        //                        db.AtualizarRespostas(item);
+        //
+        //                        var pontuacao = Convert.ToInt32(item.atende) * Convert.ToInt32(item.pesoQuestao);
+        //                        db.AtualizaPontuacaoQuestao(Convert.ToInt32(item.questao), pontuacao, Convert.ToInt32(item.modulo), Convert.ToInt32(audi), SomaDoPeso, item.criterio == "NA");
+        //                    }
+        //                }
+        //
+        //                return true;
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                return false;
+        //            }
+        //        }
 
         private static Respostas CriaResposta(string obs, string evidencia, string criterio, string baseLegalId,
                                               string baseLegalTexto, string data, string imagemEvidencia, 

@@ -1,9 +1,14 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TechSocial/Database/TechSocialDatabase.cs">
+    <Files>
+      <File FileName="TechSocial/Database/TechSocialDatabase.cs" Line="628" Column="33" />
+      <File FileName="TechSocial/Pages/LoginPage.cs" Line="123" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/Database/TechSocialDatabase.cs" line="556" column="1" />
+      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/Database/TechSocialDatabase.cs" line="502" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>

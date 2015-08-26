@@ -495,17 +495,22 @@ namespace TechSocial
         /// <param name="nota">Nota.</param>
         /// <param name="audi">Audi.</param>
         /// <param name="modulo">Modulo.</param>
-        public void AtualizaPontuacaoModuloAuditoria(int nota, int audi, int modulo, int peso = 0, bool NA = false)
+        public void AtualizaPontuacaoModuloAuditoria(int questao, int nota, int audi, int modulo, int peso = 0, bool NA = false)
         {
             var mod = this.database.Table<Modulos>().First(x => x.audi == audi && x.modulo == modulo);
+
+            var pontMod = this.AtualizaPontuacaoQuestao(questao, nota, modulo, audi, NA, peso);
+
             if (mod.pontuacao >= 0)
             {
-                if (nota == 0 && !NA)
-                    mod.pontuacao = 0;
-                else if (NA)
-                    mod.pontuacao = mod.pontuacao;
-                else
-                    mod.pontuacao += nota;
+//                if (nota == 0 && !NA)
+//                    mod.pontuacao = 0;
+//                else if (NA)
+//                    mod.pontuacao = mod.pontuacao;
+//                else
+//                    mod.pontuacao += nota;
+
+                mod.pontuacao = pontMod;
                 
                 var modCompleto = this.TrocaStatusModuloCompleto(audi, modulo);
 
@@ -611,23 +616,27 @@ namespace TechSocial
         /// <param name="questao">Questao.</param>
         /// <param name="pontuacao">Pontuacao.</param>
         /// <param name="modulo">Modulo.</param>
-        public void AtualizaPontuacaoQuestao(int questao, int pontuacao, int modulo, int audi, int SomaPeso, bool NA)
+        public int AtualizaPontuacaoQuestao(int questao, int pontuacao, int modulo, int audi, bool NA, int peso = 0)
         {
-            if (!NA)
-            {
-                var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
-                q.pontuacao = pontuacao;
+            var q = this.database.Table<Questoes>().First(x => x.questao == questao && x.modulo == modulo);
 
-                this.AtualizaSomaPesoModulo(modulo, SomaPeso, audi);
+            if (!NA)
+                q.pontuacao = pontuacao;
+            else
+                q.pontuacao = peso * 2;
+
+            this.database.Update(q);
+
+            var _questoesDoModulo = this.database.Table<Questoes>().Where(x => x.audi == audi && x.modulo == modulo).ToList();
+
+            var pontuacaoModulo = 0;
+
+            foreach (var item in _questoesDoModulo)
+            {
+                pontuacaoModulo += item.pontuacao;
             }
 
-            // Atualizando a pontuação do Módulo.
-            this.AtualizaPontuacaoModuloAuditoria(pontuacao, audi, modulo);
-
-            // Atualizando resposta.
-//            var _resposta = this.GetRespostaById(respostaId);
-//            _resposta.rascunho = false;
-//            this.database.Update(_resposta);
+            return pontuacaoModulo;
         }
 
         public void AtualizaSomaPesoModulo(int modulo, int SomaPeso, int audi)
