@@ -111,7 +111,7 @@ namespace TechSocial
 
                     var pontuacao = Convert.ToInt32(c) * Convert.ToInt32(p);
                     //db.AtualizaPontuacaoQuestao(Convert.ToInt32(questao), pontuacao, Convert.ToInt32(modulo), Convert.ToInt32(audi), SomaDoPeso, criterioENA);
-                    db.AtualizaPontuacaoModuloAuditoria(pontuacao, Convert.ToInt32(audi), Convert.ToInt32(modulo));
+                    db.AtualizaPontuacaoModuloAuditoria(pontuacao, Convert.ToInt32(audi), Convert.ToInt32(modulo), Convert.ToInt32(p), criterioENA);
                 }
 
                 return true;

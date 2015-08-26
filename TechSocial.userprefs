@@ -1,27 +1,8 @@
 ﻿<Properties StartupItem="iOS/TechSocial.iOS.csproj" GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPad2.8.4" />
-  <MonoDevelop.Ide.Workbench>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="TechSocial" expanded="True">
-            <Node name="TechSocial" expanded="True">
-              <Node name="Service" expanded="True" />
-            </Node>
-            <Node name="TechSocial.iOS" expanded="True">
-              <Node name="Main.cs" selected="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/iOS/NetworkStatus_IOS.cs" line="28" column="1" />
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/Pages/ExibeUltimaAuditoriaPage.cs" line="27" column="1" />
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/iOS/AppDelegate.cs" line="22" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="TechSocial/ViewModels/LoginViewModel.cs" line="99" offsetX="804" offsetY="1142" expression="questoes.Questoes" liveUpdate="False" />

@@ -495,7 +495,7 @@ namespace TechSocial
         /// <param name="nota">Nota.</param>
         /// <param name="audi">Audi.</param>
         /// <param name="modulo">Modulo.</param>
-        public void AtualizaPontuacaoModuloAuditoria(int nota, int audi, int modulo)
+        public void AtualizaPontuacaoModuloAuditoria(int nota, int audi, int modulo, int peso = 0, bool NA = false)
         {
             var mod = this.database.Table<Modulos>().First(x => x.audi == audi && x.modulo == modulo);
             if (mod.pontuacao >= 0)
@@ -539,6 +539,9 @@ namespace TechSocial
                     }
 
                     var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
+
+                    if (NA)
+                        sumNotasMaximas = sumNotasMaximas - (peso * 2);
 
                     auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
                     database.Update(auditoria);
