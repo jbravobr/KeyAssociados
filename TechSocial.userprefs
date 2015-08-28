@@ -2,10 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPad2.8.4" />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/Database/TechSocialDatabase.cs" line="558" column="1" />
-      <Breakpoint file="/Users/Rodrigo/Projects/TechSocial/TechSocial/Database/TechSocialDatabase.cs" line="561" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="TechSocial/ViewModels/LoginViewModel.cs" line="99" offsetX="804" offsetY="1142" expression="questoes.Questoes" liveUpdate="False" />

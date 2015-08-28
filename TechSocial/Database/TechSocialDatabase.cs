@@ -548,15 +548,18 @@ namespace TechSocial
                         {
                             foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
                             {
-                                sumNotasMaximas += (qq.peso * 2);
+                                if (!qq.NA)
+                                    sumNotasMaximas += (qq.peso * 2);
+//                                else if (qq.NA)
+//                                    sumNotasMaximas -= (qq.peso * 2);
                             }
                         }
                     }
 
                     var auditoria = this.database.Table<Auditorias>().First(x => x.audi == audi);
 
-                    if (NA)
-                        sumNotasMaximas = sumNotasMaximas - (peso * 2);
+//                    if (NA)
+//                        sumNotasMaximas = sumNotasMaximas - (peso * 2);
 
                     auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
                     database.Update(auditoria);
