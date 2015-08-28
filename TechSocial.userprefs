@@ -6,9 +6,9 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="TechSocial/ViewModels/LoginViewModel.cs" line="99" offsetX="804" offsetY="1142" expression="questoes.Questoes" liveUpdate="False" />
-    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="227" offsetY="6500" expression="auditoria.nota" liveUpdate="False" />
-    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="481" offsetY="6500" expression="sumNotas" liveUpdate="False" />
-    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="638" offsetY="6500" expression="sumNotasMaximas" liveUpdate="False" />
+    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="719" offsetY="6393" expression="auditoria.nota" liveUpdate="False" />
+    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="697" offsetY="6350" expression="sumNotas" liveUpdate="False" />
+    <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="705" offsetY="6318" expression="sumNotasMaximas" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <DisabledProjects>
     <String>Droid/TechSocial.Droid.csproj</String>

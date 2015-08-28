@@ -81,7 +81,7 @@ namespace TechSocial
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
                 else if (!this.respondido)
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloCinza.png");
-                else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente")))
+                else if ((this.qtdeNA != this.qtdeQuestoesNoModulo) && this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente")))
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
                 else if ((this.qtdeNA != this.qtdeQuestoesNoModulo) && this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("reprovado")))
                     imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");

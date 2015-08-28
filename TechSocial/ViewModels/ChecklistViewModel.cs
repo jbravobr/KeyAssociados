@@ -49,7 +49,7 @@ namespace TechSocial
 
                     foreach (var item in _questoes)
                     {
-                        modulo.pontuacao = modulo.pontuacao + item.pontuacao;
+                        modulo.pontuacao = modulo.pontuacao;
                     }
                 }
             }

@@ -524,8 +524,13 @@ namespace TechSocial
                 mod.completo = modCompleto;
                 mod.respondido = true;
 
-                if (NA)
-                    mod.qtdeNA++;
+                var _q = this.database.Table<Questoes>().Where(x => x.modulo == modulo && x.audi == audi);
+
+                foreach (var item in _q)
+                {
+                    if (item.NA)
+                        mod.qtdeNA++;
+                }
                 
                 database.Update(mod);
 
@@ -563,6 +568,16 @@ namespace TechSocial
 
                     auditoria.nota = sumNotas <= 0 ? 0 : 100 * (sumNotas / sumNotasMaximas);
                     database.Update(auditoria);
+
+//                    var pont = mod.pontuacao > 0 ? 100 * mod.pontuacao / valorMaxPontuacao : 0;
+//                  
+//                    if ((mod.qtdeNA != mod.qtdeQuestoesNoModulo) && mod.respondido && (pont < Convert.ToDouble(mod.meta) && mod.nao_atingida.ToLower().Contains("reprovado")))
+//                        imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloRed.png");
+//                    else if (this.respondido && (pont < Convert.ToDouble(this.meta) && this.nao_atingida.ToLower().Contains("pendente")))
+//                        imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloLaranja.png");
+//                    else
+//                        imgSrc = ImageSource.FromResource("TechSocial.Content.Images.circuloVerde.png");
+//                    return imgSrc;
                 }
             }
         }
