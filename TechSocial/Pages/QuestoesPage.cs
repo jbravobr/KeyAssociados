@@ -45,7 +45,7 @@ namespace TechSocial
                     return;
                 
                 model = App.Container.Resolve<QuestoesViewModel>();
-                await model.MontarQuestao(modulo);
+                await model.MontarQuestao(modulo, audi);
                 _questoes = model.Questao;
                 BindingContext = questao = _questoes.First();
                 resposta = model.GetQuestaoResposta(questao.questao, audi, modulo.ToString());

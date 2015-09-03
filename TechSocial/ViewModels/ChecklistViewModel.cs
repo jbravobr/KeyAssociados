@@ -32,7 +32,7 @@ namespace TechSocial
                     db.AtualizarModulo(_mods);
 
                 maxPont = 0;
-                foreach (var qq in qqq.Where(q=>q.modulo == _mods.modulo))
+                foreach (var qq in qqq.Where(q=>q.modulo == _mods.modulo && q.audi == Convert.ToInt32(auditoria)))
                 {
                     maxPont += qq.peso * 2;
                     _mods.valorMaxPontuacao = maxPont;

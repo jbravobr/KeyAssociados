@@ -11,7 +11,7 @@
     <Watch file="TechSocial/Database/TechSocialDatabase.cs" line="549" offsetX="705" offsetY="6318" expression="sumNotasMaximas" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <DisabledProjects>
-    <String>Droid/TechSocial.Droid.csproj</String>
     <String>TechSocial.Test/TechSocial.Test.csproj</String>
+    <String>Droid/TechSocial.Droid.csproj</String>
   </DisabledProjects>
 </Properties>

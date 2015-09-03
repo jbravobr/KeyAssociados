@@ -120,15 +120,22 @@ namespace TechSocial
                         if (auditoriasNecessarias.Contains(mod.audi))
                         {
                             var questoes = await this.serviceQuestoes.RetornarQuestoes(mod.modulo);
+                            var _questoesValidas = questoes.Questoes.ToList();
 
-                            if (questoes != null && questoes.Questoes != null && questoes.Questoes.Any())
+                            if (_questoesValidas != null && _questoesValidas != null && _questoesValidas.Any())
                             {
-                                foreach (var item in questoes.Questoes)
+
+                                for (int i = 0; i < _questoesValidas.Count; i++)
                                 {
-                                    item.audi = mod.audi;
+                                    _questoesValidas[i].audi = mod.audi;
                                 }
 
-                                db.InsertQuestao(questoes.Questoes);
+//                                foreach (Questoes item in questoes.Questoes)
+//                                {
+//                                    item.audi = mod.audi;
+//                                }
+
+                                db.InsertQuestao(_questoesValidas);
                             }   
 
                             mod.qtdeQuestoesNoModulo = questoes.Questoes.Count;

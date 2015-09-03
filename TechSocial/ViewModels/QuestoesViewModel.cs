@@ -22,10 +22,10 @@ namespace TechSocial
             this.serviceBaseLegais = serviceBaseLegais;
         }
 
-        public async Task MontarQuestao(int modulo)
+        public async Task MontarQuestao(int modulo, string audi)
         {
             var db = new TechSocialDatabase(false);
-            this.Questao = db.GetQuestoes().Where(x => x.modulo == modulo).ToList();
+            this.Questao = db.GetQuestoes().Where(x => x.modulo == modulo && x.audi == Convert.ToInt32(audi)).ToList();
             this.BasesLegais = db.GetBaseLegal();
         }
 

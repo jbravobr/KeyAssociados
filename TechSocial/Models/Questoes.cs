@@ -10,8 +10,6 @@ namespace TechSocial
 
         public int modulo { get; set; }
 
-        public Guid auditorId { get; set; }
-
         public int audi { get; set; }
 
         public int questao { get; set; }
@@ -28,11 +26,11 @@ namespace TechSocial
 
         public int pontuacao { get; set; }
 
-        public string BaseLegalId { get; set; }
-
-        public string BaseLegalNome { get; set; }
-
-        public string BaseLegalDescricao { get; set; }
+        //        public string BaseLegalId { get; set; }
+        //
+        //        public string BaseLegalNome { get; set; }
+        //
+        //        public string BaseLegalDescricao { get; set; }
 
         [Ignore]
         public string Pergunta

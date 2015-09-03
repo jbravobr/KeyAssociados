@@ -222,7 +222,7 @@ namespace TechSocial
         {
             foreach (var questao in questoes)
             {
-                if (!this.database.Table<Questoes>().Any(x => x.questao == questao.questao && x.modulo == questao.modulo))
+                if (!this.database.Table<Questoes>().Any(x => x.questao == questao.questao && x.modulo == questao.modulo && x.audi == questao.audi))
                     this.database.Insert(questao);
                 else
                     this.database.Update(questao);
@@ -480,7 +480,7 @@ namespace TechSocial
         {
             if (this.database.Table<Modulos>().Any(x => x.audi == audi && x.modulo == modulo))
             {
-                var qtdeQuestoes = this.GetQuestoes().Where(q => q.modulo == modulo);
+                var qtdeQuestoes = this.GetQuestoes().Where(q => q.modulo == modulo && q.audi == audi);
                 var respostas = this.GetRespostaPorAuditoriaModulo(audi, modulo);
 
                 return qtdeQuestoes.Count() == respostas.Count;
@@ -551,7 +551,7 @@ namespace TechSocial
                     {
                         if (_mods.compile == "1")
                         {
-                            foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo))
+                            foreach (var qq in this.database.Table<Questoes>().Where(q=>q.modulo == _mods.modulo && q.audi == audi))
                             {
                                 if (!qq.NA)
                                     sumNotasMaximas += (qq.peso * 2);
