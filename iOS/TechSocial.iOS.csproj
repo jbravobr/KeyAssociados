@@ -50,11 +50,11 @@
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Rogério Rodrigues (NF33JR3WNP)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <IpaPackageName>
     </IpaPackageName>
-    <CodesignProvision>75323b47-df24-4c94-945a-5551b2387522</CodesignProvision>
+    <CodesignProvision>0af00dd7-b3cc-4e17-bafb-1de35cb78a09</CodesignProvision>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchLink>None</MtouchLink>
     <MtouchI18n>
